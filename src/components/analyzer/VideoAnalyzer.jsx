@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Upload, 
   Video, 
@@ -18,10 +18,7 @@ import {
   Info,
   FileVideo,
   X,
-  Download,
   Clock,
-  Film,
-  Gauge,
   MessageSquare,
   Send,
   HelpCircle,
@@ -33,7 +30,6 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { getApiConfig } from '../../services/api';
 import './VideoAnalyzer.css';
 
 // =========================================================================
@@ -416,28 +412,6 @@ export const VideoAnalyzer = () => {
   const metricsMap = fusionData?.measurements || {};
   const report = analysis?.llm_report || {};
 
-  // Annotated Skeleton Videos State
-  const annotatedVideos = analysis?.annotated_videos || {};
-  const annotatedViews = Object.keys(annotatedVideos);
-  const [selectedVideoView, setSelectedVideoView] = useState(() => {
-    return annotatedViews[0] || 'side1';
-  });
-  const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
-  const videoPlayerRef = useRef(null);
-
-  useEffect(() => {
-    if (annotatedViews.length > 0 && !annotatedViews.includes(selectedVideoView)) {
-      setSelectedVideoView(annotatedViews[0]);
-    }
-  }, [analysis]);
-
-  const changePlaybackSpeed = (speed) => {
-    setPlaybackSpeed(speed);
-    if (videoPlayerRef.current) {
-      videoPlayerRef.current.playbackRate = speed;
-    }
-  };
-
   // Compile active drills based on calculated angles and flaws
   const activeDrillsList = Object.keys(CORRECTIVE_DRILLS_DATABASE).map(k => CORRECTIVE_DRILLS_DATABASE[k]);
 
@@ -514,11 +488,9 @@ export const VideoAnalyzer = () => {
           viewTitle="FRONT VIEW"
           viewSubtitle="Chest alignment & arm release slot"
           fileData={videoFiles.front}
-          annotatedVideo={annotatedVideos.front}
           inputRef={frontInputRef}
           onUpload={(f) => handleFileUpload('front', f)}
           onRemove={() => removeVideo('front')}
-          onViewSkeleton={() => setSelectedVideoView('front')}
         />
 
         {/* SIDE VIEW 1 CARD */}
@@ -526,11 +498,9 @@ export const VideoAnalyzer = () => {
           viewTitle="SIDE VIEW 1"
           viewSubtitle="Front knee brace & BFC/FFC timing"
           fileData={videoFiles.side1}
-          annotatedVideo={annotatedVideos.side1}
           inputRef={side1InputRef}
           onUpload={(f) => handleFileUpload('side1', f)}
           onRemove={() => removeVideo('side1')}
-          onViewSkeleton={() => setSelectedVideoView('side1')}
         />
 
         {/* SIDE VIEW 2 CARD */}
@@ -538,11 +508,9 @@ export const VideoAnalyzer = () => {
           viewTitle="SIDE VIEW 2"
           viewSubtitle="Opposite angle & trunk flexion"
           fileData={videoFiles.side2}
-          annotatedVideo={annotatedVideos.side2}
           inputRef={side2InputRef}
           onUpload={(f) => handleFileUpload('side2', f)}
           onRemove={() => removeVideo('side2')}
-          onViewSkeleton={() => setSelectedVideoView('side2')}
         />
       </div>
 
@@ -621,94 +589,7 @@ export const VideoAnalyzer = () => {
             </button>
           </div>
 
-          {/* SKELETON VIDEO PLAYBACK (IF AVAILABLE) */}
-          {annotatedViews.length > 0 && (
-            <div className="annotated-video-player-card glass-card p-5">
-              <div className="player-card-header flex justify-between items-center flex-wrap gap-3 mb-3">
-                <div>
-                  <h3 className="text-lg font-bold text-primary flex items-center gap-2">
-                    <Film size={18} className="text-cyan" /> Delivery Motion & Joint Angles Video
-                  </h3>
-                  <p className="text-xs text-muted">
-                    Watch the 3D joint arcs, front knee brace, and elbow extension overlaid directly on your delivery stride.
-                  </p>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <div className="video-view-tabs flex items-center gap-1">
-                    {annotatedViews.map((vKey) => (
-                      <button
-                        key={vKey}
-                        type="button"
-                        className={`video-view-tab-btn ${selectedVideoView === vKey ? 'active' : ''}`}
-                        onClick={() => setSelectedVideoView(vKey)}
-                      >
-                        {vKey.toUpperCase()} VIEW
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {annotatedVideos[selectedVideoView] && (
-                <div className="annotated-video-wrapper">
-                  <div className="video-viewport-frame max-h-[380px] bg-black/50 rounded-xl overflow-hidden flex items-center justify-center">
-                    <video
-                      key={annotatedVideos[selectedVideoView].stream_url}
-                      ref={videoPlayerRef}
-                      src={
-                        annotatedVideos[selectedVideoView].stream_url.startsWith('http')
-                          ? annotatedVideos[selectedVideoView].stream_url
-                          : `${getApiConfig().baseUrl}${annotatedVideos[selectedVideoView].stream_url}`
-                      }
-                      controls
-                      autoPlay
-                      loop
-                      playsInline
-                      className="annotated-media-element max-h-[380px] w-auto mx-auto rounded-lg"
-                      onLoadedMetadata={(e) => {
-                        e.target.playbackRate = playbackSpeed;
-                      }}
-                    />
-                  </div>
-
-                  <div className="video-player-actions-bar flex justify-between items-center flex-wrap gap-3 mt-3">
-                    <div className="speed-selector-group flex items-center gap-2">
-                      <span className="text-xs text-muted font-bold flex items-center gap-1">
-                        <Gauge size={14} className="text-cyan" /> Speed:
-                      </span>
-                      {[
-                        { label: '0.25x Slo-Mo', val: 0.25 },
-                        { label: '0.5x Medium', val: 0.5 },
-                        { label: '1.0x Normal', val: 1.0 }
-                      ].map((item) => (
-                        <button
-                          key={item.val}
-                          type="button"
-                          className={`speed-pill-btn ${playbackSpeed === item.val ? 'active' : ''}`}
-                          onClick={() => changePlaybackSpeed(item.val)}
-                        >
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-
-                    <a
-                      href={
-                        annotatedVideos[selectedVideoView].download_url.startsWith('http')
-                          ? annotatedVideos[selectedVideoView].download_url
-                          : `${getApiConfig().baseUrl}${annotatedVideos[selectedVideoView].download_url}`
-                      }
-                      download={`pacepro_${selectedVideoView}_skeleton.mp4`}
-                      className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
-                    >
-                      <Download size={14} /> Download MP4
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
 
           {/* =========================================================================
               SECTION: CALCULATED BIOMECHANICAL ANGLES & CLEAR EXPLANATIONS
@@ -1062,11 +943,9 @@ const UploadViewCard = ({
   viewTitle, 
   viewSubtitle, 
   fileData, 
-  annotatedVideo,
   inputRef, 
   onUpload, 
-  onRemove,
-  onViewSkeleton 
+  onRemove
 }) => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
@@ -1077,16 +956,7 @@ const UploadViewCard = ({
           <span className="view-badge-title">{viewTitle}</span>
           <span className="text-xs text-muted block truncate">{viewSubtitle}</span>
         </div>
-        {annotatedVideo ? (
-          <button 
-            type="button" 
-            className="view-skeleton-btn" 
-            onClick={onViewSkeleton}
-            title="Click to view skeleton video"
-          >
-            <Sparkles size={12} /> Skeleton Ready
-          </button>
-        ) : fileData ? (
+        {fileData ? (
           <span className="badge badge-emerald">Ready</span>
         ) : (
           <span className="badge badge-amber">Optional</span>
