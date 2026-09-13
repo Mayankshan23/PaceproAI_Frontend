@@ -1,0 +1,488 @@
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 50;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+.mobile-header {
+  display: none;
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.brand-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--accent-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+}
+
+.brand-icon {
+  color: #ffffff;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+.brand-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  letter-spacing: 0.08em;
+}
+
+/* Gemini-style New Chat CTA */
+.new-chat-container {
+  padding: 16px 12px 8px 12px;
+}
+
+.new-chat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.new-chat-btn:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+  color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15);
+}
+
+.sidebar.collapsed .new-chat-btn {
+  padding: 12px;
+  border-radius: 50%;
+}
+
+.sidebar-nav {
+  padding: 8px 12px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(2, 132, 199, 0.08);
+}
+
+.nav-item.active {
+  color: #0284c7;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  font-weight: 700;
+}
+
+.nav-icon {
+  flex-shrink: 0;
+}
+
+.nav-label {
+  flex: 1;
+}
+
+.nav-badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  font-weight: 800;
+}
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.athlete-profile-card {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.athlete-profile-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+.athlete-profile-card.collapsed {
+  padding: 8px 4px;
+  justify-content: center;
+}
+
+.profile-card-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.athlete-profile-card.collapsed .profile-card-inner {
+  justify-content: center;
+  gap: 0;
+}
+
+.profile-avatar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-details-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  line-height: 1.25;
+}
+
+.profile-bowler-arm {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-bowler-pace {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono, monospace);
+  white-space: nowrap;
+}
+
+.profile-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: var(--accent-cyan);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.profile-edit-btn:hover {
+  background: var(--accent-cyan);
+  color: #09090b;
+  border-color: var(--accent-cyan);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.35);
+}
+
+.profile-edit-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    height: 64px;
+  }
+  .mobile-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon-bg {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-icon { color: #0f172a; width: 18px; height: 18px; }
+  .logo-text { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; color: var(--text-primary); }
+  .logo-highlight { color: var(--accent-cyan); }
+  
+  .sidebar {
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    left: -280px;
+    width: 260px;
+    height: calc(100vh - 64px);
+    transition: left 0.3s ease;
+  }
+  .sidebar.mobile-open { left: 0; }
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 45;
+  }
+}
+
+/* Clerk Auth Controls */
+.sidebar-auth-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.sidebar-auth-group.collapsed {
+  flex-direction: column;
+}
+
+.sidebar-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.sidebar-auth-btn.signin-btn {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.sidebar-auth-btn.signin-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+.sidebar-auth-btn.signup-btn {
+  background: var(--accent-gradient);
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+}
+
+.sidebar-auth-btn.signup-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
+  transform: translateY(-1px);
+}
+
+.clerk-profile-card {
+  padding: 6px 10px;
+}
+
+.clerk-profile-card.collapsed {
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.mobile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-pill-btn {
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.auth-pill-btn.signin {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.auth-pill-btn.signup {
+  background: var(--accent-gradient);
+  color: #0f172a;
+}
+
+/* ====================================================
+   DARK MODE OVERRIDES (True Neutral Obsidian & Zinc)
+   ==================================================== */
+[data-theme='dark'] .nav-item.active {
+  color: #ffffff;
+  background: #1d1d24;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .nav-item:hover:not(.active) {
+  color: #f4f4f6;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .nav-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #38bdf8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .new-chat-btn {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f4f4f6;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .new-chat-btn:hover {
+  background: #1e1e26;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme='dark'] .athlete-profile-card {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .athlete-profile-card:hover {
+  background: #1b1b22;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+[data-theme='dark'] .theme-toggle-btn {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
+}
+
+[data-theme='dark'] .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f4f6;
+}
+
+

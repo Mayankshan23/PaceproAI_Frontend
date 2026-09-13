@@ -1,0 +1,194 @@
+/* WorkoutDashboard.css */
+.workout-page-container {
+  padding: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Stats ---- */
+.workout-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.stat-card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stat-icon-wrapper {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-icon-wrapper.amber   { background: #fef3c7; color: #d97706; }
+.stat-icon-wrapper.cyan    { background: #e0f2fe; color: #0284c7; }
+.stat-icon-wrapper.emerald { background: #d1fae5; color: #059669; }
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 650;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.stat-subtext { font-size: 0.7rem; margin-top: 2px; }
+
+/* ---- Workout Cards ---- */
+.workout-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.workout-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.workout-card.is-completed {
+  border-color: #a7f3d0;
+  background: linear-gradient(135deg, #ffffff, #f0fdf4);
+}
+.workout-category-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.workout-title-text { font-size: 0.95rem; font-weight: 650; color: var(--text-primary); }
+.workout-exercises-list { display: flex; flex-direction: column; gap: 6px; }
+
+.exercise-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.exercise-row:hover { background: #e0f2fe; }
+.exercise-row.done { opacity: 0.6; text-decoration: line-through; }
+.exercise-name-text { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
+.exercise-sets-text { font-size: 0.72rem; color: var(--text-muted); }
+
+/* ---- Workload Chart ---- */
+.workload-svg-chart-container { width: 100%; height: 180px; margin-top: 12px; }
+.workload-chart-svg { width: 100%; height: 100%; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.legend-dot.cyan   { background: var(--accent-primary); }
+.legend-dot.amber  { background: #d97706; }
+
+/* ---- Schedule ---- */
+.weekly-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.day-schedule-card { padding: 14px; background: #f8fafc; border-radius: var(--radius-md); }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(8px); z-index: 200; display: flex;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal-content {
+  width: 100%; max-width: 480px; padding: 28px;
+  background: var(--bg-card); border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.1);
+  max-height: 92vh; overflow-y: auto;
+}
+
+/* Workplan generated card */
+.workplan-day-row {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-primary);
+  background: #f0f9ff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .workout-cards-grid    { grid-template-columns: repeat(2, 1fr); }
+  .weekly-schedule-grid  { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .workout-page-container { padding: 16px; gap: 16px; }
+  .workout-stats-grid   { grid-template-columns: repeat(2, 1fr); }
+  .workout-cards-grid   { grid-template-columns: 1fr; }
+  .weekly-schedule-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .workout-stats-grid   { grid-template-columns: 1fr; }
+  .weekly-schedule-grid { grid-template-columns: 1fr; }
+  .stat-value           { font-size: 1.25rem; }
+}
+
+/* ====================================================
+   DARK MODE OVERRIDES (Linear / Raycast Modern Dark)
+   ==================================================== */
+[data-theme='dark'] .stat-icon-wrapper.cyan {
+  background: rgba(255, 255, 255, 0.06);
+  color: #38bdf8;
+}
+
+[data-theme='dark'] .stat-icon-wrapper.amber {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+
+[data-theme='dark'] .stat-icon-wrapper.emerald {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+}
+
+[data-theme='dark'] .exercise-row {
+  background: #18181e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='dark'] .exercise-row:hover {
+  background: #22222a;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme='dark'] .day-schedule-card {
+  background: #18181e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='dark'] .workout-card.is-completed {
+  background: linear-gradient(135deg, #16161b 0%, rgba(16, 185, 129, 0.08) 100%);
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+[data-theme='dark'] .workplan-day-row {
+  background: #18181e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid #38bdf8;
+}
+

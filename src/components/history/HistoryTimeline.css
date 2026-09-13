@@ -1,0 +1,257 @@
+/* HistoryTimeline.css */
+.history-page-container {
+  padding: 28px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Filter Tabs ---- */
+.filter-tabs-pills {
+  background: #ffffff;
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.filter-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 0.8rem; font-weight: 700; padding: 7px 16px;
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;
+  font-family: var(--font-main); text-transform: capitalize;
+}
+.filter-btn:hover { background: #f0f9ff; color: #0284c7; }
+.filter-btn.active { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(2,132,199,0.25); }
+
+/* ---- History List ---- */
+.history-list { display: flex; flex-direction: column; gap: 12px; }
+
+/* ---- History Item ---- */
+.history-item-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; gap: 16px; cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.history-item-card:hover { transform: translateX(3px); }
+
+.item-left  { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+
+.item-type-icon-wrapper {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: #e0f2fe; border: 1px solid #bae6fd;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.item-type-icon-wrapper.workout,
+.item-type-icon-wrapper.combined_plan { background: #fef3c7; border-color: #fde68a; }
+.item-type-icon-wrapper.diet    { background: #d1fae5; border-color: #a7f3d0; }
+.item-type-icon-wrapper.chat    { background: #ede9fe; border-color: #c4b5fd; }
+
+.auto-prune-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.history-delete-icon-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.history-delete-icon-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.history-expand-meals-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #10b981;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.history-expand-meals-btn:hover {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.history-meal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+}
+
+.meal-pill-type {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.meal-pill-title {
+  color: var(--text-secondary);
+}
+
+.meal-pill-protein {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 0.68rem;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.history-meals-expanded-drawer {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.history-meal-row {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  transition: border-color 0.15s ease;
+}
+
+.history-meal-row:hover {
+  border-color: var(--border-hover);
+}
+
+.view-link-badge {
+  background: rgba(2, 132, 199, 0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.history-item-card:hover .view-link-badge {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.item-title { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+.item-subtitle { font-size: 0.78rem; color: var(--text-muted); }
+.item-date { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.item-chevron { color: var(--text-muted); }
+
+/* ---- Empty State ---- */
+.history-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 80px 20px; text-align: center; gap: 12px;
+}
+.history-empty-icon { color: #cbd5e1; margin-bottom: 8px; }
+.history-empty-title { font-size: 1.2rem; font-weight: 700; color: var(--text-secondary); }
+.history-empty-sub   { font-size: 0.875rem; color: var(--text-muted); max-width: 320px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .history-page-container { padding: 16px; gap: 16px; }
+  .filter-tabs-pills { width: 100%; display: flex; }
+  .filter-btn { flex: 1; text-align: center; padding: 7px 8px; font-size: 0.75rem; }
+  .history-item-card { padding: 14px 16px; gap: 12px; }
+  .item-right { display: none; }
+}
+@media (max-width: 480px) {
+  .item-type-icon-wrapper { width: 38px; height: 38px; border-radius: 10px; }
+  .item-title { font-size: 0.85rem; }
+}
+
+/* ====================================================
+   DARK MODE OVERRIDES (Linear / Raycast Modern Dark)
+   ==================================================== */
+[data-theme='dark'] .item-type-icon-wrapper {
+  background: rgba(14, 165, 233, 0.14);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+[data-theme='dark'] .item-type-icon-wrapper.workout,
+[data-theme='dark'] .item-type-icon-wrapper.combined_plan {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+[data-theme='dark'] .item-type-icon-wrapper.diet {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+
+[data-theme='dark'] .item-type-icon-wrapper.chat {
+  background: rgba(139, 92, 246, 0.14);
+  border-color: rgba(192, 132, 252, 0.3);
+  color: #c084fc;
+}
+
+[data-theme='dark'] .auto-prune-pill {
+  color: #38bdf8;
+  background: rgba(14, 165, 233, 0.12);
+  border-color: rgba(56, 189, 248, 0.28);
+}
+
+[data-theme='dark'] .history-delete-icon-btn:hover {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+}
+
+[data-theme='dark'] .view-link-badge {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+[data-theme='dark'] .history-expand-meals-btn {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+
+[data-theme='dark'] .history-meal-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .history-meals-expanded-drawer {
+  background: #111115;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .history-meal-row {
+  background: #16161c;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='dark'] .history-meal-row:hover {
+  border-color: rgba(52, 211, 153, 0.3);
+}
+

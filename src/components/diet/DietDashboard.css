@@ -1,0 +1,1000 @@
+/* DietDashboard.css */
+.diet-page-container {
+  padding: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Sub Nav ---- */
+.subnav-pills {
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: inline-flex;
+  gap: 4px;
+}
+.subnav-btn {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 0.82rem; font-weight: 700; padding: 8px 16px;
+  border-radius: var(--radius-sm); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;
+  font-family: var(--font-main);
+}
+.subnav-btn.active { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(2,132,199,0.25); }
+.subnav-btn:not(.active):hover { background: #e0f2fe; color: #0284c7; }
+
+/* ---- BMR Banner ---- */
+.bmr-summary-banner {
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+  border: 1px solid #bae6fd;
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.bmr-macro-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.macro-pill {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 16px; border-radius: 999px; min-width: 80px;
+}
+.macro-pill.protein { background: #fce7f3; color: #be185d; }
+.macro-pill.carbs   { background: #fef3c7; color: #d97706; }
+.macro-pill.fats    { background: #d1fae5; color: #059669; }
+.macro-num  { font-size: 1.05rem; font-weight: 650; font-family: var(--font-heading); }
+.macro-name { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.calculator-icon-bg {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: #e0f2fe; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ---- Input Layouts ---- */
+.diet-setup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.diet-setup-section { display: flex; flex-direction: column; gap: 16px; }
+.diet-form-group { display: flex; flex-direction: column; gap: 6px; }
+
+/* ---- Segmented ---- */
+.segmented-control {
+  background: var(--bg-input); padding: 4px;
+  border-radius: var(--radius-md); border: 1px solid var(--border-color);
+  display: flex; gap: 4px;
+}
+.segment-btn {
+  flex: 1; background: transparent; border: none; color: var(--text-secondary);
+  font-size: 0.82rem; font-weight: 600; padding: 8px 6px;
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;
+  font-family: var(--font-main); text-align: center;
+}
+.segment-btn.active { background: var(--accent-primary); color: #ffffff; box-shadow: 0 2px 8px rgba(2,132,199,0.25); }
+.segment-btn:not(.active):hover { background: #e0f2fe; color: #0284c7; }
+
+/* ---- Pref Tags ---- */
+.pref-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 999px; font-size: 0.72rem;
+  font-weight: 700; background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.pref-tag:hover { background: #e0f2fe; }
+.pref-tag.selected { background: #0284c7; color: #fff; border-color: #0284c7; }
+
+/* ---- Preference Choice Segmented Buttons ---- */
+.pref-choice-btn {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.pref-choice-btn:hover:not(.active) {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+  background: var(--bg-input);
+  transform: translateY(-1px);
+}
+
+.pref-choice-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  border-color: #0284c7;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(2, 132, 199, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-secondary.active-chip {
+  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%) !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* ---- MEAL FREQUENCY CARDS ---- */
+.meal-frequency-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.diet-meal-freq-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--bg-input, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.diet-meal-freq-card:hover {
+  border-color: rgba(2, 132, 199, 0.4);
+  transform: translateY(-1px);
+  background: #f0f9ff;
+}
+
+[data-theme='dark'] .diet-meal-freq-card:hover {
+  background: rgba(14, 165, 233, 0.08);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.diet-meal-freq-card.active {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(56, 189, 248, 0.15) 100%);
+  border: 1.5px solid var(--accent-primary, #0284c7);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.16);
+}
+
+[data-theme='dark'] .diet-meal-freq-card.active {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(2, 132, 199, 0.26) 100%);
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.22);
+}
+
+.freq-card-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  font-family: var(--font-heading, monospace);
+  background: #e2e8f0;
+  color: var(--text-secondary, #475569);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.diet-meal-freq-card.active .freq-card-badge {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}
+
+[data-theme='dark'] .freq-card-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+[data-theme='dark'] .diet-meal-freq-card.active .freq-card-badge {
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  color: #ffffff;
+}
+
+.freq-card-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.freq-card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+  line-height: 1.2;
+}
+
+.diet-meal-freq-card.active .freq-card-title {
+  color: var(--accent-primary, #0284c7);
+}
+
+[data-theme='dark'] .diet-meal-freq-card.active .freq-card-title {
+  color: #38bdf8;
+}
+
+.freq-card-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.3;
+  margin-top: 1px;
+}
+
+/* ---- ALLERGIES & SENSITIVITIES CHIPS ---- */
+.allergies-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.diet-allergy-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--bg-input, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  color: var(--text-secondary, #475569);
+  user-select: none;
+}
+
+.diet-allergy-chip:hover {
+  background: #fff1f2;
+  border-color: rgba(244, 63, 94, 0.35);
+  color: #e11d48;
+}
+
+[data-theme='dark'] .diet-allergy-chip:hover {
+  background: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.3);
+  color: #fb7185;
+}
+
+.diet-allergy-chip.selected {
+  background: #ffe4e6;
+  border: 1.5px solid #f43f5e;
+  color: #be123c;
+  box-shadow: 0 2px 10px rgba(244, 63, 94, 0.16);
+}
+
+[data-theme='dark'] .diet-allergy-chip.selected {
+  background: rgba(244, 63, 94, 0.16);
+  border-color: #fb7185;
+  color: #fda4af;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.22);
+}
+
+.allergy-emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.allergy-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex: 1;
+  text-align: left;
+}
+
+.allergy-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+[data-theme='dark'] .allergy-indicator {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.allergy-indicator.active {
+  background: #f43f5e;
+  border-color: #f43f5e;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .allergy-indicator.active {
+  background: #fb7185;
+  border-color: #fb7185;
+  color: #0f172a;
+}
+
+/* ---- ACTIVITY LEVEL CARDS ---- */
+.diet-activity-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg-input, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: inherit;
+  user-select: none;
+}
+
+.diet-activity-card:hover {
+  background: #f0f9ff;
+  border-color: rgba(2, 132, 199, 0.4);
+  transform: translateY(-1px);
+}
+
+[data-theme='dark'] .diet-activity-card:hover {
+  background: rgba(14, 165, 233, 0.08);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.diet-activity-card.active {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(56, 189, 248, 0.18) 100%);
+  border: 1.5px solid var(--accent-primary, #0284c7);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.18);
+}
+
+[data-theme='dark'] .diet-activity-card.active {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(2, 132, 199, 0.28) 100%);
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.22);
+}
+
+.activity-card-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+.diet-activity-card.active .activity-card-title {
+  color: var(--accent-primary, #0284c7);
+}
+
+[data-theme='dark'] .diet-activity-card.active .activity-card-title {
+  color: #38bdf8;
+}
+
+.activity-card-factor {
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-family: var(--font-mono, monospace);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.diet-activity-card.active .activity-card-factor {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .activity-card-factor {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+[data-theme='dark'] .diet-activity-card.active .activity-card-factor {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.activity-card-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted, #94a3b8);
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+.selection-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+[data-theme='dark'] .selection-indicator {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.selection-indicator.active {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .selection-indicator.active {
+  background: #38bdf8;
+  border-color: #38bdf8;
+  color: #0f172a;
+}
+
+/* ---- ATHLETIC GOAL CARDS ---- */
+.diet-goal-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--bg-input, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: inherit;
+  user-select: none;
+}
+
+.diet-goal-card:hover {
+  background: #f0fdf4;
+  border-color: rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .diet-goal-card:hover {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.diet-goal-card.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.18) 100%);
+  border: 1.5px solid #059669;
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.2);
+}
+
+[data-theme='dark'] .diet-goal-card.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.26) 100%);
+  border-color: #34d399;
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.22);
+}
+
+.goal-card-emoji {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.goal-card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+.diet-goal-card.active .goal-card-title {
+  color: #059669;
+}
+
+[data-theme='dark'] .diet-goal-card.active .goal-card-title {
+  color: #34d399;
+}
+
+.goal-card-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.35;
+  margin-top: 2px;
+  padding-right: 20px;
+}
+
+.goal-cal-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.goal-cal-badge.active {
+  background: #d1fae5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+[data-theme='dark'] .goal-cal-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+[data-theme='dark'] .goal-cal-badge.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.goal-check-indicator {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+[data-theme='dark'] .goal-check-indicator {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.goal-check-indicator.active {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .goal-check-indicator.active {
+  background: #34d399;
+  border-color: #34d399;
+  color: #064e3b;
+}
+
+/* ---- Meal Plan ---- */
+.meal-plan-grid { display: flex; flex-direction: column; gap: 16px; }
+.meal-card { padding: 20px; }
+.meal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.meal-icon-bg {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: #e0f2fe; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.food-items-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;
+}
+.food-item-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; background: #f8fafc; border-radius: var(--radius-sm);
+}
+.food-item-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
+.food-item-cal  { font-size: 0.72rem; color: var(--text-muted); }
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .diet-setup-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .diet-page-container { padding: 16px; gap: 16px; }
+  .bmr-summary-banner { flex-direction: column; align-items: flex-start; }
+  .subnav-pills { width: 100%; display: flex; }
+  .subnav-btn { flex: 1; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .food-items-grid { grid-template-columns: 1fr; }
+  .bmr-macro-pills { width: 100%; justify-content: stretch; }
+  .macro-pill { flex: 1; }
+}
+
+/* =====================================================================
+   AI SPORTS NUTRITION & WORKLOAD COACHING ASSESSMENT
+   ===================================================================== */
+.ai-coaching-card {
+  padding: 1.6rem;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(18, 18, 22, 0.75) 0%, rgba(28, 28, 34, 0.65) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.45), 0 0 24px -6px rgba(56, 189, 248, 0.12);
+  backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme='light'] .ai-coaching-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  box-shadow: 0 10px 30px -8px rgba(14, 165, 233, 0.08);
+}
+
+.ai-coaching-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='light'] .ai-coaching-header {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.ai-badge-pulse {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+.ai-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.2rem;
+}
+
+.ai-card-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.ai-status-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+/* Coach Quote Banner */
+.coach-summary-quote {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.06);
+  border-left: 4px solid #38bdf8;
+  border-top: 1px solid rgba(56, 189, 248, 0.15);
+  border-right: 1px solid rgba(56, 189, 248, 0.15);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+  margin-bottom: 1.4rem;
+}
+
+.quote-icon-wrap {
+  margin-top: 0.15rem;
+  shrink: 0;
+}
+
+.quote-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.quote-text {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Dual Columns: Positives & Lacks */
+.coaching-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+
+@media (max-width: 840px) {
+  .coaching-columns-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coaching-col-card {
+  padding: 1.2rem;
+  border-radius: 12px;
+  background: rgba(18, 18, 22, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] .coaching-col-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.coaching-col-card.positives-card {
+  border-top: 3px solid #34d399;
+}
+
+.coaching-col-card.lacks-card {
+  border-top: 3px solid #fbbf24;
+}
+
+.col-header {
+  margin-bottom: 0.9rem;
+}
+
+.col-header h4 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.coaching-points-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.point-bullet {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 900;
+  shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.point-bullet.emerald {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.point-bullet.amber {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+/* Required Needs Grid */
+.required-needs-block {
+  margin-bottom: 1.4rem;
+  padding: 1.2rem;
+  border-radius: 12px;
+  background: rgba(18, 18, 22, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='light'] .required-needs-block {
+  background: rgba(248, 250, 252, 0.85);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.needs-block-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.9rem;
+}
+
+.needs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .needs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .needs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.need-box {
+  padding: 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] .need-box {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.need-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #38bdf8;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.need-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Goal Action Directives */
+.goal-directives-block {
+  padding: 1.2rem;
+  border-radius: 12px;
+  background: rgba(124, 58, 237, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.directives-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.9rem;
+}
+
+.directives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.directive-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.directive-step {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.directive-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ====================================================
+   DARK MODE OVERRIDES (True Neutral Obsidian & Zinc)
+   ==================================================== */
+[data-theme='dark'] .bmr-summary-banner {
+  background: #141418;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .calculator-icon-bg,
+[data-theme='dark'] .meal-icon-bg {
+  background: rgba(255, 255, 255, 0.06);
+  color: #38bdf8;
+}
+
+[data-theme='dark'] .subnav-btn:not(.active):hover,
+[data-theme='dark'] .segment-btn:not(.active):hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f4f4f6;
+}
+
+[data-theme='dark'] .pref-tag {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f4f4f6;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .pref-tag:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .pref-tag.selected {
+  background: #27272e;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme='dark'] .food-item-row {
+  background: #18181e;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .macro-pill.protein {
+  background: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+}
+
+[data-theme='dark'] .macro-pill.carbs {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+
+[data-theme='dark'] .macro-pill.fats {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+}
+
+[data-theme='dark'] .pref-choice-btn {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .pref-choice-btn:hover:not(.active) {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #f4f4f6;
+  background: #1a1a20;
+}
+
+[data-theme='dark'] .pref-choice-btn.active {
+  background: #1e1e26;
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.2), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
+  font-weight: 700;
+}
+
+[data-theme='dark'] .btn-secondary.active-chip {
+  background: #1e1e26 !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  color: #38bdf8 !important;
+}
+
+

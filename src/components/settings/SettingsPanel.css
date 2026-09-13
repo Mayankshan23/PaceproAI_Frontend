@@ -1,0 +1,97 @@
+/* SettingsPanel.css */
+.settings-page-container {
+  padding: 28px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Section card padding utility used via Tailwind-like class in JSX */
+[class*="settings-section-card"] {
+  padding: 24px;
+}
+
+.p-6 { padding: 24px !important; }
+.p-4 { padding: 16px !important; }
+.p-3 { padding: 12px !important; }
+.rounded-md { border-radius: var(--radius-md) !important; }
+.grid { display: grid; }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.gap-4 { gap: 16px; }
+.gap-3 { gap: 12px; }
+.w-28 { width: 7rem; }
+.bg-input { background: var(--bg-input) !important; }
+.border-color { border: 1px solid var(--border-color) !important; }
+.bg-emerald\/10 { background: rgba(5,150,105,0.1); }
+.text-emerald { color: #059669; }
+.border-emerald\/30 { border-color: rgba(5,150,105,0.3) !important; }
+.bg-rose\/10 { background: rgba(225,29,72,0.1); }
+.text-rose { color: #e11d48; }
+.border-rose\/30 { border-color: rgba(225,29,72,0.3) !important; }
+
+.toggle-switch { position: relative; display: inline-block; width: 46px; height: 24px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background-color: #cbd5e1; transition: 0.3s; border-radius: 999px;
+}
+.toggle-slider:before {
+  position: absolute; content: "";
+  height: 18px; width: 18px; left: 3px; bottom: 3px;
+  background-color: white; transition: 0.3s; border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input:checked + .toggle-slider { background: #0284c7; }
+input:checked + .toggle-slider:before { transform: translateX(22px); }
+
+@media (max-width: 768px) {
+  .settings-page-container { padding: 16px; gap: 16px; }
+  .grid-cols-2 { grid-template-columns: 1fr; }
+  .p-6 { padding: 16px !important; }
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: 0.3s;
+  border-radius: 999px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background: var(--accent-gradient);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+  background-color: #040914;
+}
