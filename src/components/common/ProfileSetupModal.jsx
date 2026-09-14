@@ -30,6 +30,7 @@ export const ProfileSetupModal = ({ isOpen, onClose }) => {
   const { userProfile, updateAthleteProfile } = useApp();
 
   const [name, setName] = useState(userProfile?.name || '');
+  const [sex, setSex] = useState(userProfile?.sex || 'male');
   const [arm, setArm] = useState(userProfile?.arm || 'Right-Arm Fast');
   const [bowlingAction, setBowlingAction] = useState(userProfile?.bowlingAction || 'semi_open');
   const [peakSpeed, setPeakSpeed] = useState(userProfile?.peakSpeed || '135 km/h');
@@ -42,6 +43,7 @@ export const ProfileSetupModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen && userProfile) {
       setName(userProfile.name || '');
+      setSex(userProfile.sex || 'male');
       setArm(userProfile.arm || 'Right-Arm Fast');
       setBowlingAction(userProfile.bowlingAction || 'semi_open');
       setPeakSpeed(userProfile.peakSpeed || '135 km/h');
@@ -64,6 +66,7 @@ export const ProfileSetupModal = ({ isOpen, onClose }) => {
     
     const updatedPayload = {
       name: name.trim() || 'Fast Bowler',
+      sex: sex || 'male',
       arm: arm || 'Right-Arm Fast',
       bowlingAction: bowlingAction || 'semi_open',
       peakSpeed: peakSpeed.trim() || '135 km/h',
@@ -133,8 +136,34 @@ export const ProfileSetupModal = ({ isOpen, onClose }) => {
               />
             </div>
 
-            {/* Bowling Arm & Delivery Action */}
+            {/* Gender (Biological Sex) & Bowling Arm Grid */}
             <div className="profile-grid-2">
+              {/* Gender Selector */}
+              <div className="profile-field-group">
+                <label className="profile-field-label">
+                  <User size={14} className="text-cyan" />
+                  <span>Biological Sex / Gender</span>
+                </label>
+                <div className="profile-arm-toggle-row">
+                  <button
+                    type="button"
+                    onClick={() => setSex('male')}
+                    className={`profile-arm-btn ${sex === 'male' ? 'active' : ''}`}
+                  >
+                    <span>♂️ Male</span>
+                    {sex === 'male' && <Check size={14} strokeWidth={3} />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSex('female')}
+                    className={`profile-arm-btn ${sex === 'female' ? 'active' : ''}`}
+                  >
+                    <span>♀️ Female</span>
+                    {sex === 'female' && <Check size={14} strokeWidth={3} />}
+                  </button>
+                </div>
+              </div>
+
               {/* Arm Selector */}
               <div className="profile-field-group">
                 <label className="profile-field-label">
@@ -160,20 +189,20 @@ export const ProfileSetupModal = ({ isOpen, onClose }) => {
                   </button>
                 </div>
               </div>
+            </div>
 
-              {/* Action Dropdown */}
-              <div className="profile-field-group">
-                <label className="profile-field-label">
-                  <Activity size={14} className="text-cyan" />
-                  <span>Delivery Action Style</span>
-                </label>
-                <CustomSelect
-                  options={BOWLING_ACTION_OPTIONS}
-                  value={bowlingAction}
-                  onChange={(val) => setBowlingAction(val)}
-                  placeholder="Select delivery action..."
-                />
-              </div>
+            {/* Delivery Action Dropdown */}
+            <div className="profile-field-group">
+              <label className="profile-field-label">
+                <Activity size={14} className="text-cyan" />
+                <span>Delivery Action Style</span>
+              </label>
+              <CustomSelect
+                options={BOWLING_ACTION_OPTIONS}
+                value={bowlingAction}
+                onChange={(val) => setBowlingAction(val)}
+                placeholder="Select delivery action..."
+              />
             </div>
 
             {/* Biometrics (Age, Weight, Height) */}

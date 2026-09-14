@@ -299,11 +299,11 @@ export const CombinedPlanner = () => {
 
       {/* WORKLOAD & PROFILE CONFIGURATION PANEL - ALL SECTIONS ON SAME PAGE */}
       {!configCollapsed && (
-        <div className="config-panel glass-card mb-8 animate-fade-in">
+        <div className="config-panel glass-card animate-fade-in">
           {/* =========================================================================
               SECTION 1: ATHLETE PROFILE & LIFESTYLE TIMETABLE
              ========================================================================= */}
-          <div className="config-section-container mb-6">
+          <div className="config-section-container">
             <div className="config-section-header">
               <div className="flex items-center gap-2.5">
                 <div className="section-number-badge cyan">1</div>
@@ -410,7 +410,7 @@ export const CombinedPlanner = () => {
           {/* =========================================================================
               SECTION 2: CURRENT BOWLING & TRAINING WORKLOAD
              ========================================================================= */}
-          <div className="config-section-container mb-6">
+          <div className="config-section-container">
             <div className="config-section-header">
               <div className="flex items-center gap-2.5">
                 <div className="section-number-badge amber">2</div>
@@ -421,7 +421,7 @@ export const CombinedPlanner = () => {
               </div>
             </div>
 
-            <div className="workload-controls-grid mb-4">
+            <div className="workload-controls-grid">
               {/* Total Ground Cricket Training Days */}
               <div className="control-card">
                 <div className="control-label-row">
@@ -607,7 +607,7 @@ export const CombinedPlanner = () => {
           {/* =========================================================================
               SECTION 3: RECOVERY, SPINAL SAFETY & SLEEP
              ========================================================================= */}
-          <div className="config-section-container mb-6">
+          <div className="config-section-container">
             <div className="config-section-header">
               <div className="flex items-center gap-2.5">
                 <div className="section-number-badge emerald">3</div>
@@ -618,7 +618,7 @@ export const CombinedPlanner = () => {
               </div>
             </div>
 
-            <div className="workload-controls-grid mb-4">
+            <div className="workload-controls-grid">
               {/* Nightly Sleep Duration */}
               <div className="control-card">
                 <div className="control-label-row">
@@ -727,7 +727,7 @@ export const CombinedPlanner = () => {
           {/* =========================================================================
               SECTION 4: ATHLETIC STRENGTH BASELINE & REPS ASSESSMENT
              ========================================================================= */}
-          <div className="config-section-container mb-6">
+          <div className="config-section-container">
             <div className="config-section-header">
               <div className="flex items-center gap-2.5">
                 <div className="section-number-badge purple">4</div>

@@ -106,13 +106,28 @@ export const ChatWindow = () => {
     }
   ];
 
+  const isInitialMount = useRef(true);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatMessages.length === 0) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [chatMessages, isTyping]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      const mainEl = document.querySelector('.main-content');
+      if (mainEl) mainEl.scrollTop = 0;
+      const chatBody = document.querySelector('.gemini-chat-body');
+      if (chatBody) chatBody.scrollTop = 0;
+      return;
+    }
+
+    if (chatMessages.length > 0) {
+      scrollToBottom();
+    }
+  }, [chatMessages.length, isTyping]);
 
   useEffect(() => {
     if (pendingChatPrompt) {
@@ -322,99 +337,135 @@ export const ChatWindow = () => {
     }
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const mainEl = document.querySelector('.main-content');
+    if (mainEl) mainEl.scrollTop = 0;
+  }, []);
+
   return (
     <div className="gemini-chat-container">
-      {/* Top Header */}
-      <div className="gemini-chat-header">
-        <div className="flex items-center gap-3">
-          <div className="model-selector-badge">
-            <Sparkles size={15} className="text-sky" />
-            <span className="model-name">PacePro Coach AI</span>
-            <span className="model-version font-mono">Context-Aware</span>
-          </div>
-
-          {/* Context Indicators Badge */}
-          <div className="chat-context-pills flex items-center gap-1.5 text-xs">
-            {latestBowlingAnalysis && (
-              <span className="badge badge-emerald" title="Latest Bowling Biomechanics Loaded">
-                • Video Analysis Active
-              </span>
-            )}
-            {(activeDietPlan || activeCombinedPlan) && (
-              <span className="badge badge-cyan" title="Diet & Nutrition Protocol Active">
-                • Diet Loaded
-              </span>
-            )}
-            {(activeWorkplan || activeCombinedPlan) && (
-              <span className="badge badge-purple" title="Weekly Workplan Active">
-                • 7-Day Workplan Active
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Language Preference Control: Hinglish vs English */}
-          <div className="chat-language-selector">
-            <Languages size={14} className="text-muted" />
-            <div className="lang-buttons-group">
-              <button
-                type="button"
-                className={`lang-btn ${chatLanguage === 'hinglish' ? 'active' : ''}`}
-                onClick={() => handleLanguageChange('hinglish')}
-                title="Hinglish (Hindi + English mix in Roman script)"
-              >
-                Hinglish
-              </button>
-              <button
-                type="button"
-                className={`lang-btn ${chatLanguage === 'english' ? 'active' : ''}`}
-                onClick={() => handleLanguageChange('english')}
-                title="Pure Professional English"
-              >
-                English
-              </button>
+      {/* Active Conversation Sticky Header (Only shown during active chat) */}
+      {chatMessages.length > 0 && (
+        <div className="gemini-chat-header animate-fade-in">
+          <div className="chat-header-brand">
+            <div className="chat-bot-icon-circle">
+              <Zap size={15} className="text-cyan" />
+            </div>
+            <div className="chat-brand-text">
+              <div className="flex items-center gap-2">
+                <span className="chat-header-name">PacePro AI Assistant</span>
+                <span className="online-badge">
+                  <span className="online-dot"></span> Online
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="header-status flex items-center gap-1.5 text-xs text-muted">
-            <ShieldCheck size={14} className="text-emerald" /> 
-            <span className="font-semibold text-primary">{userProfile.name}</span>
+          <div className="chat-header-actions">
+            <div className="chat-language-selector">
+              <Languages size={13} className="text-cyan" />
+              <div className="lang-buttons-group">
+                <button
+                  type="button"
+                  className={`lang-btn ${chatLanguage === 'hinglish' ? 'active' : ''}`}
+                  onClick={() => handleLanguageChange('hinglish')}
+                  title="Hinglish (Hindi + English mix in Roman script)"
+                >
+                  Hinglish
+                </button>
+                <button
+                  type="button"
+                  className={`lang-btn ${chatLanguage === 'english' ? 'active' : ''}`}
+                  onClick={() => handleLanguageChange('english')}
+                  title="Pure Professional English"
+                >
+                  English
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Scrollable Chat Body */}
-      <div className="gemini-chat-body">
+      <div className={`gemini-chat-body ${chatMessages.length === 0 ? 'home-greeting-view' : ''}`}>
         {/* Welcome Section (Shown when thread is empty) */}
         {chatMessages.length === 0 && (
           <div className="gemini-welcome-hero animate-fade-in">
-            <div className="hero-badge-row">
-              <span className="hero-chip-pill">⚡ {userProfile.arm || 'Fast Bowler'}</span>
-              <span className="hero-chip-pill">🎯 {userProfile.target || 'Pace & Lumbar Protection'}</span>
-              {userProfile.isStudent && <span className="hero-chip-pill student">🎓 Student Athlete</span>}
-              <span className="hero-chip-pill">🔥 PR: {userProfile.peakSpeed || '135+ km/h'}</span>
-            </div>
-
+            {/* Primary Headline Greeting */}
             <h1 className="hero-greeting-text">
-              {chatLanguage === 'hinglish' 
-                ? `Welcome to the Nets, ${userProfile.name?.split(' ')[0] || 'Champ'} 🏏`
-                : `Ready for the Nets, ${userProfile.name?.split(' ')[0] || 'Champ'} 🏏`}
+              Welcome to the Nets, {userProfile.name?.split(' ')[0] || userProfile.name || 'Champ'} 🏏
             </h1>
+
             <p className="hero-tagline">
               {chatLanguage === 'hinglish'
                 ? 'Tera real-time bowling mentor. Pace badhana ho, knee brace check karna ho, ya match-day diet—bata aaj kya plan karna hai?'
                 : 'Your dedicated fast bowling coach is online. Biomechanics, 130+ km/h velocity drills, or acute workload fueling—what are we conquering today?'}
             </p>
 
-            <div className="hero-goals-list my-3">
+            {/* Bowler Attributes & Language Controls */}
+            <div className="hero-middle-controls flex items-center justify-center gap-3 flex-wrap my-2 w-full max-w-[800px]">
+              <div className="hero-badge-row">
+                <span className="hero-chip-pill">⚡ {userProfile.arm || 'Fast Bowler'}</span>
+                <span className="hero-chip-pill">🎯 {userProfile.target || 'Pace & Lumbar Protection'}</span>
+                {userProfile.isStudent && <span className="hero-chip-pill student">🎓 Student Athlete</span>}
+                <span className="hero-chip-pill">🔥 PR: {userProfile.peakSpeed || '135+ km/h'}</span>
+              </div>
+
+              {/* Language Switcher Pill */}
+              <div className="chat-language-selector">
+                <Languages size={13} className="text-cyan" />
+                <div className="lang-buttons-group">
+                  <button
+                    type="button"
+                    className={`lang-btn ${chatLanguage === 'hinglish' ? 'active' : ''}`}
+                    onClick={() => handleLanguageChange('hinglish')}
+                    title="Hinglish (Hindi + English mix in Roman script)"
+                  >
+                    Hinglish
+                  </button>
+                  <button
+                    type="button"
+                    className={`lang-btn ${chatLanguage === 'english' ? 'active' : ''}`}
+                    onClick={() => handleLanguageChange('english')}
+                    title="Pure Professional English"
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Subsystem Sync Indicators */}
+            {(latestBowlingAnalysis || activeDietPlan || activeCombinedPlan || activeWorkplan) && (
+              <div className="chat-context-pills flex items-center justify-center gap-1.5 text-xs my-1">
+                {latestBowlingAnalysis && (
+                  <span className="badge badge-emerald py-0.5 px-2 text-[10px]" title="Latest Bowling Biomechanics Loaded">
+                    • Video Synced
+                  </span>
+                )}
+                {(activeDietPlan || activeCombinedPlan) && (
+                  <span className="badge badge-cyan py-0.5 px-2 text-[10px]" title="Diet & Nutrition Protocol Active">
+                    • Diet Synced
+                  </span>
+                )}
+                {(activeWorkplan || activeCombinedPlan) && (
+                  <span className="badge badge-purple py-0.5 px-2 text-[10px]" title="Weekly Workplan Active">
+                    • Plan Synced
+                  </span>
+                )}
+              </div>
+            )}
+
+            <div className="hero-goals-list my-2">
               <div className="goal-item"><span className="dot-cyan">•</span> Biomechanics & 3-Angle Analyzer</div>
               <div className="goal-item"><span className="dot-cyan">•</span> ACWR Workload & Recovery Gaps</div>
               <div className="goal-item"><span className="dot-cyan">•</span> High-Protein Macro Fueling</div>
             </div>
 
             {/* Gemini-Style 4 Prompt Cards Grid */}
-            <div className="gemini-cards-grid mt-6">
+            <div className="gemini-cards-grid mt-4">
               {suggestedPrompts.map((p, idx) => {
                 const Icon = p.icon;
                 return (
@@ -525,7 +576,7 @@ export const ChatWindow = () => {
             </div>
           )}
 
-          <div ref={messagesEndRef} />
+          {chatMessages.length > 0 && <div ref={messagesEndRef} />}
         </div>
       </div>
 

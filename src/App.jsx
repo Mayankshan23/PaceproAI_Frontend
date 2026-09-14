@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/common/Sidebar';
@@ -14,6 +14,20 @@ const VideoAnalyzer = lazy(() => import('./components/analyzer/VideoAnalyzer').t
 const TrainingDashboard = lazy(() => import('./components/training/TrainingDashboard').then(m => ({ default: m.TrainingDashboard })));
 const HistoryTimeline = lazy(() => import('./components/history/HistoryTimeline').then(m => ({ default: m.HistoryTimeline })));
 const SettingsPanel = lazy(() => import('./components/settings/SettingsPanel').then(m => ({ default: m.SettingsPanel })));
+
+const ScrollToTop = () => {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const mainEl = document.querySelector('.main-content');
+    if (mainEl) mainEl.scrollTop = 0;
+    const chatBody = document.querySelector('.gemini-chat-body');
+    if (chatBody) chatBody.scrollTop = 0;
+  }, [pathname, search]);
+  return null;
+};
 
 const PageLoader = () => (
   <div style={{
@@ -69,11 +83,15 @@ export default function App() {
   return (
     <ThemeProvider>
       <Router>
+        <ScrollToTop />
         <AppProvider>
           {!isLoaded ? (
             <PageLoader />
           ) : !showApp ? (
-            <LandingPage onEnterDashboard={() => setViewOverride('app')} />
+            <LandingPage onEnterDashboard={() => {
+              window.scrollTo(0, 0);
+              setViewOverride('app');
+            }} />
           ) : (
             <div className="app-container w-full max-w-full overflow-x-hidden">
               <Sidebar />

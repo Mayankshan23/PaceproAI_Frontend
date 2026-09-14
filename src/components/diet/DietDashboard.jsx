@@ -266,33 +266,36 @@ export const DietDashboard = () => {
       {activeTabSub === 'setup' ? (
         <div className="diet-setup-container glass-card p-6 animate-fade-in">
           {/* Real-time BMR & TDEE Calculator Banner */}
-          <div className="bmr-summary-banner p-4 rounded-xl mb-6 flex items-center justify-between">
+          <div className="bmr-summary-banner p-4 sm:p-5 rounded-2xl mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="calculator-icon-bg">
+              <div className="calculator-icon-bg shrink-0">
                 <Calculator size={22} className="text-cyan" />
               </div>
               <div>
-                <h4 className="font-bold text-primary text-sm">
+                <h4 className="font-bold text-primary text-sm sm:text-base">
                   Metabolic Energy Engine
                 </h4>
-                <span className="text-xs text-muted">
-                  Age {age} • {weight} kg • {height} cm • {sex.toUpperCase()}
-                </span>
+                <div className="text-xs text-muted mt-0.5 flex flex-wrap items-center gap-1.5 font-mono">
+                  <span className="badge badge-cyan text-[10px] py-0.5 px-2 font-sans font-bold uppercase">{sex}</span>
+                  <span>• Age {age} yrs</span>
+                  <span>• {weight} kg</span>
+                  <span>• {height} cm</span>
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-6 font-mono">
-              <div className="text-center">
-                <span className="text-xs text-muted block font-sans">BMR (Basal Rate):</span>
-                <strong className="text-base text-slate-200">{bmr} kcal</strong>
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 w-full md:w-auto font-mono">
+              <div className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/[0.04] text-center">
+                <span className="text-[10px] sm:text-[11px] text-muted block font-sans font-medium">BMR (Basal)</span>
+                <strong className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">{bmr} <span className="text-[9px] font-sans font-normal text-muted">kcal</span></strong>
               </div>
-              <div className="text-center">
-                <span className="text-xs text-muted block font-sans">TDEE (Maintenance):</span>
-                <strong className="text-base text-slate-200">{tdee} kcal</strong>
+              <div className="p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/[0.04] text-center">
+                <span className="text-[10px] sm:text-[11px] text-muted block font-sans font-medium">TDEE (Maint.)</span>
+                <strong className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">{tdee} <span className="text-[9px] font-sans font-normal text-muted">kcal</span></strong>
               </div>
-              <div className="text-center">
-                <span className="text-xs text-muted block font-sans">Bowling Target:</span>
-                <strong className="text-base text-cyan font-bold">{targetCalories} kcal</strong>
+              <div className="p-2.5 rounded-xl border border-sky-500/30 bg-sky-50 dark:bg-sky-500/15 text-center">
+                <span className="text-[10px] sm:text-[11px] text-sky-700 dark:text-sky-300 block font-sans font-bold">Target</span>
+                <strong className="text-xs sm:text-sm font-bold text-sky-700 dark:text-sky-300">{targetCalories} <span className="text-[9px] font-sans font-normal text-sky-500">kcal</span></strong>
               </div>
             </div>
           </div>

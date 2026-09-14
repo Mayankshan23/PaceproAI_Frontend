@@ -27,6 +27,10 @@ export const LandingPage = ({ onEnterDashboard }) => {
   const { isSignedIn } = useUser();
   const [openFaq, setOpenFaq] = useState(0);
 
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
   const faqs = [
     {
       q: "What camera angles are required for 3-View Biomechanics?",

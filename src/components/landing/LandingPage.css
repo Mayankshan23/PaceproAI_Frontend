@@ -443,20 +443,26 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: 9999px;
   background: rgba(14, 165, 233, 0.1);
   border: 1px solid rgba(14, 165, 233, 0.3);
   color: var(--accent-cyan);
-  font-size: 0.76rem;
+  font-size: clamp(0.68rem, 2.5vw, 0.76rem);
   font-weight: 800;
-  letter-spacing: 0.06em;
-  margin-bottom: 22px;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
 }
 
 .pill-icon {
   color: var(--accent-cyan);
   animation: pulse 2s infinite;
+  flex-shrink: 0;
 }
 
 @keyframes pulse {
@@ -466,13 +472,17 @@
 
 .hero-headline.centered {
   font-family: var(--font-heading);
-  font-size: 3.8rem;
+  font-size: clamp(1.75rem, 5.5vw, 3.8rem);
   font-weight: 800;
-  line-height: 1.14;
-  letter-spacing: -0.03em;
-  margin-bottom: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
   color: var(--text-primary);
   max-width: 960px;
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .gradient-text {
@@ -482,11 +492,15 @@
 }
 
 .hero-subheadline.centered {
-  font-size: 1.15rem;
-  line-height: 1.7;
+  font-size: clamp(0.92rem, 2.8vw, 1.15rem);
+  line-height: 1.65;
   color: var(--text-secondary);
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   max-width: 780px;
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 /* Explore features CTA */
@@ -494,16 +508,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 26px;
+  width: 100%;
 }
 
 .hero-btn-explore {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 13px 26px;
+  padding: 12px 22px;
   border-radius: 12px;
-  font-size: 0.95rem;
+  font-size: clamp(0.82rem, 2.6vw, 0.95rem);
   font-weight: 700;
   background: var(--bg-card);
   color: var(--text-primary);
@@ -512,6 +528,9 @@
   cursor: pointer;
   box-shadow: 0 4px 18px rgba(14, 165, 233, 0.12);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .hero-btn-explore:hover {
@@ -527,16 +546,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
+  width: 100%;
 }
 
 .trust-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
+  font-size: clamp(0.78rem, 2.4vw, 0.85rem);
   font-weight: 600;
   color: var(--text-muted);
 }
@@ -859,19 +879,23 @@
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 4.5vw, 2.5rem);
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.02em;
   margin-bottom: 16px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .section-subtitle {
-  font-size: 1.05rem;
+  font-size: clamp(0.88rem, 2.8vw, 1.05rem);
   color: var(--text-muted);
   max-width: 620px;
   margin: 0 auto;
   line-height: 1.6;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .features-grid {
@@ -1500,7 +1524,7 @@
 
 @media (max-width: 1024px) {
   .hero-headline.centered {
-    font-size: 2.9rem;
+    font-size: clamp(2.2rem, 4vw, 2.9rem);
   }
   
   .features-grid {
@@ -1509,6 +1533,7 @@
   
   .biomechanics-split {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
   
   .kinetic-steps-grid {
@@ -1525,6 +1550,12 @@
 }
 
 @media (max-width: 768px) {
+  .landing-container {
+    padding: 0 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .landing-nav-links {
     display: none;
   }
@@ -1533,12 +1564,58 @@
     display: block;
   }
   
+  .hero-pill-badge {
+    font-size: 0.68rem;
+    padding: 5px 12px;
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
   .hero-headline.centered {
-    font-size: 2.1rem;
+    font-size: clamp(1.65rem, 6vw, 2.2rem);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .hero-subheadline.centered {
-    font-size: 1rem;
+    font-size: clamp(0.88rem, 3vw, 1rem);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .hero-explore-row {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .hero-btn-explore {
+    width: 100%;
+    max-width: 100%;
+    padding: 11px 16px;
+    font-size: 0.84rem;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .hero-trust-row.centered {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 32px;
+  }
+
+  .trust-item {
+    font-size: 0.74rem;
+    gap: 6px;
+    word-break: break-word;
   }
 
   .window-url-bar {
@@ -1560,38 +1637,198 @@
     display: none;
   }
   
+  .landing-section {
+    padding: 52px 0;
+  }
+
+  .section-header {
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-size: clamp(1.4rem, 5vw, 1.95rem);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .feature-card {
+    padding: 20px 16px;
+    word-break: break-word;
+  }
+
+  .feature-title {
+    font-size: 1.05rem;
+  }
+
+  .feature-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .camera-views-list {
+    gap: 12px;
+  }
+
+  .camera-view-item {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .view-num {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+
+  .view-content h4 {
+    font-size: 0.92rem;
+  }
+
+  .view-content p {
+    font-size: 0.8rem;
+  }
+
+  .showcase-card {
+    padding: 16px 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
   
+  .kinetic-steps-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .kinetic-step-card {
+    padding: 18px 16px;
+  }
+
+  .kinetic-step-card h4 {
+    font-size: 1rem;
+  }
+
+  .kinetic-step-card p {
+    font-size: 0.82rem;
+  }
+
   .training-synergy-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .synergy-card {
+    padding: 20px 16px;
+  }
+
+  .synergy-header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .synergy-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .synergy-list {
+    gap: 10px;
+  }
+
+  .synergy-list li {
+    font-size: 0.82rem;
+  }
+
+  .faq-item {
+    padding: 14px 16px;
+  }
+
+  .faq-question {
+    font-size: 0.92rem;
+    gap: 8px;
+  }
+
+  .faq-answer {
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .landing-cta-banner {
+    padding: 40px 0 60px;
+  }
+
+  .cta-banner-box {
+    padding: 32px 16px;
   }
   
   .cta-headline {
-    font-size: 1.9rem;
+    font-size: clamp(1.35rem, 5vw, 1.85rem);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  .cta-sub {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin-bottom: 24px;
   }
 
   .cta-buttons {
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: 10px;
   }
 
   .cta-buttons button,
   .hero-btn-primary,
-  .hero-btn-secondary {
+  .hero-btn-secondary,
+  .cta-btn-primary,
+  .cta-btn-secondary {
     width: 100%;
-    max-width: 320px;
+    max-width: 100%;
+    padding: 12px 18px;
+    font-size: 0.88rem;
+    box-sizing: border-box;
+    text-align: center;
+    justify-content: center;
   }
   
   .footer-content {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
   
   .footer-bottom-bar {
     flex-direction: column;
     gap: 12px;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-trust-row.centered {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-number {
+    font-size: 1.6rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
   }
 }

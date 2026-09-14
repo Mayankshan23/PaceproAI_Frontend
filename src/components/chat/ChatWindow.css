@@ -11,37 +11,82 @@
 
 /* Header */
 .gemini-chat-header {
-  padding: 16px 24px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-color);
-  background: var(--bg-dark);
+  background: var(--bg-card);
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.model-selector-badge {
+.chat-header-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--bg-card);
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border-color);
+  gap: 10px;
+  min-width: 0;
 }
 
-.model-name {
-  font-weight: 700;
-  font-size: 0.88rem;
+.chat-bot-icon-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(2, 132, 199, 0.12);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chat-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chat-header-name {
+  font-weight: 750;
+  font-size: 0.92rem;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
-.model-version {
-  font-size: 0.72rem;
-  color: var(--accent-cyan);
-  background: rgba(56, 189, 248, 0.12);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
+.online-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+  background: rgba(5, 150, 105, 0.1);
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  white-space: nowrap;
+}
+
+.online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 /* Language Preference Control */
@@ -49,17 +94,18 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--bg-card);
+  background: var(--bg-input);
   padding: 3px 6px;
   border-radius: 999px;
   border: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .lang-buttons-group {
   display: flex;
   gap: 2px;
-  background: var(--bg-input);
-  padding: 2px;
+  background: transparent;
+  padding: 0;
   border-radius: 999px;
 }
 
@@ -68,12 +114,13 @@
   border: none;
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 999px;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.18s ease;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .lang-btn:hover {
@@ -89,11 +136,16 @@
 .chat-context-pills {
   display: flex;
   align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {
   .chat-context-pills {
     display: none;
+  }
+  .gemini-chat-header {
+    padding: 10px 14px;
   }
 }
 
@@ -106,14 +158,31 @@
   flex-direction: column;
 }
 
+.gemini-chat-body.home-greeting-view {
+  padding-top: 16px;
+}
+
 /* Welcome Hero (Gemini Interaction Model) */
 .gemini-welcome-hero {
-  margin: 36px 0 16px 0;
+  margin: 0 0 16px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.hero-top-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 12px;
+  gap: 12px;
 }
 
 .hero-badge-row {
@@ -147,19 +216,30 @@
 
 .hero-greeting-text {
   font-family: var(--font-heading);
-  font-size: 3.2rem;
+  font-size: clamp(1.5rem, 4.5vw, 2.5rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
   background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 45%, #38bdf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  width: 100%;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .hero-tagline {
-  font-size: 1.25rem;
+  font-size: clamp(0.92rem, 2.5vw, 1.15rem);
   color: var(--text-secondary);
   font-weight: 600;
   margin-bottom: 12px;
+  max-width: 720px;
+  line-height: 1.55;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-goals-list {
