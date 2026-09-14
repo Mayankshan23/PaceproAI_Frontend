@@ -428,7 +428,7 @@ export const VideoAnalyzer = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 w-full sm:w-auto">
           {/* Bowling Arm Action selector */}
           <div className="bowling-arm-selector">
             <span className="arm-selector-label">Action:</span>
@@ -451,7 +451,7 @@ export const VideoAnalyzer = () => {
           </div>
 
           <button 
-            className="btn-primary start-analysis-btn" 
+            className="btn-primary start-analysis-btn w-full sm:w-auto px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 font-medium" 
             onClick={handleStartAnalysis}
             disabled={isAnalyzing || (!videoFiles.front && !videoFiles.side1 && !videoFiles.side2)}
           >

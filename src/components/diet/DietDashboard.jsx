@@ -80,6 +80,28 @@ export const DietDashboard = () => {
     }
   }, [activeDietPlan]);
 
+  // Dynamically sync when userProfile updates in AppContext / ProfileSetupModal
+  useEffect(() => {
+    if (userProfile) {
+      if (userProfile.age !== undefined) setAge(userProfile.age);
+      if (userProfile.weight !== undefined) setWeight(userProfile.weight);
+      if (userProfile.height !== undefined) setHeight(userProfile.height);
+      if (userProfile.sex !== undefined) setSex(userProfile.sex);
+      if (userProfile.activity !== undefined) setActivity(userProfile.activity);
+      if (userProfile.goal !== undefined) setGoal(userProfile.goal);
+      if (userProfile.foodPref !== undefined) setFoodPref(userProfile.foodPref);
+      if (userProfile.budgetWeekly !== undefined) setBudgetWeekly(userProfile.budgetWeekly);
+      if (userProfile.allergies !== undefined && Array.isArray(userProfile.allergies)) {
+        setAllergies(userProfile.allergies);
+        setCustomAllergies(userProfile.allergies.filter(a => !presetLowerNames.includes(a.toLowerCase())));
+      }
+      if (userProfile.avoidFoods !== undefined) setAvoidFoods(userProfile.avoidFoods);
+      if (userProfile.mealFreq !== undefined) setMealFreq(userProfile.mealFreq);
+      if (userProfile.cookingPref !== undefined) setCookingPref(userProfile.cookingPref);
+      if (userProfile.recoveryNote !== undefined) setRecoveryNote(userProfile.recoveryNote);
+    }
+  }, [userProfile]);
+
   // Scientific BMR & TDEE Calculation (Mifflin-St Jeor)
   const calculateBmrTdee = () => {
     const genderOffset = sex === 'male' ? 5 : -161;
@@ -209,34 +231,7 @@ export const DietDashboard = () => {
 
   const dietPlan = activeDietPlan;
   const calculatedBmi = Number((weight / Math.pow(height / 100, 2)).toFixed(1));
-
-  const dietAiAssessment = dietPlan?.ai_coaching_assessment || dietPlan?.ai_assessment || {
-    positives: [
-      `Optimal athletic BMI (${calculatedBmi} kg/m²) provides a solid lean foundation and healthy power-to-weight ratio for explosive run-up acceleration without excess joint load.`,
-      `Well-balanced training schedule: healthy ~4–5 hours weekly split between gym strength conditioning and explosive on-ground bowling sessions.`,
-      `Calibrated ACWR workload conditioning ratio, ensuring high bowling stamina and rapid glycogen resynthesis between spells.`
-    ],
-    current_lacks: [
-      `Intra-spell glycogen depletion: Bowling dual sessions burns high glucose; lacking fast-acting carbs 45 min pre-spell leads to late-spell velocity drop.`,
-      foodPref === 'vegetarian'
-        ? `Leucine distribution gap: Vegetarian meals must be combined (paneer + lentils or soy isolate) to achieve the 3.0g leucine threshold for muscle protein synthesis.`
-        : `Hydration & mineral deficit: High bowling volume expels 1.5–2L sweat; sodium/potassium replacement is critical to prevent quad/calf cramping.`,
-      `Recovery surplus timing: Delayed post-session nutrition impairs glycogen resynthesis within the critical 45-minute metabolic window.`
-    ],
-    required_needs: {
-      daily_calories: `${targetCalories} kcal on bowling days (+350 kcal surplus for tendon regeneration); scale to ~${Math.max(2200, targetCalories - 400)} kcal on full rest days.`,
-      protein_target: `${proteinG}g daily (2.2g per kg bodyweight). Consume 30-35g within 30 min post-session with fast-acting carbohydrates.`,
-      carbs_and_fueling: `${carbsG}g complex carbs (oats, brown basmati rice, sweet potatoes) to keep muscle glycogen reserves saturated before match spells.`,
-      recovery_and_joint_care: `${(weight * 0.055).toFixed(1)} Liters of electrolyte water daily, plus Calcium & Vitamin D3 for lumbar disc and tibia bone density.`
-    },
-    goal_action_directives: [
-      `1. Pre-Spell Priming: Ingest 40-50g fast carbohydrates (banana + honey toast or isotonic drink) 45 min before bowling to maximize kinetic power output in overs 5–8.`,
-      `2. Post-Session Leucine Threshold: Consume 30-35g fast-digesting protein within 30 min of bowling/gym to halt muscle catabolism.`,
-      `3. Electrolyte Salting: Add 500mg sodium + potassium electrolytes per 750ml bottle during hot-weather ground training.`,
-      `4. Sleep Quality: Prioritize 8.5 hours sleep—peak testosterone and growth hormone release occurs during deep slow-wave sleep.`
-    ],
-    coach_summary: `Your nutrition engine is tuned for ${goal.replace('_', ' ')}. Prioritize pre-spell glycogen saturation and post-workout protein timing to sustain high bowling velocity and protect against lumbar stress fractures.`
-  };
+  const dietAiAssessment = dietPlan?.ai_coaching_assessment || dietPlan?.ai_assessment || null;
 
   return (
     <div className="diet-page-container animate-fade-in">
@@ -770,6 +765,24 @@ export const DietDashboard = () => {
             )}
           </button>
         </div>
+      ) : !dietPlan ? (
+        /* EMPTY STATE WHEN USER HAS NOT GENERATED ANY MEAL PLAN */
+        <div className="diet-empty-container glass-card p-10 text-center flex flex-col items-center justify-center my-6 animate-fade-in">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-4">
+            <Utensils className="text-emerald-400" size={32} />
+          </div>
+          <h3 className="text-xl font-bold text-white mb-2">No Meal Plan Generated Yet</h3>
+          <p className="text-slate-400 text-sm max-w-md mb-6 leading-relaxed">
+            Configure your body biometrics, bowling training intensity, and dietary preferences in the Nutrition Config tab, then click &quot;Generate Diet Plan&quot; to build your personalized sports-science meal chart.
+          </p>
+          <button 
+            type="button" 
+            className="btn-primary flex items-center gap-2 px-6 py-2.5 rounded-xl shadow-lg text-sm font-medium"
+            onClick={() => setActiveTabSub('setup')}
+          >
+            <Sliders size={16} /> Open Nutrition Config &amp; Generate
+          </button>
+        </div>
       ) : (
         /* DIET RESULT DISPLAY */
         <div className="diet-result-container animate-fade-in">
@@ -782,7 +795,7 @@ export const DietDashboard = () => {
                 <span className="target-badge cyan">Energy</span>
               </div>
               <div className="target-value-wrap">
-                <span className="target-value font-mono text-cyan">{targetCalories}</span>
+                <span className="target-value font-mono text-cyan">{dietPlan?.daily_targets?.calories || targetCalories}</span>
                 <span className="target-metric-unit">kcal / day</span>
               </div>
               <div className="target-unit">Total Daily Intake</div>
@@ -794,7 +807,7 @@ export const DietDashboard = () => {
                 <span className="target-badge emerald">Repair</span>
               </div>
               <div className="target-value-wrap">
-                <span className="target-value font-mono text-emerald">{proteinG}g</span>
+                <span className="target-value font-mono text-emerald">{dietPlan?.daily_targets?.protein_g || proteinG}g</span>
                 <span className="target-metric-unit">daily</span>
               </div>
               <div className="target-unit">2.2g / kg bodyweight</div>
@@ -806,7 +819,7 @@ export const DietDashboard = () => {
                 <span className="target-badge amber">Glycogen</span>
               </div>
               <div className="target-value-wrap">
-                <span className="target-value font-mono text-amber">{carbsG}g</span>
+                <span className="target-value font-mono text-amber">{dietPlan?.daily_targets?.carbs_g || carbsG}g</span>
                 <span className="target-metric-unit">daily</span>
               </div>
               <div className="target-unit">Explosive Energy</div>
@@ -818,7 +831,7 @@ export const DietDashboard = () => {
                 <span className="target-badge purple">Hormones</span>
               </div>
               <div className="target-value-wrap">
-                <span className="target-value font-mono text-purple">{fatsG}g</span>
+                <span className="target-value font-mono text-purple">{dietPlan?.daily_targets?.fats_g || fatsG}g</span>
                 <span className="target-metric-unit">daily</span>
               </div>
               <div className="target-unit">Hormonal Health</div>
@@ -849,7 +862,8 @@ export const DietDashboard = () => {
             </div>
           </div>
 
-          {/* AI Sports-Science & Nutrition Coaching Assessment */}
+          {/* AI Sports-Science & Nutrition Coaching Assessment - ONLY WHEN PRESENT */}
+          {dietAiAssessment && (
           <div className="ai-coaching-card glass-card mb-6">
             <div className="ai-coaching-header">
               <div className="flex items-center gap-3">
@@ -963,6 +977,7 @@ export const DietDashboard = () => {
               </div>
             )}
           </div>
+          )}
 
           {/* MEAL BREAKDOWN CARDS - ONLY SHOW IF USER GENERATED ANY */}
           {Array.isArray(dietPlan?.meals) && dietPlan.meals.length > 0 && (
