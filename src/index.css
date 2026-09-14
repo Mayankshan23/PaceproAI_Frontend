@@ -82,7 +82,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 body {
   font-family: var(--font-main);
@@ -91,10 +96,18 @@ body {
   background-attachment: fixed;
   color: var(--text-primary);
   line-height: 1.6;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -226,7 +239,7 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ---- App Layout ---- */
-.app-container { display: flex; height: 100vh; width: 100vw; overflow: hidden; background-color: var(--bg-dark); }
+.app-container { display: flex; height: 100vh; width: 100%; max-width: 100%; overflow: hidden; background-color: var(--bg-dark); }
 .main-content {
   flex: 1; display: flex; flex-direction: column; height: 100vh;
   overflow-y: auto; overflow-x: hidden; position: relative;

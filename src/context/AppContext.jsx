@@ -115,6 +115,8 @@ export const AppProvider = ({ children }) => {
 
       if (isClerkSignedIn && clerkUser) {
         const storageKey = getProfileStorageKey(currentUid);
+        const promptKey = `pacepro_profile_prompted_${currentUid}`;
+        const alreadyPrompted = localStorage.getItem(promptKey) || sessionStorage.getItem(promptKey);
         const storedProfileStr = localStorage.getItem(storageKey);
 
         const clerkFullName = clerkUser.fullName || 
@@ -132,14 +134,17 @@ export const AppProvider = ({ children }) => {
               email: clerkUser.primaryEmailAddress?.emailAddress || parsed.email,
               avatar: clerkUser.imageUrl || parsed.avatar
             });
-            if (!parsed.isConfigured) {
+            // Only prompt ONCE upon initial sign-in if unconfigured
+            if (!parsed.isConfigured && !alreadyPrompted) {
               setIsProfileSetupOpen(true);
+              localStorage.setItem(promptKey, 'true');
+              sessionStorage.setItem(promptKey, 'true');
             }
           } catch (e) {
             console.error("Error reading saved user profile:", e);
           }
         } else {
-          // Brand new login with a new Gmail account!
+          // Brand new login with a new account
           const newProfile = {
             ...defaultProfile,
             name: clerkFullName,
@@ -151,8 +156,12 @@ export const AppProvider = ({ children }) => {
           try {
             localStorage.setItem(storageKey, JSON.stringify(newProfile));
           } catch (e) {}
-          // Immediately prompt user with the setup modal!
-          setIsProfileSetupOpen(true);
+          // Immediately prompt user with the setup modal ONCE
+          if (!alreadyPrompted) {
+            setIsProfileSetupOpen(true);
+            localStorage.setItem(promptKey, 'true');
+            sessionStorage.setItem(promptKey, 'true');
+          }
         }
       }
     }

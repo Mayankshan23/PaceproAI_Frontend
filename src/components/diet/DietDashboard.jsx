@@ -23,10 +23,21 @@ import {
   Gauge,
   CheckCircle2,
   Compass,
-  AlertTriangle
+  AlertTriangle,
+  Plus,
+  X
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import './DietDashboard.css';
+
+const PRESET_ALLERGIES = [
+  { name: 'Nuts', icon: '🥜' },
+  { name: 'Dairy', icon: '🥛' },
+  { name: 'Gluten', icon: '🌾' },
+  { name: 'Soy', icon: '🌱' },
+  { name: 'Shellfish', icon: '🦐' },
+  { name: 'Lactose', icon: '🧀' }
+];
 
 export const DietDashboard = () => {
   const { activeDietPlan, runDietGeneration, addChatMessage, navigateTo, saveDietPlan, userProfile, updateAthleteProfile } = useApp();
@@ -43,7 +54,16 @@ export const DietDashboard = () => {
   const [prefOpen, setPrefOpen] = useState(true);
   const [foodPref, setFoodPref] = useState(userProfile?.foodPref || 'vegetarian');
   const [budgetWeekly, setBudgetWeekly] = useState(userProfile?.budgetWeekly ?? 3500);
-  const [allergies, setAllergies] = useState(userProfile?.allergies || ['Peanuts']);
+
+  // Allergies & Custom Allergies
+  const presetLowerNames = PRESET_ALLERGIES.map(p => p.name.toLowerCase());
+  const initialAllergies = userProfile?.allergies || ['Peanuts'];
+  const initialCustom = initialAllergies.filter(a => !presetLowerNames.includes(a.toLowerCase()));
+
+  const [allergies, setAllergies] = useState(initialAllergies);
+  const [customAllergies, setCustomAllergies] = useState(initialCustom);
+  const [isAddingCustomAllergy, setIsAddingCustomAllergy] = useState(false);
+  const [customAllergyInput, setCustomAllergyInput] = useState('');
   const [avoidFoods, setAvoidFoods] = useState(userProfile?.avoidFoods || ['Deep fried items', 'Excess refined sugar']);
   const [mealFreq, setMealFreq] = useState(userProfile?.mealFreq ?? 5);
   const [cookingPref, setCookingPref] = useState(userProfile?.cookingPref || 'home');
@@ -142,6 +162,27 @@ export const DietDashboard = () => {
     setAllergies((prev) => 
       prev.includes(item) ? prev.filter((a) => a !== item) : [...prev, item]
     );
+  };
+
+  const handleAddCustomAllergy = (e) => {
+    if (e) e.preventDefault();
+    const trimmed = customAllergyInput.trim();
+    if (!trimmed) return;
+    
+    if (!customAllergies.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+      setCustomAllergies((prev) => [...prev, trimmed]);
+    }
+    if (!allergies.includes(trimmed)) {
+      setAllergies((prev) => [...prev, trimmed]);
+    }
+    setCustomAllergyInput('');
+    setIsAddingCustomAllergy(false);
+  };
+
+  const handleRemoveCustomAllergy = (e, item) => {
+    e.stopPropagation();
+    setCustomAllergies((prev) => prev.filter(c => c !== item));
+    setAllergies((prev) => prev.filter(a => a !== item));
   };
 
   const handleSendToChat = () => {
@@ -616,15 +657,8 @@ export const DietDashboard = () => {
                     {allergies.length > 0 ? `${allergies.length} excluded` : 'None selected'}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-                  {[
-                    { name: 'Nuts', icon: '🥜' },
-                    { name: 'Dairy', icon: '🥛' },
-                    { name: 'Gluten', icon: '🌾' },
-                    { name: 'Soy', icon: '🌱' },
-                    { name: 'Shellfish', icon: '🦐' },
-                    { name: 'Lactose', icon: '🧀' }
-                  ].map(({ name: allergy, icon }) => {
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2">
+                  {PRESET_ALLERGIES.map(({ name: allergy, icon }) => {
                     const isSelected = allergies.includes(allergy);
                     return (
                       <button
@@ -641,6 +675,79 @@ export const DietDashboard = () => {
                       </button>
                     );
                   })}
+
+                  {/* Custom Added Allergies */}
+                  {customAllergies.map((allergy) => {
+                    const isSelected = allergies.includes(allergy);
+                    return (
+                      <button
+                        key={allergy}
+                        type="button"
+                        className={`diet-allergy-chip custom-allergy-chip ${isSelected ? 'selected' : ''}`}
+                        onClick={() => toggleAllergy(allergy)}
+                      >
+                        <span className="allergy-emoji">⚠️</span>
+                        <span className="allergy-name truncate" title={allergy}>{allergy}</span>
+                        <div className="flex items-center gap-1.5 ml-auto">
+                          <div className={`allergy-indicator ${isSelected ? 'active' : ''}`}>
+                            {isSelected ? <Check size={11} strokeWidth={3} /> : null}
+                          </div>
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            className="allergy-remove-btn"
+                            onClick={(e) => handleRemoveCustomAllergy(e, allergy)}
+                            title="Remove custom allergy"
+                          >
+                            <X size={10} />
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+
+                  {/* "+ Add Yours" Trigger / Inline Input Form */}
+                  {isAddingCustomAllergy ? (
+                    <form
+                      onSubmit={handleAddCustomAllergy}
+                      className="add-yours-form flex items-center gap-1 col-span-2 sm:col-span-1"
+                    >
+                      <input
+                        type="text"
+                        className="add-yours-input"
+                        placeholder="e.g. Eggs, Peanuts..."
+                        value={customAllergyInput}
+                        onChange={(e) => setCustomAllergyInput(e.target.value)}
+                        autoFocus
+                        autoComplete="off"
+                        spellCheck={false}
+                      />
+                      <button type="submit" className="add-yours-submit-btn" title="Add">
+                        <Check size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        className="add-yours-cancel-btn"
+                        onClick={() => {
+                          setIsAddingCustomAllergy(false);
+                          setCustomAllergyInput('');
+                        }}
+                        title="Cancel"
+                      >
+                        <X size={13} />
+                      </button>
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      className="diet-allergy-chip add-yours-btn"
+                      onClick={() => setIsAddingCustomAllergy(true)}
+                      title="Add custom allergy or dietary sensitivity"
+                    >
+                      <Plus size={15} className="text-cyan shrink-0" />
+                      <span className="allergy-name text-cyan font-bold">Add Yours</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -668,29 +775,53 @@ export const DietDashboard = () => {
         <div className="diet-result-container animate-fade-in">
           {/* DAILY TARGETS RICH CARDS */}
           <h3 className="section-title mb-3">DAILY TARGETS</h3>
-          <div className="targets-banner-grid grid grid-cols-4 gap-3 mb-6">
+          <div className="targets-banner-grid grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-6">
             <div className="target-card glass-card">
-              <span className="target-label">Calories</span>
-              <span className="target-value font-mono text-cyan">{targetCalories}</span>
-              <span className="target-unit">kcal / day</span>
+              <div className="target-card-top">
+                <span className="target-label">Calories</span>
+                <span className="target-badge cyan">Energy</span>
+              </div>
+              <div className="target-value-wrap">
+                <span className="target-value font-mono text-cyan">{targetCalories}</span>
+                <span className="target-metric-unit">kcal / day</span>
+              </div>
+              <div className="target-unit">Total Daily Intake</div>
             </div>
 
             <div className="target-card glass-card">
-              <span className="target-label">Protein</span>
-              <span className="target-value font-mono text-emerald">{proteinG}g</span>
-              <span className="target-unit">2.2g / kg bodyweight</span>
+              <div className="target-card-top">
+                <span className="target-label">Protein</span>
+                <span className="target-badge emerald">Repair</span>
+              </div>
+              <div className="target-value-wrap">
+                <span className="target-value font-mono text-emerald">{proteinG}g</span>
+                <span className="target-metric-unit">daily</span>
+              </div>
+              <div className="target-unit">2.2g / kg bodyweight</div>
             </div>
 
             <div className="target-card glass-card">
-              <span className="target-label">Carbohydrates</span>
-              <span className="target-value font-mono text-amber">{carbsG}g</span>
-              <span className="target-unit">Explosive Energy</span>
+              <div className="target-card-top">
+                <span className="target-label">Carbohydrates</span>
+                <span className="target-badge amber">Glycogen</span>
+              </div>
+              <div className="target-value-wrap">
+                <span className="target-value font-mono text-amber">{carbsG}g</span>
+                <span className="target-metric-unit">daily</span>
+              </div>
+              <div className="target-unit">Explosive Energy</div>
             </div>
 
             <div className="target-card glass-card">
-              <span className="target-label">Fats</span>
-              <span className="target-value font-mono text-purple">{fatsG}g</span>
-              <span className="target-unit">Hormonal Health</span>
+              <div className="target-card-top">
+                <span className="target-label">Fats</span>
+                <span className="target-badge purple">Hormones</span>
+              </div>
+              <div className="target-value-wrap">
+                <span className="target-value font-mono text-purple">{fatsG}g</span>
+                <span className="target-metric-unit">daily</span>
+              </div>
+              <div className="target-unit">Hormonal Health</div>
             </div>
           </div>
 
@@ -833,37 +964,34 @@ export const DietDashboard = () => {
             )}
           </div>
 
-          {/* MEAL BREAKDOWN CARDS */}
-          <h3 className="section-title mb-3">COMPLETE MEAL CHART</h3>
-          <div className="meals-breakdown-grid grid grid-cols-2 gap-4 mb-6">
-            {(dietPlan?.meals || [
-              { type: "Breakfast", title: "Oats + milk + banana + 4 Eggs", items: ["100g Rolled Oats", "4 Boiled Eggs", "1 Banana", "Almond Butter"], calories: 750, protein_g: 42 },
-              { type: "Lunch", title: "Rice + dal + Chicken / Paneer", items: ["200g Basmati Rice", "200g Chicken Breast or Paneer", "1 Bowl Dal", "Green Salad"], calories: 850, protein_g: 50 },
-              { type: "Pre-workout", title: "Toast + Honey + Coffee", items: ["2 Toast Slices", "1 tbsp Honey", "Black Coffee"], calories: 350, protein_g: 8 },
-              { type: "Post-workout", title: "Whey Isolate + Banana", items: ["1 Scoop Whey Isolate", "1 Banana"], calories: 280, protein_g: 28 },
-              { type: "Dinner", title: "Roti + Fish Curry / Dal", items: ["3 Roti", "150g Fish Curry or Dal", "Curd / Yogurt"], calories: 650, protein_g: 35 },
-              { type: "Snacks", title: "Roasted Chana & Walnuts", items: ["50g Roasted Chana", "Handful Walnuts", "Green Tea"], calories: 300, protein_g: 12 }
-            ]).map((meal, idx) => (
-              <div key={idx} className="meal-card glass-card p-4">
-                <div className="meal-header flex justify-between items-center mb-2">
-                  <span className="badge badge-cyan">{meal.type}</span>
-                  {meal.calories && (
-                    <span className="font-mono text-xs text-muted">{meal.calories} kcal • {meal.protein_g}g Protein</span>
-                  )}
-                </div>
+          {/* MEAL BREAKDOWN CARDS - ONLY SHOW IF USER GENERATED ANY */}
+          {Array.isArray(dietPlan?.meals) && dietPlan.meals.length > 0 && (
+            <div className="meal-chart-section mb-6">
+              <h3 className="section-title mb-3">COMPLETE MEAL CHART</h3>
+              <div className="meals-breakdown-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+                {dietPlan.meals.map((meal, idx) => (
+                  <div key={idx} className="meal-card glass-card p-4">
+                    <div className="meal-header flex justify-between items-center mb-2">
+                      <span className="badge badge-cyan">{meal.type}</span>
+                      {meal.calories && (
+                        <span className="font-mono text-xs text-muted">{meal.calories} kcal • {meal.protein_g}g Protein</span>
+                      )}
+                    </div>
 
-                <h4 className="meal-title font-bold text-primary text-base mb-2">{meal.title}</h4>
+                    <h4 className="meal-title font-bold text-primary text-base mb-2">{meal.title}</h4>
 
-                <ul className="meal-items-list mb-3">
-                  {meal.items?.map((it, i) => (
-                    <li key={i} className="text-xs text-secondary flex items-center gap-2 py-1">
-                      <span className="dot-cyan">•</span> {it}
-                    </li>
-                  ))}
-                </ul>
+                    <ul className="meal-items-list mb-3">
+                      {meal.items?.map((it, i) => (
+                        <li key={i} className="text-xs text-secondary flex items-center gap-2 py-1">
+                          <span className="dot-cyan">•</span> {it}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
 
           {/* Action Bar */}
           <div className="flex justify-end gap-3 mt-6">

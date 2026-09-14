@@ -75,7 +75,7 @@ export default function App() {
           ) : !showApp ? (
             <LandingPage onEnterDashboard={() => setViewOverride('app')} />
           ) : (
-            <div className="app-container">
+            <div className="app-container w-full max-w-full overflow-x-hidden">
               <Sidebar />
               <MainContentArea />
             </div>

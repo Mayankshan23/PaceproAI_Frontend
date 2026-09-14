@@ -106,12 +106,7 @@ export const HistoryTimeline = () => {
       <div className="history-timeline-list flex flex-col gap-4">
         {filteredItems.map((item) => {
           const isDiet = item.type === 'diet';
-          const dietMeals = isDiet ? (item.detail?.meals || item.detail?.meal_plan || [
-            { type: "Breakfast", title: "Oats + milk + banana + 4 Eggs", items: ["100g Rolled Oats", "4 Boiled Eggs", "1 Banana"], calories: 750, protein_g: 42, time: "07:30 AM" },
-            { type: "Lunch", title: "Rice + dal + Chicken / Paneer", items: ["200g Basmati Rice", "200g Chicken / Paneer", "1 Bowl Dal"], calories: 850, protein_g: 50, time: "01:30 PM" },
-            { type: "Pre-workout", title: "Toast + Honey + Coffee", items: ["2 Toast Slices", "Raw Honey", "Black Coffee"], calories: 350, protein_g: 8, time: "04:30 PM" },
-            { type: "Dinner", title: "Roti + Dal + Fish / Paneer", items: ["3 Roti", "150g Fish / Paneer", "Curd / Yogurt"], calories: 650, protein_g: 35, time: "08:30 PM" }
-          ]) : null;
+          const dietMeals = isDiet ? (item.detail?.meals || item.detail?.meal_plan || []) : null;
 
           const isMealsExpanded = expandedDietMeals[item.id];
 

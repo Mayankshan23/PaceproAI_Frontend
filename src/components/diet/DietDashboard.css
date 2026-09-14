@@ -322,6 +322,227 @@
   color: #0f172a;
 }
 
+/* ---- Custom Allergies & Add Yours Chip ---- */
+.add-yours-btn {
+  background: rgba(14, 165, 233, 0.06);
+  border: 1.5px dashed rgba(56, 189, 248, 0.5);
+  color: var(--accent-primary);
+  justify-content: center;
+}
+.add-yours-btn:hover {
+  background: rgba(14, 165, 233, 0.14);
+  border-color: #0ea5e9;
+  color: #0284c7;
+}
+[data-theme='dark'] .add-yours-btn {
+  background: rgba(56, 189, 248, 0.08);
+  border: 1.5px dashed rgba(56, 189, 248, 0.4);
+}
+[data-theme='dark'] .add-yours-btn:hover {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.custom-allergy-chip {
+  border-style: solid;
+}
+
+.allergy-remove-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.allergy-remove-btn:hover {
+  background: #e11d48;
+  color: #ffffff;
+}
+[data-theme='dark'] .allergy-remove-btn {
+  background: rgba(255, 255, 255, 0.12);
+}
+[data-theme='dark'] .allergy-remove-btn:hover {
+  background: #fb7185;
+  color: #0f172a;
+}
+
+.add-yours-form {
+  background: var(--bg-card);
+  border: 1.5px solid var(--accent-primary, #0ea5e9);
+  border-radius: 10px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+  box-sizing: border-box;
+}
+
+.add-yours-input {
+  width: 100%;
+  min-width: 80px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.76rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 4px 4px;
+}
+
+.add-yours-submit-btn,
+.add-yours-cancel-btn {
+  border: none;
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.add-yours-submit-btn {
+  background: #0ea5e9;
+  color: #ffffff;
+}
+.add-yours-submit-btn:hover {
+  background: #0284c7;
+}
+
+.add-yours-cancel-btn {
+  background: transparent;
+  color: var(--text-muted);
+}
+.add-yours-cancel-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+}
+[data-theme='dark'] .add-yours-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---- DAILY TARGETS RICH CARDS ---- */
+.targets-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .targets-banner-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .targets-banner-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.target-card {
+  padding: 16px 18px;
+  border-radius: var(--radius-lg, 16px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 124px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.target-card:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-floating);
+}
+
+.target-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.target-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.target-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.target-badge.cyan    { background: #e0f2fe; color: #0284c7; }
+.target-badge.emerald { background: #d1fae5; color: #059669; }
+.target-badge.amber   { background: #fef3c7; color: #d97706; }
+.target-badge.purple  { background: #ede9fe; color: #7c3aed; }
+
+[data-theme='dark'] .target-badge.cyan    { background: rgba(14, 165, 233, 0.14); color: #38bdf8; }
+[data-theme='dark'] .target-badge.emerald { background: rgba(16, 185, 129, 0.14); color: #34d399; }
+[data-theme='dark'] .target-badge.amber   { background: rgba(245, 158, 11, 0.14); color: #fbbf24; }
+[data-theme='dark'] .target-badge.purple  { background: rgba(139, 92, 246, 0.14); color: #c084fc; }
+
+.target-value-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.target-value {
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.target-metric-unit {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.target-unit {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  background: var(--bg-input);
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  box-sizing: border-box;
+}
+
 /* ---- ACTIVITY LEVEL CARDS ---- */
 .diet-activity-card {
   display: flex;

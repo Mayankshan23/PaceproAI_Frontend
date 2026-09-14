@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { SignInButton, SignUpButton, useUser } from '@clerk/react';
 import { LandingNavbar } from './LandingNavbar';
+import { SynchronizedMetricsTable } from '../common/SynchronizedMetricsTable';
 import './LandingPage.css';
 
 export const LandingPage = ({ onEnterDashboard }) => {
@@ -286,38 +287,7 @@ export const LandingPage = ({ onEnterDashboard }) => {
                   <span className="showcase-indicator">AI VERIFIED</span>
                 </div>
 
-                <div className="metrics-compare-table">
-                  <div className="compare-row header-row">
-                    <span>Key Landmark</span>
-                    <span>Pro Standard</span>
-                    <span>Your Target</span>
-                  </div>
-                  <div className="compare-row">
-                    <span className="landmark-name">Front Knee Brace</span>
-                    <span className="pro-val">170° – 178°</span>
-                    <span className="target-val highlight">172° (Optimal)</span>
-                  </div>
-                  <div className="compare-row">
-                    <span className="landmark-name">Hip-Shoulder Separation</span>
-                    <span className="pro-val">28° – 35°</span>
-                    <span className="target-val highlight">31.4° (High Torque)</span>
-                  </div>
-                  <div className="compare-row">
-                    <span className="landmark-name">Arm Slot Angle</span>
-                    <span className="pro-val">10° – 18°</span>
-                    <span className="target-val highlight">12.5° (High Arm)</span>
-                  </div>
-                  <div className="compare-row">
-                    <span className="landmark-name">Stride Length (% Height)</span>
-                    <span className="pro-val">75% – 85%</span>
-                    <span className="target-val highlight">81.2% (Balanced)</span>
-                  </div>
-                </div>
-
-                <div className="showcase-quote">
-                  <Award size={20} className="award-icon" />
-                  <span>"A 10° increase in knee brace stiffness increases ball release velocity by up to 5.4 km/h."</span>
-                </div>
+                <SynchronizedMetricsTable />
               </div>
             </div>
           </div>
