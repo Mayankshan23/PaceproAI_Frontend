@@ -23,7 +23,14 @@ import { assessStrengthApi } from '../../services/api';
 import './StrengthCheck.css';
 
 export const StrengthCheck = () => {
-  const { userProfile, updateAthleteProfile, addHistoryItem, navigateTo, addChatMessage } = useApp();
+  const { 
+    userProfile, 
+    updateAthleteProfile, 
+    navigateTo, 
+    addChatMessage, 
+    strengthTask, 
+    runStrengthAssessment 
+  } = useApp();
 
   // Test setup parameters
   const [track, setTrack] = useState(userProfile?.strengthTrack || 'gym_lifting');
@@ -57,13 +64,12 @@ export const StrengthCheck = () => {
   const [niggle, setNiggle] = useState('none');
 
   // UI state
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [results, setResults] = useState(null);
+  const isAnalyzing = strengthTask.isRunning;
+  const results = strengthTask.results;
   const [isSaved, setIsSaved] = useState(false);
 
   const handleRunAssessment = async (e) => {
     if (e) e.preventDefault();
-    setIsAnalyzing(true);
     setIsSaved(false);
 
     const payload = {
@@ -88,8 +94,7 @@ export const StrengthCheck = () => {
     };
 
     try {
-      const res = await assessStrengthApi(payload);
-      setResults(res);
+      await runStrengthAssessment(payload);
 
       if (updateAthleteProfile) {
         updateAthleteProfile({
@@ -106,8 +111,6 @@ export const StrengthCheck = () => {
       }
     } catch (err) {
       console.error("Failed to run strength assessment:", err);
-    } finally {
-      setIsAnalyzing(false);
     }
   };
 
@@ -543,8 +546,8 @@ export const StrengthCheck = () => {
               <p className="text-xs text-secondary leading-relaxed">
                 {results.injury_risk_advisory.biomechanical_cause}
               </p>
-              <div className="mt-2 p-2.5 rounded bg-cyan-950/20 border border-cyan-800/30 text-xs text-cyan-200">
-                <strong>Corrective Bowling Technique Cue:</strong> {results.injury_risk_advisory.priority_cue}
+              <div className="mt-2 p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-xs text-primary leading-relaxed">
+                <strong className="text-cyan">Corrective Bowling Technique Cue:</strong> {results.injury_risk_advisory.priority_cue}
               </div>
             </div>
           )}

@@ -40,7 +40,16 @@ const PRESET_ALLERGIES = [
 ];
 
 export const DietDashboard = () => {
-  const { activeDietPlan, runDietGeneration, addChatMessage, navigateTo, saveDietPlan, userProfile, updateAthleteProfile } = useApp();
+  const { 
+    activeDietPlan, 
+    runDietGeneration, 
+    addChatMessage, 
+    navigateTo, 
+    saveDietPlan, 
+    userProfile, 
+    updateAthleteProfile,
+    dietTask
+  } = useApp();
 
   // Core Backend Supported Inputs (Initialized dynamically from userProfile)
   const [age, setAge] = useState(userProfile?.age ?? 20);
@@ -69,7 +78,7 @@ export const DietDashboard = () => {
   const [cookingPref, setCookingPref] = useState(userProfile?.cookingPref || 'home');
   const [recoveryNote, setRecoveryNote] = useState(userProfile?.recoveryNote || 'none');
 
-  const [isGenerating, setIsGenerating] = useState(false);
+  const isGenerating = dietTask.isRunning;
   const [activeTabSub, setActiveTabSub] = useState(() => (activeDietPlan ? 'plan' : 'setup')); // 'setup' | 'plan'
   const [isSaved, setIsSaved] = useState(false);
 
@@ -131,7 +140,6 @@ export const DietDashboard = () => {
   const { bmr, tdee, targetCalories, proteinG, carbsG, fatsG } = calculateBmrTdee();
 
   const handleGenerate = async () => {
-    setIsGenerating(true);
     try {
       // Sync athlete profile state globally
       if (updateAthleteProfile) {
@@ -175,8 +183,6 @@ export const DietDashboard = () => {
       setActiveTabSub('plan');
     } catch (e) {
       console.error(e);
-    } finally {
-      setIsGenerating(false);
     }
   };
 

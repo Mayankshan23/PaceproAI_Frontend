@@ -945,6 +945,184 @@
 }
 
 /* =====================================================================
+   EXECUTIVE KPI STRIP (No Overflows, Clean & Crisp)
+   ===================================================================== */
+.protocol-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+  margin: 1rem 0 1.25rem 0;
+}
+
+.kpi-card {
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--radius-md, 14px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 112px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-floating);
+}
+
+[data-theme='dark'] .kpi-card {
+  background: rgba(20, 20, 26, 0.75);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.kpi-card-label {
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  line-height: 1.2;
+  margin-bottom: 0.35rem;
+}
+
+.kpi-card-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  line-height: 1.25;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.kpi-card-sub {
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-top: 0.4rem;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* =====================================================================
+   SEGMENTED NAVIGATION TABS (PacePro Theme Matching)
+   ===================================================================== */
+.protocol-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem;
+  border-radius: var(--radius-lg, 16px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 1.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.protocol-tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+[data-theme='dark'] .protocol-tabs-nav {
+  background: rgba(18, 18, 22, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.protocol-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-md, 12px);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-main);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.protocol-tab-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .protocol-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
+}
+
+/* Active Tab Styles */
+.protocol-tab-btn.active.schedule-tab {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #bae6fd;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+}
+
+[data-theme='dark'] .protocol-tab-btn.active.schedule-tab {
+  background: rgba(14, 165, 233, 0.16);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
+}
+
+.protocol-tab-btn.active.coaching-tab {
+  background: #e0f2fe;
+  color: #0ea5e9;
+  border-color: #7dd3fc;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.12);
+}
+
+[data-theme='dark'] .protocol-tab-btn.active.coaching-tab {
+  background: rgba(14, 165, 233, 0.16);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
+}
+
+.protocol-tab-btn.active.roadmap-tab {
+  background: #ede9fe;
+  color: #7c3aed;
+  border-color: #c4b5fd;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.12);
+}
+
+[data-theme='dark'] .protocol-tab-btn.active.roadmap-tab {
+  background: rgba(139, 92, 246, 0.16);
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.45);
+  box-shadow: 0 0 16px rgba(192, 132, 252, 0.2);
+}
+
+.protocol-tab-btn.active.safety-tab {
+  background: #ffe4e6;
+  color: #e11d48;
+  border-color: #fecdd3;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.12);
+}
+
+[data-theme='dark'] .protocol-tab-btn.active.safety-tab {
+  background: rgba(244, 63, 94, 0.16);
+  color: #fb7185;
+  border-color: rgba(251, 113, 133, 0.45);
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.2);
+}
+
+/* =====================================================================
    ATHLETE ANALYTICS & LOAD INTELLIGENCE GRID
    ===================================================================== */
 .athlete-analytics-grid {
@@ -2303,84 +2481,246 @@
   font-weight: 600;
 }
 
-/* Overload & Overstimulation Warning Banner */
+/* Overload & Overstimulation Warning Banner (Red Theme Hazard) */
 .overload-warning-banner {
-  background: linear-gradient(135deg, rgba(225, 29, 72, 0.12) 0%, rgba(18, 18, 22, 0.85) 100%);
-  border: 1px solid rgba(244, 63, 94, 0.35);
-  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.15);
+  background: var(--hazard-red-bg);
+  border: 1.5px solid var(--hazard-red-border);
+  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.12);
   padding: 1.4rem 1.6rem;
   border-radius: var(--radius-lg, 16px);
 }
 
 .warning-pulse-icon {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
-  background: rgba(244, 63, 94, 0.2);
+  background: var(--hazard-red-badge);
+  border: 1px solid var(--hazard-red-border);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 16px rgba(244, 63, 94, 0.25);
+  flex-shrink: 0;
 }
 
 .warning-item-card {
-  background: rgba(18, 18, 22, 0.6);
-  border-radius: 10px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  padding: 1rem 1.1rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .warning-item-card:hover {
   transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
 }
 
-.warning-item-card.danger {
-  border-color: rgba(244, 63, 94, 0.4);
-  background: linear-gradient(135deg, rgba(244, 63, 94, 0.08) 0%, rgba(18, 18, 22, 0.7) 100%);
+.warning-item-card.danger,
+.warning-item-card.critical {
+  border-color: var(--hazard-red-border);
+  background: var(--hazard-red-bg);
 }
 
-.warning-item-card.warning {
-  border-color: rgba(245, 158, 11, 0.4);
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(18, 18, 22, 0.7) 100%);
+.warning-item-card.warning,
+.warning-item-card.attention {
+  border-color: var(--hazard-yellow-border);
+  background: var(--hazard-yellow-bg);
 }
 
-.severity-tag.danger {
-  background: rgba(244, 63, 94, 0.25);
-  color: #fda4af;
-  border: 1px solid rgba(244, 63, 94, 0.4);
+.warning-item-title {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.35;
 }
 
-.severity-tag.warning {
-  background: rgba(245, 158, 11, 0.25);
-  color: #fde68a;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+.warning-item-reason {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
-/* Current Mistakes & Gaps Card */
+.severity-tag.danger,
+.severity-tag.critical {
+  background: var(--hazard-red-badge);
+  color: var(--hazard-red-title);
+  border: 1px solid var(--hazard-red-border);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.severity-tag.warning,
+.severity-tag.attention {
+  background: var(--hazard-yellow-badge);
+  color: var(--hazard-yellow-title);
+  border: 1px solid var(--hazard-yellow-border);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.warning-risk-box {
+  background: var(--hazard-red-bg-sub);
+  border: 1px solid var(--hazard-red-border);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+
+.warning-risk-box .risk-label {
+  color: var(--hazard-red-label);
+  font-weight: 700;
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.warning-risk-box p {
+  color: var(--hazard-red-text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.warning-fix-box {
+  background: var(--hazard-fix-bg);
+  border: 1px solid var(--hazard-fix-border);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+
+.warning-fix-box .fix-label {
+  color: var(--hazard-fix-label);
+  font-weight: 700;
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.warning-fix-box p {
+  color: var(--hazard-fix-text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+/* Current Mistakes & Gaps Card (Yellow Theme Hazard) */
 .mistakes-card {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(18, 18, 22, 0.85) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: var(--hazard-yellow-bg);
+  border: 1.5px solid var(--hazard-yellow-border);
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.1);
   padding: 1.4rem 1.6rem;
   border-radius: var(--radius-lg, 16px);
 }
 
 .icon-wrap-amber {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: rgba(245, 158, 11, 0.15);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--hazard-yellow-badge);
+  border: 1px solid var(--hazard-yellow-border);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .mistake-item-card {
-  background: rgba(28, 28, 34, 0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1.5px solid var(--hazard-yellow-border);
+  padding: 1rem 1.1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .mistake-item-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-card);
+  border-color: var(--accent-amber);
+}
+
+.mistake-category-badge {
+  color: var(--hazard-yellow-title);
+  background: var(--hazard-yellow-badge);
+  border: 1px solid var(--hazard-yellow-border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  margin-bottom: 0.65rem;
+}
+
+.mistake-detail-row {
+  margin-bottom: 0.65rem;
+}
+
+.mistake-label-red {
+  color: var(--hazard-red-label);
+  font-weight: 700;
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+
+.mistake-label-amber {
+  color: var(--hazard-yellow-label);
+  font-weight: 700;
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+
+.mistake-text-primary {
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.mistake-text-secondary {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.mistake-fix-box {
+  background: var(--hazard-fix-bg);
+  border: 1px solid var(--hazard-fix-border);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.mistake-fix-box .fix-label {
+  color: var(--hazard-fix-label);
+  font-weight: 700;
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.mistake-fix-box p {
+  color: var(--hazard-fix-text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-weight: 500;
 }
 
 /* 3-Pillar Macro Rationale Grid */

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { AppProvider } from './context/AppContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/common/Sidebar';
+import { GlobalTaskBanner } from './components/common/GlobalTaskBanner';
 import { Sparkles } from 'lucide-react';
 import { useAuth } from '@clerk/react';
 import { LandingPage } from './components/landing/LandingPage';
@@ -96,6 +97,7 @@ export default function App() {
             <div className="app-container w-full max-w-full overflow-x-hidden">
               <Sidebar />
               <MainContentArea />
+              <GlobalTaskBanner />
             </div>
           )}
         </AppProvider>

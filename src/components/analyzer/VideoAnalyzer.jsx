@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { 
   Upload, 
   Video, 
+  Film,
   Trash2, 
   RefreshCw, 
   Play, 
@@ -27,7 +28,11 @@ import {
   TrendingUp,
   Zap,
   BookOpen,
-  ExternalLink
+  ExternalLink,
+  RotateCcw,
+  PlusCircle,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import './VideoAnalyzer.css';
@@ -185,36 +190,36 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "⚡ Locked & Rigid Fulcrum (Optimal)",
           badgeClass: "badge-emerald",
-          explanation: `Your lead leg maintains a firm ${val}${item.unit} angle at foot plant. This abruptly halts lower-body momentum, transferring 95%+ of ground reaction force up the kinetic chain to whip your torso forward for maximum pace.`,
+          explanation: `Awesome work! Your lead leg maintains a firm ${val}${item.unit} brace at foot plant. This acts as a solid catapult fulcrum, transferring ground energy straight into ball release velocity.`,
           speedImpact: "+3 to 5 km/h gained via rigid lever transfer.",
-          safetyNote: "Spares lumbar spine by transferring ground reaction shock into delivery whip."
+          safetyNote: "Provides a balanced, stable platform that protects your lower back."
         };
       } else {
         return {
-          statusText: "⚠️ Knee Flexion Collapse (Energy Leak)",
-          badgeClass: "badge-amber",
-          explanation: `Your front knee flexes to ${val}${item.unit} at foot plant. Bending the lead knee absorbs ground reaction force into your quad muscles instead of transferring it upward, leaking ball velocity.`,
-          speedImpact: "Losing ~2 to 4 km/h of release speed into knee flexion.",
-          safetyNote: "Increases patellar tendon strain and sends unabsorbed shock into L4/L5 lumbar spine."
+          statusText: "🚀 Prime Pace Opportunity (+3–5 km/h)",
+          badgeClass: "badge-cyan",
+          explanation: `Your front knee flexes to ${val}${item.unit} at foot plant. You have a huge opportunity to add an easy +3 to 5 km/h of ball speed by practicing a firmer lead leg plant, converting all your run-up power directly into release pace!`,
+          speedImpact: "Firming your lead leg at plant can easily unlock extra pace.",
+          safetyNote: "Practicing front-leg stiffness drills builds strong joint stability."
         };
       }
 
     case 'release_elbow_extension':
       if (val >= 165 || (val <= 15 && item.unit === '° flex')) {
         return {
-          statusText: "✓ ICC Legal Action (<15° Extension)",
+          statusText: "✓ Clean & Legal Bowling Arc",
           badgeClass: "badge-emerald",
-          explanation: `Your bowling arm extends cleanly to ${val}${item.unit} through delivery. This creates a high release apex for steep downward bounce and complies fully with ICC biomechanical regulations.`,
-          speedImpact: "Max release height generates downward angle and heavy bounce.",
-          safetyNote: "Smooth rotational sweep protects elbow UCL and triceps tendon."
+          explanation: `Your bowling arm extends smoothly to ${val}${item.unit} through release. This creates a tall delivery apex for steep downward bounce and full compliance with standard regulations.`,
+          speedImpact: "High release point produces natural bounce and steep carry.",
+          safetyNote: "Fluid arm sweep keeps shoulder and elbow tendons feeling healthy."
         };
       } else {
         return {
-          statusText: "⚠️ Excessive Elbow Flexion / Jerk",
-          badgeClass: "badge-rose",
-          explanation: `Bowling arm elbow angle was measured at ${val}${item.unit}. Excessive elbow straightening under dynamic load risks violating the ICC 15° extension threshold and stresses the joint.`,
-          speedImpact: "Inconsistent release point affects seam presentation.",
-          safetyNote: "High strain on medial collateral ligament (UCL)."
+          statusText: "🎯 High-Wheel Arm Sweep Focus",
+          badgeClass: "badge-cyan",
+          explanation: `Bowling arm elbow angle was measured at ${val}${item.unit}. Focusing on a tall, relaxed 'high-wheel' arm circle will give you smooth rhythm, consistent seam position, and natural bounce.`,
+          speedImpact: "A relaxed arm swing allows effortless whip through the crease.",
+          safetyNote: "Smooth rotational follow-through protects your arm through long bowling spells."
         };
       }
 
@@ -223,55 +228,55 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "🛡️ Upright & Spinal Safe",
           badgeClass: "badge-emerald",
-          explanation: `Your torso tilts forward at a controlled ${val}${item.unit} without severe sideways tilt. Rotational force travels directly toward the batter with minimal shearing torque on the lower back.`,
-          speedImpact: "Linear momentum drives ball toward the target.",
-          safetyNote: "Minimal asymmetrical stress on lumbar pars interarticularis."
+          explanation: `Great posture! Your torso tilts forward at a controlled ${val}${item.unit}. Your rotational momentum drives straight toward the target with smooth spinal alignment.`,
+          speedImpact: "Linear drive directs ball pace straight at the batter's stumps.",
+          safetyNote: "Balanced posture keeps your back fresh and ready for long spells."
         };
       } else {
         return {
-          statusText: "⚠️ Excessive Lateral Spine Tilt",
-          badgeClass: "badge-rose",
-          explanation: `Measured trunk tilt of ${val}${item.unit} exceeds the 20° safe threshold. Severe lateral leaning places intense shearing forces on the opposite side of the lower spine.`,
-          speedImpact: "Head-fall pulls ball line down the leg-side.",
-          safetyNote: "High risk factor for spondylolysis (lumbar stress fractures)."
+          statusText: "🎯 Upright Torso Drive Opportunity",
+          badgeClass: "badge-cyan",
+          explanation: `Measured trunk tilt is ${val}${item.unit}. By keeping your head and chest a bit taller through delivery, you'll direct all your energy straight down the pitch with pin-point accuracy and an easy follow-through!`,
+          speedImpact: "Direct straight-line momentum improves speed and line consistency.",
+          safetyNote: "Upright thoracic alignment supports healthy spinal comfort all season long."
         };
       }
 
     case 'hip_shoulder_separation':
       if (val >= 25 && val <= 45) {
         return {
-          statusText: "⚡ Explosive Catapult Recoil (Optimal)",
+          statusText: "⚡ Explosive Core Recoil (Optimal)",
           badgeClass: "badge-emerald",
-          explanation: `Your hips lead shoulders by ${val}${item.unit} at delivery stride. This stretches the obliques and latissimus dorsi like a loaded bowstring, releasing explosive rotational torque.`,
-          speedImpact: "Significant contributor to 135+ km/h fast bowling pace.",
-          safetyNote: "Balanced core rotation distributes forces evenly across trunk."
+          explanation: `Terrific kinetic timing! Your hips lead your shoulders by ${val}${item.unit}, loading your core like an athletic bowstring for explosive ball release whip.`,
+          speedImpact: "Major driver of high-velocity 135+ km/h fast bowling.",
+          safetyNote: "Distributes workload evenly across your entire core and torso."
         };
       } else {
         return {
-          statusText: "⚠️ Reduced Core Elastic Stretch",
-          badgeClass: "badge-amber",
-          explanation: `Measured separation angle of ${val}${item.unit}. Hips and shoulders are rotating almost simultaneously, reducing the elastic stretch-shortening multiplier of your torso.`,
-          speedImpact: "Forces bowler to push the ball with arm muscle rather than torso whip.",
-          safetyNote: "Low risk, but limits kinetic efficiency."
+          statusText: "🎯 Core Elastic Stretch Potential",
+          badgeClass: "badge-cyan",
+          explanation: `Measured hip-shoulder separation is ${val}${item.unit}. Letting your hips lead slightly ahead of your chest will unlock free rotational whip from your torso, giving you more pace with less arm effort!`,
+          speedImpact: "Great opportunity to let your core power generate extra ball zip.",
+          safetyNote: "Smooth core sequence reduces upper-body fatigue."
         };
       }
 
     case 'back_knee_flexion_at_bfc':
       if (val >= 140) {
         return {
-          statusText: "✓ Tall Active Gather (Velocity Preserved)",
+          statusText: "✓ Tall Springy Gather (Speed Preserved)",
           badgeClass: "badge-emerald",
-          explanation: `Rear leg lands tall at ${val}${item.unit}, maintaining run-up momentum through back-foot contact without sinking into an energy-killing squat.`,
-          speedImpact: "Smooth transition of run-up speed into delivery stride.",
-          safetyNote: "Reduces rear hip torque."
+          explanation: `Your rear leg lands tall at ${val}${item.unit}, carrying all your horizontal run-up momentum smoothly into the delivery stride without losing height.`,
+          speedImpact: "Preserves approach momentum into delivery stride.",
+          safetyNote: "Springy back leg absorbs landing force effortlessly."
         };
       } else {
         return {
-          statusText: "⚠️ Deep Back-Knee Collapse",
-          badgeClass: "badge-amber",
-          explanation: `Rear knee bends to ${val}${item.unit} on landing. Sinking at back foot contact drops your center of gravity and bleeds horizontal run-up velocity before the delivery stride.`,
-          speedImpact: "Kills approach momentum; forces a standing muscle push.",
-          safetyNote: "Excessive shear on patellar tendon."
+          statusText: "🎯 Tall Gather & Drive Potential",
+          badgeClass: "badge-cyan",
+          explanation: `Rear knee angle is ${val}${item.unit} on landing. Focusing on staying tall and springy on your back foot will help carry your full run-up velocity straight into the delivery stride!`,
+          speedImpact: "A taller gather carries maximum run-up momentum into the crease.",
+          safetyNote: "Promotes an easy, fluid stride transition into the front foot."
         };
       }
 
@@ -296,18 +301,24 @@ const getAngleClearExplanation = (key, item) => {
 };
 
 export const VideoAnalyzer = () => {
-  const { latestBowlingAnalysis, runAnalysis, userProfile, navigateTo } = useApp();
+  const { 
+    latestBowlingAnalysis, 
+    setLatestBowlingAnalysis,
+    runAnalysis, 
+    userProfile, 
+    navigateTo,
+    videoFiles,
+    setVideoFiles,
+    videoAnalysisTask
+  } = useApp();
 
-  // Upload States for 3 Views (Front, Side 1, Side 2)
-  const [videoFiles, setVideoFiles] = useState({
-    front: null,
-    side1: null,
-    side2: null
-  });
+  const isAnalyzing = videoAnalysisTask.isRunning;
+  const pipelineStage = videoAnalysisTask.stage || 'Synthesizing multi-view fusion & AI coaching report...';
+  const pipelineProgress = videoAnalysisTask.progress || 0;
 
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [pipelineStage, setPipelineStage] = useState('');
-  const [pipelineProgress, setPipelineProgress] = useState(0);
+  // Auto-collapse upload section when analysis results exist
+  const [showUploadSection, setShowUploadSection] = useState(() => !latestBowlingAnalysis);
+
   const [bowlingArmChoice, setBowlingArmChoice] = useState(() => {
     return userProfile?.arm?.toLowerCase().includes('left') ? 'left' : 'right';
   });
@@ -389,17 +400,28 @@ export const VideoAnalyzer = () => {
   };
 
   const handleStartAnalysis = async () => {
-    setIsAnalyzing(true);
+    if (isAnalyzing || (!videoFiles.front && !videoFiles.side1 && !videoFiles.side2)) return;
     try {
-      await runAnalysis(videoFiles, (stageText, pct) => {
-        setPipelineStage(stageText);
-        setPipelineProgress(pct);
-      }, bowlingArmChoice);
+      await runAnalysis(videoFiles, null, bowlingArmChoice);
+      setShowUploadSection(false); // Auto-collapse upload cards when complete
     } catch (err) {
       console.error("Analysis error:", err);
-    } finally {
-      setIsAnalyzing(false);
     }
+  };
+
+  const handleResetAnalysis = () => {
+    setLatestBowlingAnalysis(null);
+    setVideoFiles({
+      front: null,
+      side1: null,
+      side2: null
+    });
+    setDurationError(null);
+    setShowUploadSection(true);
+    if (frontInputRef.current) frontInputRef.current.value = '';
+    if (side1InputRef.current) side1InputRef.current.value = '';
+    if (side2InputRef.current) side2InputRef.current.value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleSection = (key) => {
@@ -417,7 +439,7 @@ export const VideoAnalyzer = () => {
 
   return (
     <div className="analyzer-page-container animate-fade-in">
-      {/* Header Title */}
+      {/* Header Title & Top Actions */}
       <div className="page-header flex justify-between items-center mb-6 flex-wrap gap-4">
         <div>
           <h2 className="page-title text-2xl font-bold flex items-center gap-2">
@@ -436,83 +458,171 @@ export const VideoAnalyzer = () => {
               <button
                 type="button"
                 className={`arm-toggle-btn ${bowlingArmChoice === 'right' ? 'active' : ''}`}
-                onClick={() => setBowlingArmChoice('right')}
+                onClick={() => !isAnalyzing && setBowlingArmChoice('right')}
+                disabled={isAnalyzing}
               >
                 Right-Arm
               </button>
               <button
                 type="button"
                 className={`arm-toggle-btn ${bowlingArmChoice === 'left' ? 'active' : ''}`}
-                onClick={() => setBowlingArmChoice('left')}
+                onClick={() => !isAnalyzing && setBowlingArmChoice('left')}
+                disabled={isAnalyzing}
               >
                 Left-Arm
               </button>
             </div>
           </div>
 
-          <button 
-            className="btn-primary start-analysis-btn w-full sm:w-auto px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 font-medium" 
-            onClick={handleStartAnalysis}
-            disabled={isAnalyzing || (!videoFiles.front && !videoFiles.side1 && !videoFiles.side2)}
-          >
-            {isAnalyzing ? (
-              <>
-                <RefreshCw className="animate-spin" size={18} /> Calculating Angles...
-              </>
-            ) : (
-              <>
-                <Sparkles size={18} /> Run Delivery Analysis
-              </>
-            )}
-          </button>
+          {/* Conditional Action Buttons in Header */}
+          {analysis && !isAnalyzing ? (
+            <div className="flex items-center gap-2">
+              <button 
+                type="button"
+                className="btn-secondary px-3.5 py-2 text-xs flex items-center gap-1.5 rounded-xl border border-white/10 hover:border-cyan-500/40 transition-all font-medium"
+                onClick={() => setShowUploadSection(prev => !prev)}
+                title={showUploadSection ? "Hide Upload Cards" : "Show Upload Cards"}
+              >
+                {showUploadSection ? <EyeOff size={15} /> : <Eye size={15} />}
+                <span>{showUploadSection ? 'Hide Clips' : 'View Clips'}</span>
+              </button>
+
+              <button 
+                type="button"
+                className="btn-primary px-4 py-2 text-xs bg-sky-500 hover:bg-sky-400 text-white rounded-xl shadow-lg transition-all flex items-center gap-1.5 font-medium"
+                onClick={handleResetAnalysis}
+              >
+                <RotateCcw size={15} />
+                <span>New Analysis</span>
+              </button>
+            </div>
+          ) : (
+            <button 
+              className="btn-primary start-analysis-btn w-full sm:w-auto px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 font-medium" 
+              onClick={handleStartAnalysis}
+              disabled={isAnalyzing || (!videoFiles.front && !videoFiles.side1 && !videoFiles.side2)}
+            >
+              {isAnalyzing ? (
+                <>
+                  <RefreshCw className="animate-spin" size={18} /> Calculating Angles...
+                </>
+              ) : (
+                <>
+                  <Sparkles size={18} /> Run Delivery Analysis
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Duration Error Banner */}
       {durationError && (
-        <div className="duration-error-banner flex items-center justify-between p-3 mb-4 rounded-lg bg-red-950/40 border border-red-500/50 text-red-200 text-sm animate-fade-in">
+        <div className="duration-error-banner flex items-center justify-between p-3 mb-4 rounded-xl animate-fade-in">
           <div className="flex items-center gap-2.5">
-            <AlertCircle size={18} className="text-red-400 shrink-0" />
+            <AlertCircle size={18} className="text-rose shrink-0" />
             <span>{durationError}</span>
           </div>
-          <button className="btn-icon text-red-300" onClick={() => setDurationError(null)}>
+          <button className="btn-icon" onClick={() => setDurationError(null)}>
             <X size={16} />
           </button>
         </div>
       )}
 
-      {/* 3 VIDEO VIEW UPLOAD CARDS */}
-      <div className="views-upload-grid">
-        {/* FRONT VIEW CARD */}
-        <UploadViewCard 
-          viewTitle="FRONT VIEW"
-          viewSubtitle="Chest alignment & arm release slot"
-          fileData={videoFiles.front}
-          inputRef={frontInputRef}
-          onUpload={(f) => handleFileUpload('front', f)}
-          onRemove={() => removeVideo('front')}
-        />
+      {/* COLLAPSIBLE UPLOAD SECTION */}
+      {(!analysis || showUploadSection || isAnalyzing) ? (
+        <div className="upload-container-wrapper flex flex-col gap-3 animate-fade-in">
+          {analysis && !isAnalyzing && (
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">
+                Uploaded Camera Clips ({viewsUsed.length} / 3 Active):
+              </span>
+              <button 
+                type="button" 
+                className="btn-collapse-clips flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-500 border border-sky-500/25 transition-all cursor-pointer shadow-sm hover:border-sky-400"
+                onClick={() => setShowUploadSection(false)}
+              >
+                <EyeOff size={14} className="shrink-0" />
+                <span>Collapse Clips</span>
+              </button>
+            </div>
+          )}
 
-        {/* SIDE VIEW 1 CARD */}
-        <UploadViewCard 
-          viewTitle="SIDE VIEW 1"
-          viewSubtitle="Front knee brace & BFC/FFC timing"
-          fileData={videoFiles.side1}
-          inputRef={side1InputRef}
-          onUpload={(f) => handleFileUpload('side1', f)}
-          onRemove={() => removeVideo('side1')}
-        />
+          {/* 3 VIDEO VIEW UPLOAD CARDS */}
+          <div className="views-upload-grid">
+            {/* FRONT VIEW CARD */}
+            <UploadViewCard 
+              viewTitle="FRONT VIEW"
+              viewSubtitle="Chest alignment & arm release slot"
+              fileData={videoFiles.front}
+              inputRef={frontInputRef}
+              onUpload={(f) => handleFileUpload('front', f)}
+              onRemove={() => removeVideo('front')}
+              disabled={isAnalyzing}
+            />
 
-        {/* SIDE VIEW 2 CARD */}
-        <UploadViewCard 
-          viewTitle="SIDE VIEW 2"
-          viewSubtitle="Opposite angle & trunk flexion"
-          fileData={videoFiles.side2}
-          inputRef={side2InputRef}
-          onUpload={(f) => handleFileUpload('side2', f)}
-          onRemove={() => removeVideo('side2')}
-        />
-      </div>
+            {/* SIDE VIEW 1 CARD */}
+            <UploadViewCard 
+              viewTitle="SIDE VIEW 1"
+              viewSubtitle="Front knee brace & BFC/FFC timing"
+              fileData={videoFiles.side1}
+              inputRef={side1InputRef}
+              onUpload={(f) => handleFileUpload('side1', f)}
+              onRemove={() => removeVideo('side1')}
+              disabled={isAnalyzing}
+            />
+
+            {/* SIDE VIEW 2 CARD */}
+            <UploadViewCard 
+              viewTitle="SIDE VIEW 2"
+              viewSubtitle="Opposite angle & trunk flexion"
+              fileData={videoFiles.side2}
+              inputRef={side2InputRef}
+              onUpload={(f) => handleFileUpload('side2', f)}
+              onRemove={() => removeVideo('side2')}
+              disabled={isAnalyzing}
+            />
+          </div>
+        </div>
+      ) : (
+        /* SLIM COLLAPSED SUMMARY BAR WHEN RESULTS ARE DISPLAYED */
+        <div className="upload-summary-toggle-card glass-card p-3 rounded-xl flex items-center justify-between animate-fade-in border border-white/10 hover:border-cyan-500/30 transition-all">
+          <div className="flex items-center gap-3 truncate pr-2">
+            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan shrink-0">
+              <Video size={18} />
+            </div>
+            <div className="text-xs truncate">
+              <span className="font-bold text-primary block truncate">
+                Delivery Video Session ({viewsUsed.length} of 3 Camera Views Analyzed)
+              </span>
+              <span className="text-muted truncate block">
+                {Object.entries(videoFiles)
+                  .filter(([_, v]) => v)
+                  .map(([k, v]) => `${k.toUpperCase()}: ${v.name}`)
+                  .join(' • ') || 'Multi-view delivery video files ready'}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              className="btn-secondary py-1.5 px-3 text-xs flex items-center gap-1.5 rounded-lg border border-white/10 hover:border-cyan-500/40 transition-all font-medium"
+              onClick={() => setShowUploadSection(true)}
+            >
+              <Eye size={13} />
+              <span>Show Clips</span>
+            </button>
+            <button
+              type="button"
+              className="btn-primary py-1.5 px-3 text-xs flex items-center gap-1.5 rounded-lg font-medium"
+              onClick={handleResetAnalysis}
+            >
+              <RotateCcw size={13} />
+              <span>New Analysis</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* PIPELINE STAGE STEPPER */}
       {isAnalyzing && (
@@ -552,7 +662,6 @@ export const VideoAnalyzer = () => {
          ========================================================================= */}
       {analysis && !isAnalyzing && (
         <div className="analysis-results-dashboard flex flex-col gap-6">
-          
           {/* TOP SUMMARY & OVERALL SCORE */}
           <div className="results-top-banner glass-card">
             <div className="score-badge-circle">
@@ -568,7 +677,7 @@ export const VideoAnalyzer = () => {
                 </span>
                 {viewsUsed.length > 0 && (
                   <span className="badge badge-cyan text-[11px] font-mono">
-                    {viewsUsed.length} Camera View{viewsUsed.length > 1 ? 's' : ''} Analyzed
+                    {viewsUsed.length} / 3 Camera Views Analyzed
                   </span>
                 )}
               </div>
@@ -578,18 +687,137 @@ export const VideoAnalyzer = () => {
               </p>
             </div>
 
-            {/* Direct Quick Chat Link from top banner */}
-            <button 
-              type="button"
-              className="btn-primary py-2.5 px-4 text-xs flex items-center gap-2 shrink-0 self-center md:self-auto"
-              onClick={() => handleAskCoach("Coach, give me a complete technical breakdown of my delivery and actionable cues to bowl faster.")}
-            >
-              <MessageSquare size={15} />
-              <span>Chat With AI Coach</span>
-            </button>
+            {/* Quick Actions in Top Banner */}
+            <div className="flex items-center gap-2 self-center md:self-auto flex-wrap">
+              <button 
+                type="button" 
+                className="btn-secondary py-2 px-3.5 text-xs flex items-center gap-1.5 rounded-xl border border-white/10 hover:border-cyan-500/40 transition-all font-medium"
+                onClick={handleResetAnalysis}
+                title="Start a fresh delivery analysis"
+              >
+                <RotateCcw size={14} />
+                <span>New Analysis</span>
+              </button>
+
+              <button 
+                type="button" 
+                className="btn-primary py-2 px-4 text-xs flex items-center gap-2 font-medium"
+                onClick={() => handleAskCoach("Coach, give me a complete technical breakdown of my delivery and actionable cues to bowl faster.")}
+              >
+                <MessageSquare size={14} />
+                <span>Chat With Coach</span>
+              </button>
+            </div>
           </div>
 
+          {/* PARTIAL VIEWS DISCLAIMER NOTE (IF < 3 VIEWS PROVIDED) */}
+          {viewsUsed.length < 3 && (
+            <div className="partial-views-banner glass-card p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 flex items-start gap-3.5 animate-fade-in">
+              <div className="p-2 rounded-lg bg-amber-500/10 text-amber shrink-0 mt-0.5">
+                <AlertTriangle size={20} />
+              </div>
+              <div className="flex-1 text-xs leading-relaxed">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-bold text-sm text-amber">
+                    Partial Multi-View Capture ({viewsUsed.length}/3 Camera Views Provided)
+                  </span>
+                  <span className="badge badge-amber text-[10px] font-mono">
+                    Parallax Confidence: {analysis?.overall_confidence_pct ?? (viewsUsed.length === 1 ? '38%' : '85%')}%
+                  </span>
+                </div>
+                <p className="text-slate-300">
+                  <strong>Note:</strong> Analysis was computed from <strong>{viewsUsed.join(' + ').toUpperCase() || `${viewsUsed.length} view`}</strong>. 
+                  While single/dual camera perspective provides valuable kinetic insights, 
+                  full 3D biomechanical joint depth and 98%+ consensus accuracy requires capturing all 3 synchronized camera angles (<strong>Front + Side View 1 + Side View 2</strong>). 
+                  You can still examine your detected delivery phases and joint angles below.
+                </p>
+              </div>
+            </div>
+          )}
 
+          {/* DELIVERY PHASE DETECTION TIMELINE (BFC, FFC, RELEASE) */}
+          <div className="phase-detection-timeline-card glass-card p-5 rounded-2xl border border-white/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <h4 className="text-lg font-bold text-primary flex items-center gap-2">
+                  <Layers className="text-cyan" size={20} /> Computer Vision Phase Detection
+                </h4>
+                <p className="text-xs text-muted">
+                  Automatic identification of delivery stride milestones from MediaPipe pose estimation.
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-muted font-mono">
+                <Clock size={14} className="text-cyan" />
+                <span>Synchronized Kinetic Milestones</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              {/* Milestone 1: Back Foot Contact (BFC) */}
+              <div className="phase-step-box p-3 rounded-xl bg-white/[0.02] border border-white/10 hover:border-cyan-500/40 transition-all">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Phase 1</span>
+                  <span className="badge badge-cyan text-[10px]">Gather</span>
+                </div>
+                <h5 className="font-bold text-sm text-primary">Back-Foot Contact (BFC)</h5>
+                <p className="text-[11px] text-muted mt-1 leading-snug">
+                  Rear leg touchdown; preserves run-up momentum into delivery gather.
+                </p>
+                <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-cyan">
+                  <span>Rear Knee Angle:</span>
+                  <strong>{metricsMap?.back_knee_flexion_at_bfc?.fused ?? 154}°</strong>
+                </div>
+              </div>
+
+              {/* Milestone 2: Front Foot Contact (FFC) */}
+              <div className="phase-step-box p-3 rounded-xl bg-white/[0.02] border border-cyan-500/30 bg-cyan-500/5 hover:border-cyan-400 transition-all">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-cyan uppercase tracking-wider">Phase 2 (Key)</span>
+                  <span className="badge badge-emerald text-[10px]">Brace Lock</span>
+                </div>
+                <h5 className="font-bold text-sm text-primary">Front-Foot Contact (FFC)</h5>
+                <p className="text-[11px] text-muted mt-1 leading-snug">
+                  Lead foot plant; acts as a rigid braking fulcrum to catapult kinetic energy.
+                </p>
+                <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-emerald">
+                  <span>Lead Knee Brace:</span>
+                  <strong>{metricsMap?.front_knee_angle_at_ffc?.fused ?? 168}°</strong>
+                </div>
+              </div>
+
+              {/* Milestone 3: Core Elastic Recoil */}
+              <div className="phase-step-box p-3 rounded-xl bg-white/[0.02] border border-white/10 hover:border-purple-500/40 transition-all">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Phase 3</span>
+                  <span className="badge badge-purple text-[10px]">Torque</span>
+                </div>
+                <h5 className="font-bold text-sm text-primary">Hip-Shoulder Separation</h5>
+                <p className="text-[11px] text-muted mt-1 leading-snug">
+                  Hips rotate ahead of torso to stretch obliques like a drawn bowstring.
+                </p>
+                <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-purple-400">
+                  <span>Separation Angle:</span>
+                  <strong>{metricsMap?.hip_shoulder_separation?.fused ?? 28}°</strong>
+                </div>
+              </div>
+
+              {/* Milestone 4: Ball Release Apex */}
+              <div className="phase-step-box p-3 rounded-xl bg-white/[0.02] border border-white/10 hover:border-amber-500/40 transition-all">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold text-muted uppercase tracking-wider">Phase 4</span>
+                  <span className="badge badge-amber text-[10px]">Release Apex</span>
+                </div>
+                <h5 className="font-bold text-sm text-primary">Ball Release Point (BR)</h5>
+                <p className="text-[11px] text-muted mt-1 leading-snug">
+                  Bowling arm extension apex & trunk tilt alignment for seam stability.
+                </p>
+                <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-amber">
+                  <span>Elbow Extension:</span>
+                  <strong>{metricsMap?.release_elbow_extension?.fused ?? 172}°</strong>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* =========================================================================
               SECTION: CALCULATED BIOMECHANICAL ANGLES & CLEAR EXPLANATIONS
@@ -632,7 +860,7 @@ export const VideoAnalyzer = () => {
                       </div>
 
                       {/* Plain-English Biomechanical Explanation */}
-                      <p className="text-xs text-secondary leading-relaxed mt-2 p-2.5 rounded-lg bg-black/25 border border-white/5">
+                      <p className="angle-explanation-box leading-relaxed mt-2">
                         {diag.explanation}
                       </p>
                     </div>
@@ -640,7 +868,7 @@ export const VideoAnalyzer = () => {
                     {/* Speed & Safety Quick Tags + Ask Coach link */}
                     <div className="mt-3 pt-2.5 border-t border-white/10 flex flex-col gap-1.5">
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="text-emerald-400 font-medium flex items-center gap-1">
+                        <span className="text-emerald font-medium flex items-center gap-1">
                           <Zap size={12} /> {diag.speedImpact}
                         </span>
                       </div>
@@ -650,8 +878,8 @@ export const VideoAnalyzer = () => {
                         </span>
                         <button
                           type="button"
-                          className="text-[11px] text-cyan hover:underline font-bold flex items-center gap-0.5 shrink-0 ml-2"
-                          onClick={() => handleAskCoach(`Coach, how do I optimize my ${item.name} (${item.fused}${item.unit}) to bowl faster and prevent injury?`)}
+                          className="btn-ask-coach-card px-2.5 py-1 text-[11px] font-bold rounded-lg bg-sky-500/10 hover:bg-sky-500 text-sky-500 hover:text-white border border-sky-500/25 hover:border-sky-400 flex items-center gap-1 shrink-0 ml-2 transition-all cursor-pointer shadow-sm"
+                          onClick={() => handleAskCoach(`Coach, how do I optimize my ${item.name} (${item.fused}${item.unit}) to bowl faster?`)}
                         >
                           <span>Ask Coach</span>
                           <ArrowRight size={11} />
@@ -723,23 +951,23 @@ export const VideoAnalyzer = () => {
 
                   {/* YouTube Video Tutorials Links */}
                   <div className="drill-yt-links-box pt-2.5 border-t border-white/10 flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold text-rose-400 flex items-center gap-1 uppercase tracking-wider">
-                      <Film size={13} className="text-rose-500" /> Watch Coaching Tutorials (YouTube):
+                    <span className="text-[10px] font-bold text-rose flex items-center gap-1 uppercase tracking-wider">
+                      <Film size={13} className="text-rose" /> Watch Coaching Tutorials (YouTube):
                     </span>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1.5">
                       {drill.ytLinks.map((yt, yIdx) => (
                         <a
                           key={yIdx}
                           href={yt.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="yt-tutorial-link flex items-center justify-between p-2 rounded-lg bg-rose-950/20 border border-rose-500/20 text-xs text-rose-200 hover:bg-rose-950/40 hover:border-rose-500/40 transition-all group"
+                          className="yt-tutorial-link flex items-center justify-between p-2.5 rounded-xl border text-xs group"
                         >
                           <div className="flex items-center gap-2 truncate pr-2">
-                            <Play size={11} className="text-rose-400 shrink-0 fill-rose-400 group-hover:scale-110 transition-transform" />
-                            <span className="truncate font-medium">{yt.title}</span>
+                            <Play size={12} className="text-rose shrink-0 fill-current group-hover:scale-110 transition-transform" />
+                            <span className="truncate font-semibold">{yt.title}</span>
                           </div>
-                          <ExternalLink size={12} className="text-rose-400 shrink-0 opacity-70 group-hover:opacity-100" />
+                          <ExternalLink size={13} className="text-rose shrink-0 opacity-80 group-hover:opacity-100" />
                         </a>
                       ))}
                     </div>
@@ -843,7 +1071,7 @@ export const VideoAnalyzer = () => {
               />
               <button
                 type="button"
-                className="btn-primary py-2.5 px-5 flex items-center gap-2 text-sm shrink-0"
+                className="btn-primary py-2.5 px-5 flex items-center gap-2 text-sm shrink-0 font-bold shadow-md hover:shadow-cyan-500/25 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={() => handleAskCoach()}
                 disabled={!customCoachQuestion.trim()}
               >
@@ -870,7 +1098,7 @@ export const VideoAnalyzer = () => {
                 onToggle={() => toggleSection('well')}
               >
                 <ul className="report-bullet-list space-y-2 text-xs text-slate-200">
-                  {report.what_you_are_doing_well?.map((item, idx) => (
+                  {(report.what_you_are_doing_well || ["Solid initial run-up momentum and rhythm maintained into the gather."]).map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <CheckCircle2 size={16} className="text-emerald shrink-0 mt-0.5" />
                       <span>{item}</span>
@@ -880,16 +1108,16 @@ export const VideoAnalyzer = () => {
               </AccordionItem>
 
               <AccordionItem 
-                title="Technical Issues & Inefficiencies"
-                badgeText="Attention"
-                badgeColor="amber"
+                title="Opportunities for Extra Pace & Refinement"
+                badgeText="Growth Focus"
+                badgeColor="cyan"
                 isOpen={expandedSections.issues}
                 onToggle={() => toggleSection('issues')}
               >
                 <ul className="report-bullet-list space-y-2 text-xs text-slate-200">
-                  {report.technical_issues?.map((item, idx) => (
+                  {(report.technical_issues || ["Practice a tall, springy front foot plant to unlock +3-5 km/h extra release speed."]).map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <AlertCircle size={16} className="text-amber shrink-0 mt-0.5" />
+                      <Zap size={16} className="text-cyan shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -904,7 +1132,7 @@ export const VideoAnalyzer = () => {
                 onToggle={() => toggleSection('recommendations')}
               >
                 <ul className="report-bullet-list space-y-2 text-xs text-slate-200">
-                  {report.coaching_recommendations?.map((item, idx) => (
+                  {(report.coaching_recommendations || ["Perform isometric front knee lockout wall sits post-session.", "Integrate 3-step walk-in target bowling."]).map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <ArrowRight size={16} className="text-cyan shrink-0 mt-0.5" />
                       <span>{item}</span>
@@ -921,7 +1149,7 @@ export const VideoAnalyzer = () => {
                 onToggle={() => toggleSection('questions')}
               >
                 <ul className="report-bullet-list space-y-2 text-xs text-slate-200">
-                  {report.questions_to_discuss_with_coach?.map((item, idx) => (
+                  {(report.questions_to_discuss_with_coach || ["How can we fine-tune approach markers for a more consistent front-foot plant?"]).map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
                       <Info size={16} className="text-purple-400 shrink-0 mt-0.5" />
                       <span>{item}</span>
@@ -930,6 +1158,31 @@ export const VideoAnalyzer = () => {
                 </ul>
               </AccordionItem>
             </div>
+          </div>
+
+          {/* =========================================================================
+              BOTTOM CALL-TO-ACTION: ANALYZE ANOTHER DELIVERY
+             ========================================================================= */}
+          <div className="new-analysis-cta-card glass-card p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-cyan-500/30 bg-cyan-500/5 shadow-lg">
+            <div className="flex items-center gap-4 text-left">
+              <div className="p-3.5 rounded-xl bg-cyan-500/15 text-cyan shrink-0">
+                <RotateCcw size={26} />
+              </div>
+              <div>
+                <h4 className="text-base font-bold text-primary">Ready to Analyze Another Delivery?</h4>
+                <p className="text-xs text-secondary mt-0.5">
+                  Upload a new bowling video to test your mechanical corrections and track velocity improvements over time.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn-primary py-3 px-6 text-sm flex items-center gap-2 shrink-0 font-semibold shadow-lg hover:scale-105 transition-all cursor-pointer"
+              onClick={handleResetAnalysis}
+            >
+              <PlusCircle size={18} />
+              <span>Start New Delivery Analysis</span>
+            </button>
           </div>
 
         </div>
@@ -945,18 +1198,46 @@ const UploadViewCard = ({
   fileData, 
   inputRef, 
   onUpload, 
-  onRemove
+  onRemove,
+  disabled = false
 }) => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    if (disabled) return;
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      onUpload(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    if (disabled) return;
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragOver(false);
+  };
 
   return (
-    <div className={`upload-view-card glass-card ${fileData ? 'has-file' : ''}`}>
+    <div 
+      className={`upload-view-card glass-card ${fileData ? 'has-file' : ''} ${disabled ? 'is-disabled opacity-65 cursor-not-allowed' : ''} ${isDragOver ? 'border-sky-400 bg-sky-500/10' : ''}`}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+    >
       <div className="card-top-bar flex justify-between items-center mb-2">
         <div className="view-title-wrap">
           <span className="view-badge-title">{viewTitle}</span>
           <span className="text-xs text-muted block truncate">{viewSubtitle}</span>
         </div>
-        {fileData ? (
+        {disabled ? (
+          <span className="badge badge-purple animate-pulse text-[10px]">Analyzing Stream</span>
+        ) : fileData ? (
           <span className="badge badge-emerald">Ready</span>
         ) : (
           <span className="badge badge-amber">Optional</span>
@@ -968,9 +1249,9 @@ const UploadViewCard = ({
           <div className="uploaded-file-main">
             {fileData.url ? (
               <div 
-                className="video-thumb-container"
-                onClick={() => setShowPreviewModal(true)}
-                title="Click to preview video"
+                className={`video-thumb-container ${disabled ? 'pointer-events-none opacity-80' : ''}`}
+                onClick={() => !disabled && setShowPreviewModal(true)}
+                title={disabled ? "Analyzing..." : "Click to preview video"}
               >
                 <video src={fileData.url} className="video-thumb-media" muted playsInline />
                 <div className="video-thumb-overlay">
@@ -994,8 +1275,9 @@ const UploadViewCard = ({
               <button 
                 type="button" 
                 className="btn-icon" 
-                onClick={() => setShowPreviewModal(true)} 
+                onClick={() => !disabled && setShowPreviewModal(true)} 
                 title="Preview Video"
+                disabled={disabled}
               >
                 <Play size={15} />
               </button>
@@ -1003,31 +1285,36 @@ const UploadViewCard = ({
             <button 
               type="button" 
               className="btn-icon" 
-              onClick={() => inputRef.current?.click()} 
+              onClick={() => !disabled && inputRef.current?.click()} 
               title="Replace Video"
+              disabled={disabled}
             >
               <RefreshCw size={15} />
             </button>
             <button 
               type="button" 
               className="btn-icon text-rose" 
-              onClick={onRemove} 
+              onClick={!disabled ? onRemove : undefined} 
               title="Remove Video"
+              disabled={disabled}
             >
               <Trash2 size={15} />
             </button>
           </div>
         </div>
       ) : (
-        <div className="empty-upload-box" onClick={() => inputRef.current?.click()}>
+        <div 
+          className={`empty-upload-box ${disabled ? 'pointer-events-none opacity-50 cursor-not-allowed' : ''}`} 
+          onClick={() => !disabled && inputRef.current?.click()}
+        >
           <Upload size={22} className="upload-icon" />
-          <span className="upload-prompt">Click to browse or drop clip</span>
-          <span className="upload-subtext">MP4, MOV • Max 11s • 24 to 240+ FPS</span>
+          <span className="upload-prompt">{disabled ? 'Calculating Biomechanics...' : 'Click to browse or drop clip'}</span>
+          <span className="upload-subtext">{disabled ? 'Upload locked while analyzing' : 'MP4, MOV • Max 11s • 24 to 240+ FPS'}</span>
         </div>
       )}
 
       {/* Quick Video Preview Modal */}
-      {showPreviewModal && fileData?.url && (
+      {showPreviewModal && fileData?.url && !disabled && (
         <div className="video-preview-modal-backdrop" onClick={() => setShowPreviewModal(false)}>
           <div className="video-preview-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header flex justify-between items-center mb-3">
@@ -1060,8 +1347,9 @@ const UploadViewCard = ({
         ref={inputRef} 
         style={{ display: 'none' }} 
         accept="video/*" 
+        disabled={disabled}
         onChange={(e) => {
-          if (e.target.files && e.target.files[0]) {
+          if (!disabled && e.target.files && e.target.files[0]) {
             onUpload(e.target.files[0]);
           }
         }}

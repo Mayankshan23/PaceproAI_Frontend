@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, Flame, Sparkles, Zap, HeartPulse } from 'lucide-react';
 import { CombinedPlanner } from '../planner/CombinedPlanner';
-import { WorkoutDashboard } from '../workout/WorkoutDashboard';
 import { DietDashboard } from '../diet/DietDashboard';
 import { StrengthCheck } from './StrengthCheck';
 import './TrainingDashboard.css';

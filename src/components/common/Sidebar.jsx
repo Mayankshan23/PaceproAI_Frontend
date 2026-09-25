@@ -25,21 +25,43 @@ import { useTheme } from '../../context/ThemeContext';
 import './Sidebar.css';
 
 export const Sidebar = () => {
-  const { navigateTo, userProfile, resetChat, openProfileSetupModal } = useApp();
+  const { 
+    navigateTo, 
+    userProfile, 
+    resetChat, 
+    openProfileSetupModal,
+    videoAnalysisTask,
+    dietTask,
+    combinedTask,
+    workoutTask,
+    strengthTask
+  } = useApp();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isTrainingActive = dietTask?.isRunning || combinedTask?.isRunning || workoutTask?.isRunning || strengthTask?.isRunning;
+  const isVideoActive = videoAnalysisTask?.isRunning;
+
   const mainNavItems = [
     { id: 'chat', path: '/', label: 'Home', icon: Home },
-    { id: 'analyzer', path: '/analyzer', label: 'Video Analyzer', icon: Video, badge: '3-View' },
+    { 
+      id: 'analyzer', 
+      path: '/analyzer', 
+      label: 'Video Analyzer', 
+      icon: Video, 
+      badge: isVideoActive ? `${videoAnalysisTask.progress || 20}%` : '3-View',
+      isGenerating: isVideoActive
+    },
     { 
       id: 'training', 
       path: '/training', 
       label: 'Workout & Diet', 
       icon: Dumbbell,
-      matchPaths: ['/training', '/workout', '/diet']
+      matchPaths: ['/training', '/workout', '/diet'],
+      badge: isTrainingActive ? 'AI...' : null,
+      isGenerating: isTrainingActive
     },
     { id: 'history', path: '/history', label: 'History', icon: History }
   ];
@@ -128,7 +150,9 @@ export const Sidebar = () => {
                   <span className="nav-label">{item.label}</span>
                 )}
                 {!collapsed && item.badge && (
-                  <span className="nav-badge">{item.badge}</span>
+                  <span className={`nav-badge ${item.isGenerating ? 'badge-generating animate-pulse' : ''}`}>
+                    {item.badge}
+                  </span>
                 )}
               </button>
             );

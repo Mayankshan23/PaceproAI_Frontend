@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Dumbbell, 
   Plus, 
@@ -23,11 +23,21 @@ import { useApp } from '../../context/AppContext';
 import './WorkoutDashboard.css';
 
 export const WorkoutDashboard = () => {
-  const { workoutsList, toggleExerciseDone, addWorkoutSession, saveWorkplan, runWorkplanGeneration, userProfile, updateAthleteProfile } = useApp();
+  const { 
+    workoutsList, 
+    toggleExerciseDone, 
+    addWorkoutSession, 
+    saveWorkplan, 
+    runWorkplanGeneration, 
+    userProfile, 
+    updateAthleteProfile,
+    activeWorkplan,
+    workoutTask 
+  } = useApp();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
-  const [generatedWorkplan, setGeneratedWorkplan] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedWorkplan, setGeneratedWorkplan] = useState(activeWorkplan);
+  const isGenerating = workoutTask.isRunning;
   const [isSaved, setIsSaved] = useState(false);
 
   // Dynamic Athlete Inputs (pre-filled from userProfile)
@@ -41,13 +51,19 @@ export const WorkoutDashboard = () => {
   const [sex, setSex] = useState(userProfile?.sex || 'male');
   const [goal, setGoal] = useState(userProfile?.goal || 'increase_speed');
 
+  // Sync when activeWorkplan updates in context
+  useEffect(() => {
+    if (activeWorkplan) {
+      setGeneratedWorkplan(activeWorkplan);
+    }
+  }, [activeWorkplan]);
+
   // Calculate workload stats
   const totalWorkouts = workoutsList.length;
   const completedWorkouts = workoutsList.filter((w) => w.completed).length;
   const completionPct = Math.round((completedWorkouts / (totalWorkouts || 1)) * 100);
 
   const handleGenerateWorkplan = async () => {
-    setIsGenerating(true);
     setIsSaved(false);
     try {
       // Sync athlete profile state globally
@@ -79,8 +95,6 @@ export const WorkoutDashboard = () => {
       setGeneratedWorkplan(result);
     } catch (error) {
       console.error('Workplan generation error:', error);
-    } finally {
-      setIsGenerating(false);
     }
   };
 

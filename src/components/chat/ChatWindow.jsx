@@ -16,7 +16,8 @@ import {
   Mic,
   Plus,
   Languages,
-  Globe
+  Globe,
+  Trophy
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { sendChatMessageApi } from '../../services/api';
@@ -56,7 +57,13 @@ export const ChatWindow = () => {
 
   const suggestedPrompts = chatLanguage === 'hinglish' ? [
     { 
-      title: "Bowling Analysis Check", 
+      title: "Cricket Trials & Selection", 
+      desc: "Mere area me fast bowling trials kab hote hain aur selection process kya hai?",
+      icon: Trophy, 
+      query: "Coach, mere area me cricket trials aur state/district team selection ka roadmap kya hai? Selectors kya dekhte hain?" 
+    },
+    { 
+      title: "Bowling Video Analysis", 
       desc: "3-view video upload karke knee brace aur arm slot angles calculate karo",
       icon: Video, 
       action: () => navigateTo('analyzer') 
@@ -68,18 +75,18 @@ export const ChatWindow = () => {
       query: "Coach, mera daily protein requirement aur match day nutrition explain karo" 
     },
     { 
-      title: "130+ Speed & Run-up", 
-      desc: "Run-up deceleration roko aur momentum transfer enhance karo",
+      title: "130+ Speed & Seam Craft", 
+      desc: "Outswing, wobble seam aur 130+ pace unlock karne ke key biomechanical cues",
       icon: Dumbbell, 
-      query: "Coach, meri bowling speed 130+ touch karane ke liye run-up aur delivery stride mein kya changes chahiye?" 
-    },
-    { 
-      title: "Front Knee & Spine Safety", 
-      desc: "Knee brace angle maintain karo aur lower back stress niggle se bacho",
-      icon: Activity, 
-      query: "Front knee brace angle maintain karte waqt lower back niggle se kaise bachein?" 
+      query: "Coach, 130+ km/h pace ke sath outswing aur wobble seam bowl karne ki technique batao" 
     }
   ] : [
+    { 
+      title: "Cricket Trials & Selection", 
+      desc: "Find fast bowling trials in my area & the district/state selection roadmap",
+      icon: Trophy, 
+      query: "Coach, how do I find fast bowling trials in my area and what is the state/district selection pathway?" 
+    },
     { 
       title: "Analyze My Delivery", 
       desc: "Upload 3-view video clips to calculate knee brace & arm slot angles",
@@ -93,16 +100,10 @@ export const ChatWindow = () => {
       query: "Coach, breakdown my daily protein target and fueling strategy based on my bowling overs" 
     },
     { 
-      title: "130+ Velocity Drills", 
-      desc: "Run-up acceleration, momentum transfer and arm speed drills",
+      title: "130+ Velocity & Seam Craft", 
+      desc: "Mechanical adjustments for 130+ km/h pace, outswing & wobble seam",
       icon: Dumbbell, 
-      query: "Coach, what specific mechanical adjustments unlock 130+ km/h pace without risking injury?" 
-    },
-    { 
-      title: "Front Knee & Spine Safety", 
-      desc: "Front knee brace locking mechanics and lumbar spine protection",
-      icon: Activity, 
-      query: "How do I maintain a stiff front leg brace without putting stress on my lumbar spine?" 
+      query: "Coach, what specific mechanical adjustments unlock 130+ km/h pace with outswing and wobble seam?" 
     }
   ];
 
@@ -400,8 +401,8 @@ export const ChatWindow = () => {
 
             <p className="hero-tagline">
               {chatLanguage === 'hinglish'
-                ? 'Tera real-time bowling mentor. Pace badhana ho, knee brace check karna ho, ya match-day diet—bata aaj kya plan karna hai?'
-                : 'Your dedicated fast bowling coach is online. Biomechanics, 130+ km/h velocity drills, or acute workload fueling—what are we conquering today?'}
+                ? 'Tera all-in-one cricket coach aur mentor. Area me trials dhundna ho, match tactics, bowling video analysis, ya high-protein diet—kuch bhi pucho!'
+                : 'Your all-in-one cricket coach & bowling biomechanist. Local trials & selection pathways, seam tactics, video analysis, or high-protein fueling—ask anything!'}
             </p>
 
             {/* Bowler Attributes & Language Controls */}
@@ -459,8 +460,9 @@ export const ChatWindow = () => {
             )}
 
             <div className="hero-goals-list my-2">
-              <div className="goal-item"><span className="dot-cyan">•</span> Biomechanics & 3-Angle Analyzer</div>
-              <div className="goal-item"><span className="dot-cyan">•</span> ACWR Workload & Recovery Gaps</div>
+              <div className="goal-item"><span className="dot-cyan">•</span> Cricket Trials & State Selection</div>
+              <div className="goal-item"><span className="dot-cyan">•</span> 3-Angle Bowling Biomechanics</div>
+              <div className="goal-item"><span className="dot-cyan">•</span> Seam Craft & Match Tactics</div>
               <div className="goal-item"><span className="dot-cyan">•</span> High-Protein Macro Fueling</div>
             </div>
 

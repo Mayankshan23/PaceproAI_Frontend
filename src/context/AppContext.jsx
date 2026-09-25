@@ -7,6 +7,7 @@ import {
   generateDietPlanApi, 
   generateCombinedPlanApi, 
   generateWorkoutPlanApi, 
+  assessStrengthApi,
   fetchHistoryApi,
   saveHistoryApi,
   deleteHistoryApi,
@@ -242,6 +243,46 @@ export const AppProvider = ({ children }) => {
     } catch { return []; }
   });
 
+  // Persistent Global State for Uploaded Video Files (preserves clips during tab switching)
+  const [videoFiles, setVideoFiles] = useState({
+    front: null,
+    side1: null,
+    side2: null
+  });
+
+  // Persistent Global Background Task Trackers (Survives route & tab switches)
+  const [videoAnalysisTask, setVideoAnalysisTask] = useState({
+    isRunning: false,
+    stage: '',
+    progress: 0,
+    error: null
+  });
+
+  const [dietTask, setDietTask] = useState({
+    isRunning: false,
+    stage: '',
+    error: null
+  });
+
+  const [combinedTask, setCombinedTask] = useState({
+    isRunning: false,
+    stage: '',
+    error: null
+  });
+
+  const [workoutTask, setWorkoutTask] = useState({
+    isRunning: false,
+    stage: '',
+    error: null
+  });
+
+  const [strengthTask, setStrengthTask] = useState({
+    isRunning: false,
+    stage: '',
+    results: null,
+    error: null
+  });
+
   const saveWorkplan = (plan) => {
     const updated = [plan, ...savedWorkplans];
     setSavedWorkplans(updated);
@@ -324,11 +365,31 @@ export const AppProvider = ({ children }) => {
     await deleteHistoryApi(historyId, userId);
   };
 
-  // Run bowling analysis
-  const runAnalysis = async (filesDict, onProgress, armOverride = null) => {
+  // Run bowling analysis (Global Task Runner)
+  const runAnalysis = async (filesDict, onProgress = null, armOverride = null) => {
+    setVideoAnalysisTask({
+      isRunning: true,
+      stage: 'Uploading multi-view camera streams...',
+      progress: 15,
+      error: null
+    });
+
     try {
       const bowlingArm = armOverride || (userProfile?.arm?.toLowerCase().includes('left') ? 'left' : 'right');
-      const result = await analyzeBowlingPipeline(filesDict, onProgress, bowlingArm, userId, userProfile?.name);
+      const result = await analyzeBowlingPipeline(
+        filesDict, 
+        (stageText, pct) => {
+          setVideoAnalysisTask(prev => ({
+            ...prev,
+            stage: stageText,
+            progress: pct
+          }));
+          if (onProgress) onProgress(stageText, pct);
+        }, 
+        bowlingArm, 
+        userId, 
+        userProfile?.name
+      );
       setLatestBowlingAnalysis(result);
       
       // Add to MongoDB history with 3-generation auto-retention
@@ -356,15 +417,34 @@ export const AppProvider = ({ children }) => {
         }
       });
 
+      setVideoAnalysisTask({
+        isRunning: false,
+        stage: 'Analysis Complete!',
+        progress: 100,
+        error: null
+      });
+
       return result;
     } catch (err) {
       console.error("Analysis execution error:", err);
+      setVideoAnalysisTask({
+        isRunning: false,
+        stage: '',
+        progress: 0,
+        error: err.message || 'Analysis failed. Please try again.'
+      });
       throw err;
     }
   };
 
-  // Run Diet plan generation
+  // Run Diet plan generation (Global Task Runner)
   const runDietGeneration = async (dietInputs) => {
+    setDietTask({
+      isRunning: true,
+      stage: 'Synthesizing fast bowler macro & micro nutrition schedule...',
+      error: null
+    });
+
     try {
       const result = await generateDietPlanApi({ ...dietInputs, user_id: userId });
       setActiveDietPlan(result);
@@ -381,15 +461,32 @@ export const AppProvider = ({ children }) => {
       };
       await addHistoryItem(newHistoryItem);
 
+      setDietTask({
+        isRunning: false,
+        stage: '',
+        error: null
+      });
+
       return result;
     } catch (err) {
       console.error("Diet generation error:", err);
+      setDietTask({
+        isRunning: false,
+        stage: '',
+        error: err.message || 'Diet generation failed. Please try again.'
+      });
       throw err;
     }
   };
 
-  // Run Combined Workload & Diet Generation
+  // Run Combined Workload & Diet Generation (Global Task Runner)
   const runCombinedGeneration = async (combinedInputs) => {
+    setCombinedTask({
+      isRunning: true,
+      stage: 'Synthesizing fast bowler unified workload & nutrition protocol...',
+      error: null
+    });
+
     try {
       const result = await generateCombinedPlanApi({ ...combinedInputs, user_id: userId });
       setActiveCombinedPlan(result);
@@ -409,20 +506,91 @@ export const AppProvider = ({ children }) => {
       };
       await addHistoryItem(newHistoryItem);
 
+      setCombinedTask({
+        isRunning: false,
+        stage: '',
+        error: null
+      });
+
       return result;
     } catch (err) {
       console.error("Combined generation error:", err);
+      setCombinedTask({
+        isRunning: false,
+        stage: '',
+        error: err.message || 'Combined plan generation failed. Please try again.'
+      });
       throw err;
     }
   };
 
+  // Run Workout Plan Generation (Global Task Runner)
   const runWorkplanGeneration = async (workoutInputs) => {
+    setWorkoutTask({
+      isRunning: true,
+      stage: 'Synthesizing fast bowler gym & bowling periodization schedule...',
+      error: null
+    });
+
     try {
       const result = await generateWorkoutPlanApi({ ...workoutInputs, user_id: userId });
       setActiveWorkplan(result);
+      setWorkoutTask({
+        isRunning: false,
+        stage: '',
+        error: null
+      });
       return result;
     } catch (err) {
       console.error("Workout generation error:", err);
+      setWorkoutTask({
+        isRunning: false,
+        stage: '',
+        error: err.message || 'Workout plan generation failed. Please try again.'
+      });
+      throw err;
+    }
+  };
+
+  // Run Strength Assessment (Global Task Runner)
+  const runStrengthAssessment = async (payload) => {
+    setStrengthTask({
+      isRunning: true,
+      stage: 'Evaluating kinetic chain, brace capacity & injury risk...',
+      results: null,
+      error: null
+    });
+
+    try {
+      const res = await assessStrengthApi(payload);
+      setStrengthTask({
+        isRunning: false,
+        stage: '',
+        results: res,
+        error: null
+      });
+
+      // Add to MongoDB history
+      const newHistoryItem = {
+        id: `h_${Date.now()}`,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        type: 'strength',
+        title: `Kinetic Strength Assessment (${userProfile?.name || 'Fast Bowler'})`,
+        subtitle: `Score: ${res?.overall_score || 0}/100 • Risk: ${res?.injury_risk_tier?.toUpperCase() || 'LOW'}`,
+        status: 'Completed',
+        detail: res
+      };
+      await addHistoryItem(newHistoryItem);
+
+      return res;
+    } catch (err) {
+      console.error("Strength assessment error:", err);
+      setStrengthTask({
+        isRunning: false,
+        stage: '',
+        results: null,
+        error: err.message || 'Strength assessment failed.'
+      });
       throw err;
     }
   };
@@ -460,10 +628,21 @@ export const AppProvider = ({ children }) => {
         openProfileSetupModal: () => setIsProfileSetupOpen(true),
         apiState,
         updateApiConfigState,
+        videoFiles,
+        setVideoFiles,
+        videoAnalysisTask,
+        dietTask,
+        combinedTask,
+        workoutTask,
+        strengthTask,
         latestBowlingAnalysis,
+        setLatestBowlingAnalysis,
         activeDietPlan,
+        setActiveDietPlan,
         activeCombinedPlan,
+        setActiveCombinedPlan,
         activeWorkplan,
+        setActiveWorkplan,
         workoutsList,
         historyList,
         addHistoryItem,
@@ -483,6 +662,7 @@ export const AppProvider = ({ children }) => {
         runDietGeneration,
         runCombinedGeneration,
         runWorkplanGeneration,
+        runStrengthAssessment,
         toggleExerciseDone,
         addWorkoutSession
       }}

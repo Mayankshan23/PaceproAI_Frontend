@@ -38,7 +38,8 @@ export const CombinedPlanner = () => {
     addChatMessage, 
     navigateTo,
     userProfile,
-    updateAthleteProfile
+    updateAthleteProfile,
+    combinedTask
   } = useApp();
 
   // --- Athlete Status & Workload Parameters ---
@@ -80,11 +81,12 @@ export const CombinedPlanner = () => {
   const [pushupsReps, setPushupsReps] = useState(userProfile?.pushupsReps ?? 25);
 
   // --- UI States ---
-  const [isGenerating, setIsGenerating] = useState(false);
+  const isGenerating = combinedTask.isRunning;
   const [isSaved, setIsSaved] = useState(false);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
   const [configCollapsed, setConfigCollapsed] = useState(false);
   const [showDirectives, setShowDirectives] = useState(false);
+  const [activeProtocolTab, setActiveProtocolTab] = useState('schedule'); // 'schedule' | 'coaching' | 'roadmap' | 'safety'
 
   const plan = activeCombinedPlan;
 
@@ -159,7 +161,6 @@ export const CombinedPlanner = () => {
   ];
 
   const handleGenerate = async () => {
-    setIsGenerating(true);
     setIsSaved(false);
     try {
       if (updateAthleteProfile) {
@@ -232,8 +233,6 @@ export const CombinedPlanner = () => {
       setConfigCollapsed(true);
     } catch (err) {
       console.error("Error generating workload plan:", err);
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -1157,626 +1156,719 @@ export const CombinedPlanner = () => {
             </div>
           </div>
 
-          {/* 1.5 High-Visibility Automated Warnings (Pani, Overtraining, BMI, Strength) */}
-          {plan?.overload_warnings && plan.overload_warnings.length > 0 && (
-            <div className="overload-warning-banner glass-card mb-6 animate-fade-in">
-              <div className="warning-banner-top flex items-center justify-between gap-4 pb-3 mb-4 border-b border-rose-500/20">
-                <div className="flex items-center gap-3">
-                  <div className="warning-pulse-icon">
-                    <ShieldAlert className="text-rose-400 animate-pulse" size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-rose-300 font-bold text-base tracking-wide flex items-center gap-2">
-                      <span>🚨 High Workload Strain, Hydration & Biometric Alerts</span>
-                      <span className="badge badge-rose text-xs font-mono font-bold">
-                        {plan.overload_warnings.length} {plan.overload_warnings.length === 1 ? 'Alert' : 'Alerts'} Detected
-                      </span>
-                    </h4>
-                    <p className="text-xs text-muted mt-0.5">
-                      Sports-science algorithms detected acute dehydration, low muscular armor, or compressed recovery gaps. Follow immediate fixes to prevent lumbar stress fractures.
-                    </p>
-                  </div>
-                </div>
+          {/* 1.2 Executive KPI Strip */}
+          <div className="protocol-kpi-strip">
+            <div className="kpi-card">
+              <span className="kpi-card-label">Weekly Bowling Overs</span>
+              <div className="kpi-card-value text-cyan">
+                {plan?.workload_summary?.total_weekly_overs ?? 16} 
+                <span className="text-xs text-muted font-sans font-normal">/ {plan?.workload_summary?.overs_ceiling ?? 24} max</span>
               </div>
-
-              <div className="warning-cards-grid grid grid-cols-1 md:grid-cols-2 gap-3">
-                {plan.overload_warnings.map((warn, wIdx) => (
-                  <div key={wIdx} className={`warning-item-card ${warn.severity} p-3.5 rounded-lg border`}>
-                    <div className="warning-item-header flex items-center justify-between mb-2">
-                      <span className={`severity-tag ${warn.severity} uppercase text-[10px] font-bold px-2 py-0.5 rounded`}>
-                        {warn.severity}
-                      </span>
-                      <span className="text-[11px] text-muted font-mono">{warn.type}</span>
-                    </div>
-                    <h5 className="warning-item-title text-sm font-semibold text-primary mb-1.5">{warn.title}</h5>
-                    <p className="warning-item-reason text-xs text-muted mb-2 leading-relaxed">
-                      <strong className="text-primary">Reason:</strong> {warn.reason}
-                    </p>
-                    <div className="warning-risk-box bg-rose-950/30 p-2 rounded mb-2 border border-rose-900/30">
-                      <span className="text-[11px] text-rose-300 font-semibold block mb-0.5">⚠️ Physiological Risk:</span>
-                      <p className="text-xs text-rose-200/80 leading-relaxed">{warn.physiological_risk}</p>
-                    </div>
-                    <div className="warning-fix-box bg-emerald-950/30 p-2 rounded border border-emerald-900/30">
-                      <span className="text-[11px] text-emerald font-semibold block mb-0.5">🛠️ Actionable Correction:</span>
-                      <p className="text-xs text-emerald-200 leading-relaxed">{warn.actionable_fix}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <span className="kpi-card-sub text-emerald">✓ ECB Directive Compliant</span>
             </div>
-          )}
 
-          {/* 1.8 STAGED ATHLETIC TARGETS & PERIODIZATION ROADMAP */}
-          <div className="staged-targets-card mb-6 animate-fade-in">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-purple-500/20">
-              <div className="flex items-center gap-3">
-                <div className="ai-badge-pulse">
-                  <Target size={20} className="text-purple-400" />
-                </div>
-                <div>
-                  <h4 className="text-purple-300 font-bold text-base tracking-wide flex items-center gap-2">
-                    <span>🎯 Staged Athletic Targets & Periodization Roadmap</span>
-                  </h4>
-                  <p className="text-xs text-muted mt-0.5">
-                    Strategic 3-phase progression tailored to your BMI ({calculatedBmi}), {doesDeadlifts ? `Deadlift strength (${strengthRatio}x BW)` : `Bodyweight foundation (${pushupsReps} pushups)`}, and bowling volume.
-                  </p>
-                </div>
+            <div className="kpi-card">
+              <span className="kpi-card-label">ACWR Workload Ratio</span>
+              <div className="kpi-card-value text-emerald">
+                {plan?.workload_summary?.acwr_score ?? 1.15}
               </div>
-              <span className="badge badge-purple font-mono text-xs">
-                Active: {plan?.staged_targets?.current_focus || 'Phase 1: Armor & Foundation'}
+              <span className="kpi-card-sub text-emerald">● Optimal Sweet Spot (0.8 - 1.3)</span>
+            </div>
+
+            <div className="kpi-card">
+              <span className="kpi-card-label">Daily Fueling Target</span>
+              <div className="kpi-card-value text-amber">
+                {plan?.nutrition_summary?.training_day_calories ?? 2800} 
+                <span className="text-xs text-muted font-sans font-normal">kcal</span>
+              </div>
+              <span className="kpi-card-sub text-secondary">
+                {plan?.nutrition_summary?.daily_protein_target_g ?? 150}g Protein Target
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-              {/* Phase 1 */}
-              <div className="stage-phase-card active-phase">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-mono font-bold text-cyan uppercase tracking-wider">
-                    {plan?.staged_targets?.phase_1?.title || 'Phase 1: Armor & Foundation'}
-                  </span>
-                  <span className="badge badge-cyan text-[10px] font-bold">WEEKS 1–4</span>
-                </div>
-                <p className="text-xs text-muted mb-3 leading-relaxed">
-                  {plan?.staged_targets?.phase_1?.summary || 'Build muscular armor and posterior chain capacity to absorb 8-9x BW delivery strides.'}
-                </p>
-                <div className="space-y-2">
-                  {(plan?.staged_targets?.phase_1?.targets || [
-                    calculatedBmi < 18.5 ? "First gain +3 to 4 kg lean muscular armor (Reach BMI > 19.5)" : "Solidify posterior chain foundation",
-                    doesDeadlifts ? `Progress Trap Bar Deadlift to ${Math.round(weight * 1.5)}kg (1.5x BW)` : "Master partner/bed-anchored Nordic hamstring drops & 30+ pushups",
-                    `Hydration Lock: Minimum 3.8L fluid intake daily with electrolytes`,
-                    `Strict bowling cap at safe ceiling with 48h spacing`
-                  ]).map((t, idx) => (
-                    <div key={idx} className="milestone-item">
-                      <div className="milestone-dot" />
-                      <span>{t}</span>
-                    </div>
-                  ))}
-                </div>
+            <div className="kpi-card">
+              <span className="kpi-card-label">Hydration Minimum</span>
+              <div className="kpi-card-value text-cyan">
+                {waterIntake} 
+                <span className="text-xs text-muted font-sans font-normal">L / day</span>
               </div>
-
-              {/* Phase 2 */}
-              <div className="stage-phase-card">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-mono font-bold text-emerald uppercase tracking-wider">
-                    {plan?.staged_targets?.phase_2?.title || 'Phase 2: Lead-Leg Stiffness'}
-                  </span>
-                  <span className="badge badge-emerald text-[10px] font-bold">WEEKS 5–8</span>
-                </div>
-                <p className="text-xs text-muted mb-3 leading-relaxed">
-                  {plan?.staged_targets?.phase_2?.summary || 'Unilateral brake capacity on lead leg to convert horizontal speed into vertical pace.'}
-                </p>
-                <div className="space-y-2">
-                  {(plan?.staged_targets?.phase_2?.targets || [
-                    doesDeadlifts ? `Bulgarian Split Squats: 3x8 reps with ${Math.round(weight * 0.25)}kg DBs` : "Single-leg Bulgarian split squats (3x15 reps bodyweight)",
-                    "Isometric Front-Knee Stiffness: 3x60s wall sits post-bowling",
-                    "Core anti-rotation Paloff presses (or Ground Hollow Holds)",
-                    "Spot bowling cadence drills for 165°-175° knee lock"
-                  ]).map((t, idx) => (
-                    <div key={idx} className="milestone-item">
-                      <div className="milestone-dot" style={{ background: '#10b981' }} />
-                      <span>{t}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Phase 3 */}
-              <div className="stage-phase-card">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-mono font-bold text-purple uppercase tracking-wider">
-                    {plan?.staged_targets?.phase_3?.title || 'Phase 3: Peak Velocity'}
-                  </span>
-                  <span className="badge badge-purple text-[10px] font-bold">WEEKS 9–12</span>
-                </div>
-                <p className="text-xs text-muted mb-3 leading-relaxed">
-                  {plan?.staged_targets?.phase_3?.summary || 'Translate strength gains into explosive bowling speed while keeping ACWR in sweet spot.'}
-                </p>
-                <div className="space-y-2">
-                  {(plan?.staged_targets?.phase_3?.targets || [
-                    "Overhead rotational medicine ball slams for kinetic whip",
-                    `Full run-up velocity conversion: Target > ${maxSpeed} km/h`,
-                    "ACWR regulation locked in sweet spot (0.90 - 1.25)",
-                    "Maintain 48h spacing during high-overs tournament spells"
-                  ]).map((t, idx) => (
-                    <div key={idx} className="milestone-item">
-                      <div className="milestone-dot" style={{ background: '#a855f7' }} />
-                      <span>{t}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <span className="kpi-card-sub text-cyan">💧 Spinal Disc Cushioning</span>
             </div>
           </div>
 
-          {/* 2. Athlete Load & Biometric Strength Analytics */}
-          <div className="athlete-analytics-grid">
-            {/* CARD 1: User Workload & Strain (ACWR) */}
-            <div className="analytics-card workload-analytics glass-card">
-              <div className="analytics-card-header">
-                <div className="flex items-center gap-2">
-                  <Activity size={18} className="text-cyan" />
-                  <h4>Current Workload & Strain (ACWR)</h4>
+          {/* 1.3 Segmented Navigation Tabs for Protocol Results */}
+          <div className="protocol-tabs-nav">
+            <button 
+              type="button"
+              className={`protocol-tab-btn schedule-tab ${activeProtocolTab === 'schedule' ? 'active' : ''}`}
+              onClick={() => setActiveProtocolTab('schedule')}
+            >
+              <Calendar size={16} />
+              <span>7-Day Schedule & Routine</span>
+            </button>
+            <button 
+              type="button"
+              className={`protocol-tab-btn coaching-tab ${activeProtocolTab === 'coaching' ? 'active' : ''}`}
+              onClick={() => setActiveProtocolTab('coaching')}
+            >
+              <Sparkles size={16} />
+              <span>AI Coaching Diagnostic</span>
+            </button>
+            <button 
+              type="button"
+              className={`protocol-tab-btn roadmap-tab ${activeProtocolTab === 'roadmap' ? 'active' : ''}`}
+              onClick={() => setActiveProtocolTab('roadmap')}
+            >
+              <Target size={16} />
+              <span>Targets & Roadmap</span>
+            </button>
+            <button 
+              type="button"
+              className={`protocol-tab-btn safety-tab ${activeProtocolTab === 'safety' ? 'active' : ''}`}
+              onClick={() => setActiveProtocolTab('safety')}
+            >
+              <ShieldCheck size={16} />
+              <span>Workload & Safety Audit</span>
+              {plan?.overload_warnings?.length > 0 && (
+                <span className="badge badge-rose text-[10px] ml-1">{plan.overload_warnings.length}</span>
+              )}
+            </button>
+          </div>
+
+          {/* TAB 1: 7-DAY SCHEDULE & ROUTINE */}
+          {activeProtocolTab === 'schedule' && (
+            <div className="protocol-schedule-tab animate-fade-in">
+              {/* 7-Day Interactive Matrix Selector */}
+              <div className="days-nav-tabs glass-card mb-4">
+                <div className="days-tab-header-row">
+                  <span className="days-tab-header-label">
+                    <Calendar size={15} className="text-cyan inline mr-1" />
+                    Interactive 7-Day Workload Schedule:
+                  </span>
+                  <span className="days-tab-helper">Click any day to inspect spell limits, drills & gym session</span>
                 </div>
-                <span className="zone-pill sweet-spot">ACWR {plan?.workload_summary?.acwr_score ?? 1.15}</span>
+                <div className="days-tab-scroller">
+                  {(plan?.schedule || []).map((dayItem, idx) => {
+                    const isSelected = idx === selectedDayIdx;
+                    const isMax = dayItem.day_type === 'max_overs_bowling';
+                    const isGym = dayItem.day_type === 'gym_strength' || dayItem.day_type === 'calisthenics_ground';
+                    const isDual = dayItem.day_type === 'dual_session';
+                    const isRec = dayItem.day_type === 'active_recovery';
+
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        className={`day-tab-btn ${isSelected ? 'active' : ''} ${dayItem.day_type}`}
+                        onClick={() => setSelectedDayIdx(idx)}
+                      >
+                        <div className="day-tab-icon">
+                          {isMax ? <Zap size={15} className="text-rose-400" /> :
+                           isGym ? <Dumbbell size={15} className="text-purple-400" /> :
+                           isDual ? <Activity size={15} className="text-amber-400" /> :
+                           isRec ? <ShieldCheck size={15} className="text-emerald-400" /> :
+                           <Award size={15} className="text-cyan-400" />}
+                        </div>
+                        <span className="day-name">{dayItem.day.slice(0, 3).toUpperCase()}</span>
+                        <span className="day-badge-text">{dayItem.badge}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              {/* ACWR Visual Meter */}
-              <div className="acwr-meter-container">
-                <div className="acwr-scale-labels">
-                  <span>&lt;0.8 Underload</span>
-                  <span className="text-emerald font-bold">0.8 – 1.3 Sweet Spot</span>
-                  <span>&gt;1.5 Danger</span>
-                </div>
-                <div className="acwr-gauge-bar">
-                  <div className="gauge-zone underload" style={{ width: '25%' }}></div>
-                  <div className="gauge-zone sweet-spot" style={{ width: '45%' }}></div>
-                  <div className="gauge-zone warning" style={{ width: '15%' }}></div>
-                  <div className="gauge-zone danger" style={{ width: '15%' }}></div>
-                  <div 
-                    className="gauge-pointer"
-                    style={{ 
-                      left: `${Math.min(95, Math.max(5, (((plan?.workload_summary?.acwr_score ?? 1.15) - 0.5) / 1.5) * 100))}%` 
-                    }}
-                    title={`Current ACWR: ${plan?.workload_summary?.acwr_score ?? 1.15}`}
-                  ></div>
-                </div>
-                <p className="acwr-meter-caption">
-                  Acute:Chronic Ratio is <strong>{plan?.workload_summary?.acwr_score ?? 1.15}</strong>. Safe conditioning for bowling stamina while protecting pars interarticularis spinal health.
-                </p>
-              </div>
-
-              {/* Weekly Overs Strain Bar */}
-              <div className="workload-stat-row">
-                <div className="workload-metric-box">
-                  <span className="metric-label">Weekly Bowling Strain</span>
-                  <div className="metric-num text-amber">{plan?.workload_summary?.total_weekly_overs ?? 16} Overs</div>
-                  <div className="metric-progress-wrap">
-                    <div 
-                      className="metric-progress-fill amber" 
-                      style={{ width: `${Math.min(100, ((plan?.workload_summary?.total_weekly_overs ?? 16) / (age < 19 ? 18 : 24)) * 100)}%` }}
-                    ></div>
+              {/* Day Detail Card */}
+              {currentDay && (
+                <div className="day-card workload-card glass-card animate-fade-in mb-4">
+                  <div className="day-card-header">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="day-flag font-mono font-bold text-cyan">{currentDay.day.toUpperCase()}</span>
+                        <span className={`pill-badge ${currentDay.day_type}`}>{currentDay.badge}</span>
+                      </div>
+                      <h4 className="day-headline">{currentDay.title}</h4>
+                    </div>
+                    <Dumbbell className="text-cyan" size={24} />
                   </div>
-                  <span className="metric-sub">Recommended ceiling: {age < 19 ? 18 : 24} overs/wk ({age}y bowler)</span>
-                </div>
 
-                <div className="workload-metric-box">
-                  <span className="metric-label">Weekly Schedule Density</span>
-                  <div className="metric-num text-purple">{gymDays + groundDays} Sessions</div>
-                  <div className="session-mini-tags">
-                    <span className="tag-chip ground">{groundDays} Ground ({maxOversDays} Match)</span>
-                    <span className="tag-chip gym">{gymDays === 0 ? 'Calisthenics Only' : `${gymDays} Gym Strength`}</span>
+                  {/* Athlete Adaptable Daily Timetable */}
+                  <div className="schedule-adaptability-box mb-4">
+                    <div className="box-title flex items-center gap-2">
+                      <Clock size={14} className="text-cyan" />
+                      <span>{plan?.athlete_status === 'student' ? 'Student Timetable (Class-Friendly Structure)' : 'Pro Athlete Daily Schedule'}</span>
+                    </div>
+                    <p className="schedule-time-text">
+                      {plan?.athlete_status === 'student' ? currentDay.student_schedule : currentDay.fulltime_schedule}
+                    </p>
+                    <div className="gap-advisory-note">
+                      <HeartPulse size={13} className="text-emerald shrink-0" />
+                      <span>{currentDay.session_gap_advisory}</span>
+                    </div>
                   </div>
-                  <span className="metric-sub">{sessionGap.split('•')[0].trim()}</span>
+
+                  {/* Ground Bowling & Gym Session Grid */}
+                  <div className="day-fullwidth-grid">
+                    {/* Ground Session Details */}
+                    {currentDay.workload?.ground_session ? (
+                      <div className="training-subblock ground-block">
+                        <div className="subblock-header">
+                          <div className="flex items-center gap-2">
+                            <Award size={16} className="text-amber" />
+                            <strong className="text-primary text-sm">Ground Cricket Bowling Session</strong>
+                          </div>
+                          <span className="overs-counter font-mono">
+                            {currentDay.workload.ground_session.overs} OVERS • {currentDay.workload.ground_session.intensity}
+                          </span>
+                        </div>
+                        <p className="drill-focus-text">
+                          <strong>Focus:</strong> {currentDay.workload.ground_session.focus}
+                        </p>
+                        <ul className="drills-checklist">
+                          {(currentDay.workload.ground_session.drills || []).map((drill, dIdx) => (
+                            <li key={dIdx} className="drill-item">
+                              <Check size={13} className="text-cyan shrink-0" />
+                              <span>{drill}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="training-subblock rest-subblock">
+                        <div className="flex items-center gap-2 mb-1 text-emerald">
+                          <ShieldCheck size={16} />
+                          <strong className="text-xs">Spine & Knee Brace Deload</strong>
+                        </div>
+                        <span className="text-xs text-muted">No ground bowling today to allow bone remodeling and disc decompression.</span>
+                      </div>
+                    )}
+
+                    {/* Gym or Calisthenics Session Details */}
+                    {currentDay.workload?.gym_session ? (
+                      <div className="training-subblock gym-block">
+                        <div className="subblock-header">
+                          <div className="flex items-center gap-2">
+                            <Dumbbell size={16} className="text-purple" />
+                            <strong className="text-primary text-sm">{currentDay.workload.gym_session.status}</strong>
+                          </div>
+                          <span className="duration-counter font-mono">
+                            {currentDay.workload.gym_session.duration}
+                          </span>
+                        </div>
+                        <p className="drill-focus-text">
+                          <strong>Focus:</strong> {currentDay.workload.gym_session.focus}
+                        </p>
+                        <div className="exercises-table">
+                          {(currentDay.workload.gym_session.exercises || []).map((ex, eIdx) => (
+                            <div key={eIdx} className="exercise-row">
+                              <span className="ex-name">{ex.name}</span>
+                              <span className="ex-metrics font-mono">{ex.sets} Sets × {ex.reps}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="training-subblock rest-subblock">
+                        <div className="flex items-center gap-2 mb-1 text-purple">
+                          <HeartPulse size={16} />
+                          <strong className="text-xs">Central Nervous System Reset</strong>
+                        </div>
+                        <span className="text-xs text-muted">Full rest from high-impact physical loads today. Focus on myofascial foam rolling, passive stretching, and sleep.</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
+          )}
 
-            {/* CARD 2: Strength Capacity & Muscular Armor Baseline */}
-            <div className="analytics-card macros-analytics glass-card">
-              <div className="analytics-card-header">
-                <div className="flex items-center gap-2">
-                  <Gauge size={18} className="text-emerald" />
-                  <h4>Strength Baseline & Muscular Armor ({weight} kg)</h4>
-                </div>
-                <span className={`zone-pill ${calculatedBmi < 18.5 ? 'red' : 'sweet-spot'}`}>
-                  BMI: {calculatedBmi} {calculatedBmi < 18.5 ? '(Armor Deficit)' : '(Normal)'}
-                </span>
-              </div>
-
-              {/* Strength Spec Grid */}
-              <div className="macro-spec-grid">
-                {doesDeadlifts ? (
-                  <div className="macro-spec-item protein">
-                    <div className="spec-top">
-                      <span className="spec-name">Deadlift Capacity</span>
-                      <strong className="spec-val text-cyan">{estimatedDeadlift1Rm} kg ({strengthRatio}x BW)</strong>
+          {/* TAB 2: AI COACHING DIAGNOSTIC */}
+          {activeProtocolTab === 'coaching' && (
+            <div className="protocol-coaching-tab animate-fade-in space-y-4">
+              {/* AI Sports-Science Coaching Assessment */}
+              <div className="ai-coaching-card glass-card">
+                <div className="ai-coaching-header">
+                  <div className="flex items-center gap-3">
+                    <div className="ai-badge-pulse">
+                      <Sparkles size={18} className="text-cyan animate-pulse" />
                     </div>
-                    <div className="spec-bar-wrap">
-                      <div className="spec-bar cyan" style={{ width: `${Math.min(100, (strengthRatio / 2.0) * 100)}%` }}></div>
+                    <div>
+                      <h3 className="ai-card-title">AI Sports-Science Routine Assessment</h3>
+                      <p className="ai-card-subtitle">
+                        Sports-science synthesis derived from ACWR Workload ({plan?.workload_summary?.acwr_score ?? 1.15}), {doesDeadlifts ? `Deadlift Strength (${strengthRatio}x BW)` : `Bodyweight Capacity (${pushupsReps} pushups)`}, and BMI ({calculatedBmi})
+                      </p>
                     </div>
-                    <span className="spec-note">Target: 1.6x–2.0x bodyweight for rigid knee plant lock</span>
                   </div>
-                ) : (
-                  <div className="macro-spec-item protein">
-                    <div className="spec-top">
-                      <span className="spec-name">Bodyweight Squats</span>
-                      <strong className="spec-val text-cyan">{bodyweightSquatsReps} Reps</strong>
+                  <div className="ai-status-tag">
+                    <ShieldCheck size={14} className="text-emerald" />
+                    <span>Verified Sports Science Foundation</span>
+                  </div>
+                </div>
+
+                {/* Coach Summary Note */}
+                {aiAssessment?.coach_summary && (
+                  <div className="coach-summary-quote">
+                    <div className="quote-icon-wrap">
+                      <MessageSquare size={16} className="text-cyan" />
                     </div>
-                    <div className="spec-bar-wrap">
-                      <div className="spec-bar cyan" style={{ width: `${Math.min(100, (bodyweightSquatsReps / 45) * 100)}%` }}></div>
+                    <div className="quote-body">
+                      <span className="quote-label">Head Coach AI Directive:</span>
+                      <p className="quote-text">{aiAssessment.coach_summary}</p>
                     </div>
-                    <span className="spec-note">Lower body endurance without gym weights</span>
                   </div>
                 )}
 
-                <div className="macro-spec-item carbs">
-                  <div className="spec-top">
-                    <span className="spec-name">Single-Leg Brake</span>
-                    <strong className="spec-val text-amber">
-                      {doesDeadlifts ? `${splitSquatKg} kg × ${splitSquatReps} r` : `${splitSquatReps} Reps / Leg`}
-                    </strong>
-                  </div>
-                  <div className="spec-bar-wrap">
-                    <div className="spec-bar amber" style={{ width: `${Math.min(100, (splitSquatReps / 12) * 100)}%` }}></div>
-                  </div>
-                  <span className="spec-note">Unilateral eccentric strength prevents knee brace buckling</span>
-                </div>
-
-                <div className="macro-spec-item fats">
-                  <div className="spec-top">
-                    <span className="spec-name">Anti-Extension Core</span>
-                    <strong className="spec-val text-purple">{plankSeconds}s Hold</strong>
-                  </div>
-                  <div className="spec-bar-wrap">
-                    <div className="spec-bar purple" style={{ width: `${Math.min(100, (plankSeconds / 90) * 100)}%` }}></div>
-                  </div>
-                  <span className="spec-note">Resists lumbar hyperextension shear at delivery stride</span>
-                </div>
-
-                <div className="macro-spec-item hydration">
-                  <div className="spec-top">
-                    <span className="spec-name">Hydration Status</span>
-                    <strong className={`spec-val ${waterIntake < 3.5 ? 'text-rose-400' : 'text-emerald'}`}>
-                      {waterIntake}L / {Math.max(3.8, (weight * 0.055)).toFixed(1)}L
-                    </strong>
-                  </div>
-                  <div className="spec-bar-wrap">
-                    <div className="spec-bar emerald" style={{ width: `${Math.min(100, (waterIntake / 4.5) * 100)}%` }}></div>
-                  </div>
-                  <span className="spec-note">{waterIntake < 3.5 ? '⚠️ High Cramp & Disc Risk' : 'Optimal Disc Cushioning'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* AI Sports-Science Coaching Assessment */}
-          <div className="ai-coaching-card glass-card">
-            <div className="ai-coaching-header">
-              <div className="flex items-center gap-3">
-                <div className="ai-badge-pulse">
-                  <Sparkles size={18} className="text-cyan animate-pulse" />
-                </div>
-                <div>
-                  <h3 className="ai-card-title">AI Sports-Science Routine Assessment</h3>
-                  <p className="ai-card-subtitle">
-                    Sports-science synthesis derived from ACWR Workload ({plan?.workload_summary?.acwr_score ?? 1.15}), {doesDeadlifts ? `Deadlift Strength (${strengthRatio}x BW)` : `Bodyweight Capacity (${pushupsReps} pushups)`}, and BMI ({calculatedBmi})
-                  </p>
-                </div>
-              </div>
-              <div className="ai-status-tag">
-                <ShieldCheck size={14} className="text-emerald" />
-                <span>Verified Sports Science Foundation</span>
-              </div>
-            </div>
-
-            {/* Coach Summary Note */}
-            {aiAssessment?.coach_summary && (
-              <div className="coach-summary-quote">
-                <div className="quote-icon-wrap">
-                  <MessageSquare size={16} className="text-cyan" />
-                </div>
-                <div className="quote-body">
-                  <span className="quote-label">Head Coach AI Directive:</span>
-                  <p className="quote-text">{aiAssessment.coach_summary}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Dual Column: Positives & Current Lacks */}
-            <div className="coaching-columns-grid">
-              {/* Positives Card */}
-              <div className="coaching-col-card positives-card">
-                <div className="col-header flex items-center gap-2">
-                  <CheckCircle2 size={16} className="text-emerald" />
-                  <h4>Positives & Physical Baseline</h4>
-                </div>
-                <ul className="coaching-points-list">
-                  {(aiAssessment?.positives || []).map((pos, idx) => (
-                    <li key={idx} className="point-item positive">
-                      <span className="point-bullet emerald">✓</span>
-                      <span>{pos}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Current Lacks Card */}
-              <div className="coaching-col-card lacks-card">
-                <div className="col-header flex items-center gap-2">
-                  <AlertTriangle size={16} className="text-amber" />
-                  <h4>Current Lacks, Gaps & Risks</h4>
-                </div>
-                <ul className="coaching-points-list">
-                  {(aiAssessment?.current_lacks || []).map((lack, idx) => (
-                    <li key={idx} className="point-item lack">
-                      <span className="point-bullet amber">!</span>
-                      <span>{lack}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Goal Action Directives */}
-            {(aiAssessment?.goal_action_directives || []).length > 0 && (
-              <div className="goal-directives-block">
-                <h4 className="directives-title flex items-center gap-2">
-                  <Compass size={16} className="text-purple" />
-                  <span>Action Plan: What You Should Do According to Your Goal ({goal.replace('_', ' ').toUpperCase()})</span>
-                </h4>
-                <div className="directives-list">
-                  {aiAssessment.goal_action_directives.map((directive, idx) => (
-                    <div key={idx} className="directive-row">
-                      <span className="directive-step">{idx + 1}</span>
-                      <p className="directive-text">{directive.replace(/^\d+\.\s*/, '')}</p>
+                {/* Dual Column: Positives & Current Lacks */}
+                <div className="coaching-columns-grid">
+                  {/* Positives Card */}
+                  <div className="coaching-col-card positives-card">
+                    <div className="col-header flex items-center gap-2">
+                      <CheckCircle2 size={16} className="text-emerald" />
+                      <h4>Positives & Physical Baseline</h4>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Current Mistakes & Gaps (Aap Current Mein Kya Ghalat Kar Rahe Hain) */}
-          {plan?.current_mistakes_and_gaps && plan.current_mistakes_and_gaps.length > 0 && (
-            <div className="mistakes-card glass-card mb-6 animate-fade-in">
-              <div className="mistakes-header-bar flex items-center justify-between pb-3 mb-4 border-b border-amber-500/20">
-                <div className="flex items-center gap-3">
-                  <div className="icon-wrap-amber">
-                    <AlertTriangle className="text-amber animate-pulse" size={22} />
-                  </div>
-                  <div>
-                    <h4 className="text-amber font-bold text-base tracking-wide flex items-center gap-2">
-                      <span>⚠️ Current Training & Recovery Gaps (Aap Current Mein Kya Ghalat Kar Rahe Hain)</span>
-                    </h4>
-                    <p className="text-xs text-muted mt-0.5">
-                      Specific assessment of your weekly bowling days ({weeklyBowlingDays}d), session spacing ({sessionGap.split('•')[0].trim()}), hydration ({waterIntake}L), and strength capacity.
-                    </p>
-                  </div>
-                </div>
-                <span className="badge badge-amber text-xs font-mono font-bold">Analysis Feedback</span>
-              </div>
-
-              <div className="mistakes-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {plan.current_mistakes_and_gaps.map((item, mIdx) => (
-                  <div key={mIdx} className="mistake-item-card p-3.5 rounded-lg border border-amber-500/20 bg-amber-950/10 flex flex-col justify-between">
-                    <div>
-                      <span className="text-[11px] font-mono text-amber font-bold uppercase tracking-wider block mb-2">
-                        {item.category}
-                      </span>
-                      <div className="mistake-detail-row mb-2">
-                        <span className="text-[11px] text-rose-300 font-semibold flex items-center gap-1 mb-0.5">
-                          <XCircle size={13} className="text-rose-400 shrink-0" /> Current Mistake:
-                        </span>
-                        <p className="text-xs text-primary leading-relaxed">{item.mistake}</p>
-                      </div>
-                      <div className="mistake-detail-row mb-2.5">
-                        <span className="text-[11px] text-amber font-semibold flex items-center gap-1 mb-0.5">
-                          <AlertOctagon size={13} className="text-amber shrink-0" /> Kyun Harmful Hai:
-                        </span>
-                        <p className="text-xs text-muted leading-relaxed">{item.why_harmful}</p>
-                      </div>
-                    </div>
-                    <div className="mistake-fix-box bg-emerald-950/30 p-2 rounded border border-emerald-800/30 mt-1">
-                      <span className="text-[11px] text-emerald font-semibold flex items-center gap-1 mb-0.5">
-                        <CheckCircle2 size={13} className="text-emerald shrink-0" /> Kya Karna Chahiye (Fix):
-                      </span>
-                      <p className="text-xs text-emerald-200 leading-relaxed">{item.correction}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 3. 7-Day Interactive Matrix Selector */}
-          <div className="days-nav-tabs glass-card">
-            <div className="days-tab-header-row">
-              <span className="days-tab-header-label">
-                <Calendar size={15} className="text-cyan inline mr-1" />
-                Structured 7-Day Workload Schedule:
-              </span>
-              <span className="days-tab-helper">Click any day to inspect fast bowling volume, strength & recovery</span>
-            </div>
-            <div className="days-tab-scroller">
-              {(plan?.schedule || []).map((dayItem, idx) => {
-                const isSelected = idx === selectedDayIdx;
-                const isMax = dayItem.day_type === 'max_overs_bowling';
-                const isGym = dayItem.day_type === 'gym_strength' || dayItem.day_type === 'calisthenics_ground';
-                const isDual = dayItem.day_type === 'dual_session';
-                const isRec = dayItem.day_type === 'active_recovery';
-
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`day-tab-btn ${isSelected ? 'active' : ''} ${dayItem.day_type}`}
-                    onClick={() => setSelectedDayIdx(idx)}
-                  >
-                    <div className="day-tab-icon">
-                      {isMax ? <Zap size={15} className="text-rose-400" /> :
-                       isGym ? <Dumbbell size={15} className="text-purple-400" /> :
-                       isDual ? <Activity size={15} className="text-amber-400" /> :
-                       isRec ? <ShieldCheck size={15} className="text-emerald-400" /> :
-                       <Award size={15} className="text-cyan-400" />}
-                    </div>
-                    <span className="day-name">{dayItem.day.slice(0, 3).toUpperCase()}</span>
-                    <span className="day-badge-text">{dayItem.badge}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 4. Day Detail: Full-Width Fast Bowler Workload & Strength View */}
-          {currentDay && (
-            <div className="day-card workload-card glass-card animate-fade-in">
-              <div className="day-card-header">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="day-flag font-mono font-bold text-cyan">{currentDay.day.toUpperCase()}</span>
-                    <span className={`pill-badge ${currentDay.day_type}`}>{currentDay.badge}</span>
-                  </div>
-                  <h4 className="day-headline">{currentDay.title}</h4>
-                </div>
-                <Dumbbell className="text-cyan" size={24} />
-              </div>
-
-              {/* Athlete Adaptable Daily Timetable */}
-              <div className="schedule-adaptability-box mb-4">
-                <div className="box-title flex items-center gap-2">
-                  <Clock size={14} className="text-cyan" />
-                  <span>{plan?.athlete_status === 'student' ? 'Student Timetable (Class-Friendly Structure)' : 'Pro Athlete Daily Schedule'}</span>
-                </div>
-                <p className="schedule-time-text">
-                  {plan?.athlete_status === 'student' ? currentDay.student_schedule : currentDay.fulltime_schedule}
-                </p>
-                <div className="gap-advisory-note">
-                  <HeartPulse size={13} className="text-emerald shrink-0" />
-                  <span>{currentDay.session_gap_advisory}</span>
-                </div>
-              </div>
-
-              {/* Ground Bowling Session & Strength/Calisthenics Grid */}
-              <div className="day-fullwidth-grid">
-                {/* Ground Session Details */}
-                {currentDay.workload?.ground_session ? (
-                  <div className="training-subblock ground-block">
-                    <div className="subblock-header">
-                      <div className="flex items-center gap-2">
-                        <Award size={16} className="text-amber" />
-                        <strong className="text-primary text-sm">Ground Cricket Bowling Session</strong>
-                      </div>
-                      <span className="overs-counter font-mono">
-                        {currentDay.workload.ground_session.overs} OVERS • {currentDay.workload.ground_session.intensity}
-                      </span>
-                    </div>
-                    <p className="drill-focus-text">
-                      <strong>Focus:</strong> {currentDay.workload.ground_session.focus}
-                    </p>
-                    <ul className="drills-checklist">
-                      {(currentDay.workload.ground_session.drills || []).map((drill, dIdx) => (
-                        <li key={dIdx} className="drill-item">
-                          <Check size={13} className="text-cyan shrink-0" />
-                          <span>{drill}</span>
+                    <ul className="coaching-points-list">
+                      {(aiAssessment?.positives || []).map((pos, idx) => (
+                        <li key={idx} className="point-item positive">
+                          <span className="point-bullet emerald">✓</span>
+                          <span>{pos}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
-                ) : (
-                  <div className="training-subblock rest-subblock">
-                    <div className="flex items-center gap-2 mb-1 text-emerald">
-                      <ShieldCheck size={16} />
-                      <strong className="text-xs">Spine & Knee Brace Deload</strong>
-                    </div>
-                    <span className="text-xs text-muted">No ground bowling today to allow bone remodeling and disc decompression.</span>
-                  </div>
-                )}
 
-                {/* Gym or Calisthenics Session Details */}
-                {currentDay.workload?.gym_session ? (
-                  <div className="training-subblock gym-block">
-                    <div className="subblock-header">
-                      <div className="flex items-center gap-2">
-                        <Dumbbell size={16} className="text-purple" />
-                        <strong className="text-primary text-sm">{currentDay.workload.gym_session.status}</strong>
-                      </div>
-                      <span className="duration-counter font-mono">
-                        {currentDay.workload.gym_session.duration}
-                      </span>
+                  {/* Current Lacks Card */}
+                  <div className="coaching-col-card lacks-card">
+                    <div className="col-header flex items-center gap-2">
+                      <AlertTriangle size={16} className="text-amber" />
+                      <h4>Current Lacks, Gaps & Risks</h4>
                     </div>
-                    <p className="drill-focus-text">
-                      <strong>Focus:</strong> {currentDay.workload.gym_session.focus}
-                    </p>
-                    <div className="exercises-table">
-                      {(currentDay.workload.gym_session.exercises || []).map((ex, eIdx) => (
-                        <div key={eIdx} className="exercise-row">
-                          <span className="ex-name">{ex.name}</span>
-                          <span className="ex-metrics font-mono">{ex.sets} Sets × {ex.reps}</span>
+                    <ul className="coaching-points-list">
+                      {(aiAssessment?.current_lacks || []).map((lack, idx) => (
+                        <li key={idx} className="point-item lack">
+                          <span className="point-bullet amber">!</span>
+                          <span>{lack}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Goal Action Directives */}
+                {(aiAssessment?.goal_action_directives || []).length > 0 && (
+                  <div className="goal-directives-block">
+                    <h4 className="directives-title flex items-center gap-2">
+                      <Compass size={16} className="text-purple" />
+                      <span>Action Plan: What You Should Do According to Your Goal ({goal.replace('_', ' ').toUpperCase()})</span>
+                    </h4>
+                    <div className="directives-list">
+                      {aiAssessment.goal_action_directives.map((directive, idx) => (
+                        <div key={idx} className="directive-row">
+                          <span className="directive-step">{idx + 1}</span>
+                          <p className="directive-text">{directive.replace(/^\d+\.\s*/, '')}</p>
                         </div>
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <div className="training-subblock rest-subblock">
-                    <div className="flex items-center gap-2 mb-1 text-purple">
-                      <HeartPulse size={16} />
-                      <strong className="text-xs">Central Nervous System Reset</strong>
+                )}
+              </div>
+
+              {/* Current Mistakes & Gaps */}
+              {plan?.current_mistakes_and_gaps && plan.current_mistakes_and_gaps.length > 0 && (
+                <div className="mistakes-card glass-card">
+                  <div className="mistakes-header-bar flex items-center justify-between pb-3 mb-4 border-b border-amber-500/30">
+                    <div className="flex items-center gap-3">
+                      <div className="icon-wrap-amber">
+                        <AlertTriangle className="text-amber animate-pulse" size={22} />
+                      </div>
+                      <div>
+                        <h4 className="text-amber font-bold text-base tracking-wide flex items-center gap-2">
+                          <span>⚠️ Current Training & Recovery Gaps</span>
+                        </h4>
+                        <p className="text-xs text-muted mt-0.5">
+                          Specific assessment of your weekly bowling days ({weeklyBowlingDays}d), session spacing, and hydration.
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-xs text-muted">Full rest from high-impact physical loads today. Focus on myofascial foam rolling, passive stretching, and sleep.</span>
+                    <span className="badge badge-amber text-xs font-mono font-bold">Analysis Feedback</span>
+                  </div>
+
+                  <div className="mistakes-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {plan.current_mistakes_and_gaps.map((item, mIdx) => (
+                      <div key={mIdx} className="mistake-item-card">
+                        <div>
+                          <span className="mistake-category-badge">
+                            {item.category}
+                          </span>
+                          <div className="mistake-detail-row">
+                            <span className="mistake-label-red">
+                              <XCircle size={13} className="shrink-0" /> Current Mistake:
+                            </span>
+                            <p className="mistake-text-primary">{item.mistake}</p>
+                          </div>
+                          <div className="mistake-detail-row">
+                            <span className="mistake-label-amber">
+                              <AlertOctagon size={13} className="shrink-0" /> Physiological Strain:
+                            </span>
+                            <p className="mistake-text-secondary">{item.why_harmful}</p>
+                          </div>
+                        </div>
+                        <div className="mistake-fix-box">
+                          <span className="fix-label">
+                            <CheckCircle2 size={13} className="shrink-0" /> Actionable Fix:
+                          </span>
+                          <p>{item.correction}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 3: STAGED TARGETS & ROADMAP */}
+          {activeProtocolTab === 'roadmap' && (
+            <div className="protocol-roadmap-tab animate-fade-in space-y-4">
+              {/* Staged Targets Roadmap */}
+              <div className="staged-targets-card glass-card p-5">
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-purple-500/20">
+                  <div className="flex items-center gap-3">
+                    <div className="ai-badge-pulse">
+                      <Target size={20} className="text-purple-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-purple-300 font-bold text-base tracking-wide flex items-center gap-2">
+                        <span>🎯 Staged Athletic Targets & Periodization Roadmap</span>
+                      </h4>
+                      <p className="text-xs text-muted mt-0.5">
+                        Strategic 3-phase progression tailored to your BMI ({calculatedBmi}), {doesDeadlifts ? `Deadlift strength (${strengthRatio}x BW)` : `Bodyweight foundation (${pushupsReps} pushups)`}, and bowling volume.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="badge badge-purple font-mono text-xs">
+                    Active: {plan?.staged_targets?.current_focus || 'Phase 1: Armor & Foundation'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                  {/* Phase 1 */}
+                  <div className="stage-phase-card active-phase">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-mono font-bold text-cyan uppercase tracking-wider">
+                        {plan?.staged_targets?.phase_1?.title || 'Phase 1: Armor & Foundation'}
+                      </span>
+                      <span className="badge badge-cyan text-[10px] font-bold">WEEKS 1–4</span>
+                    </div>
+                    <p className="text-xs text-muted mb-3 leading-relaxed">
+                      {plan?.staged_targets?.phase_1?.summary || 'Build muscular armor and posterior chain capacity to absorb 8-9x BW delivery strides.'}
+                    </p>
+                    <div className="space-y-2">
+                      {(plan?.staged_targets?.phase_1?.targets || [
+                        calculatedBmi < 18.5 ? "First gain +3 to 4 kg lean muscular armor (Reach BMI > 19.5)" : "Solidify posterior chain foundation",
+                        doesDeadlifts ? `Progress Trap Bar Deadlift to ${Math.round(weight * 1.5)}kg (1.5x BW)` : "Master partner/bed-anchored Nordic hamstring drops & 30+ pushups",
+                        `Hydration Lock: Minimum 3.8L fluid intake daily with electrolytes`,
+                        `Strict bowling cap at safe ceiling with 48h spacing`
+                      ]).map((t, idx) => (
+                        <div key={idx} className="milestone-item">
+                          <div className="milestone-dot" />
+                          <span>{t}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Phase 2 */}
+                  <div className="stage-phase-card">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-mono font-bold text-emerald uppercase tracking-wider">
+                        {plan?.staged_targets?.phase_2?.title || 'Phase 2: Lead-Leg Stiffness'}
+                      </span>
+                      <span className="badge badge-emerald text-[10px] font-bold">WEEKS 5–8</span>
+                    </div>
+                    <p className="text-xs text-muted mb-3 leading-relaxed">
+                      {plan?.staged_targets?.phase_2?.summary || 'Unilateral brake capacity on lead leg to convert horizontal speed into vertical pace.'}
+                    </p>
+                    <div className="space-y-2">
+                      {(plan?.staged_targets?.phase_2?.targets || [
+                        doesDeadlifts ? `Bulgarian Split Squats: 3x8 reps with ${Math.round(weight * 0.25)}kg DBs` : "Single-leg Bulgarian split squats (3x15 reps bodyweight)",
+                        "Isometric Front-Knee Stiffness: 3x60s wall sits post-bowling",
+                        "Core anti-rotation Paloff presses (or Ground Hollow Holds)",
+                        "Spot bowling cadence drills for 165°-175° knee lock"
+                      ]).map((t, idx) => (
+                        <div key={idx} className="milestone-item">
+                          <div className="milestone-dot" style={{ background: '#10b981' }} />
+                          <span>{t}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Phase 3 */}
+                  <div className="stage-phase-card">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[11px] font-mono font-bold text-purple uppercase tracking-wider">
+                        {plan?.staged_targets?.phase_3?.title || 'Phase 3: Peak Velocity'}
+                      </span>
+                      <span className="badge badge-purple text-[10px] font-bold">WEEKS 9–12</span>
+                    </div>
+                    <p className="text-xs text-muted mb-3 leading-relaxed">
+                      {plan?.staged_targets?.phase_3?.summary || 'Translate strength gains into explosive bowling speed while keeping ACWR in sweet spot.'}
+                    </p>
+                    <div className="space-y-2">
+                      {(plan?.staged_targets?.phase_3?.targets || [
+                        "Overhead rotational medicine ball slams for kinetic whip",
+                        `Full run-up velocity conversion: Target > ${maxSpeed} km/h`,
+                        "ACWR regulation locked in sweet spot (0.90 - 1.25)",
+                        "Maintain 48h spacing during high-overs tournament spells"
+                      ]).map((t, idx) => (
+                        <div key={idx} className="milestone-item">
+                          <div className="milestone-dot" style={{ background: '#a855f7' }} />
+                          <span>{t}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Strength Baseline & Muscular Armor */}
+              <div className="analytics-card macros-analytics glass-card">
+                <div className="analytics-card-header">
+                  <div className="flex items-center gap-2">
+                    <Gauge size={18} className="text-emerald" />
+                    <h4>Strength Baseline & Muscular Armor ({weight} kg)</h4>
+                  </div>
+                  <span className={`zone-pill ${calculatedBmi < 18.5 ? 'red' : 'sweet-spot'}`}>
+                    BMI: {calculatedBmi} {calculatedBmi < 18.5 ? '(Armor Deficit)' : '(Normal)'}
+                  </span>
+                </div>
+
+                <div className="macro-spec-grid">
+                  {doesDeadlifts ? (
+                    <div className="macro-spec-item protein">
+                      <div className="spec-top">
+                        <span className="spec-name">Deadlift Capacity</span>
+                        <strong className="spec-val text-cyan">{estimatedDeadlift1Rm} kg ({strengthRatio}x BW)</strong>
+                      </div>
+                      <div className="spec-bar-wrap">
+                        <div className="spec-bar cyan" style={{ width: `${Math.min(100, (strengthRatio / 2.0) * 100)}%` }}></div>
+                      </div>
+                      <span className="spec-note">Target: 1.6x–2.0x bodyweight for rigid knee plant lock</span>
+                    </div>
+                  ) : (
+                    <div className="macro-spec-item protein">
+                      <div className="spec-top">
+                        <span className="spec-name">Bodyweight Squats</span>
+                        <strong className="spec-val text-cyan">{bodyweightSquatsReps} Reps</strong>
+                      </div>
+                      <div className="spec-bar-wrap">
+                        <div className="spec-bar cyan" style={{ width: `${Math.min(100, (bodyweightSquatsReps / 45) * 100)}%` }}></div>
+                      </div>
+                      <span className="spec-note">Lower body endurance without gym weights</span>
+                    </div>
+                  )}
+
+                  <div className="macro-spec-item carbs">
+                    <div className="spec-top">
+                      <span className="spec-name">Single-Leg Brake</span>
+                      <strong className="spec-val text-amber">
+                        {doesDeadlifts ? `${splitSquatKg} kg × ${splitSquatReps} r` : `${splitSquatReps} Reps / Leg`}
+                      </strong>
+                    </div>
+                    <div className="spec-bar-wrap">
+                      <div className="spec-bar amber" style={{ width: `${Math.min(100, (splitSquatReps / 12) * 100)}%` }}></div>
+                    </div>
+                    <span className="spec-note">Unilateral eccentric strength prevents knee brace buckling</span>
+                  </div>
+
+                  <div className="macro-spec-item fats">
+                    <div className="spec-top">
+                      <span className="spec-name">Anti-Extension Core</span>
+                      <strong className="spec-val text-purple">{plankSeconds}s Hold</strong>
+                    </div>
+                    <div className="spec-bar-wrap">
+                      <div className="spec-bar purple" style={{ width: `${Math.min(100, (plankSeconds / 90) * 100)}%` }}></div>
+                    </div>
+                    <span className="spec-note">Resists lumbar hyperextension shear at delivery stride</span>
+                  </div>
+
+                  <div className="macro-spec-item hydration">
+                    <div className="spec-top">
+                      <span className="spec-name">Hydration Status</span>
+                      <strong className={`spec-val ${waterIntake < 3.5 ? 'text-rose-400' : 'text-emerald'}`}>
+                        {waterIntake}L / {Math.max(3.8, (weight * 0.055)).toFixed(1)}L
+                      </strong>
+                    </div>
+                    <div className="spec-bar-wrap">
+                      <div className="spec-bar emerald" style={{ width: `${Math.min(100, (waterIntake / 4.5) * 100)}%` }}></div>
+                    </div>
+                    <span className="spec-note">{waterIntake < 3.5 ? '⚠️ High Cramp & Disc Risk' : 'Optimal Disc Cushioning'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: WORKLOAD & SAFETY AUDIT */}
+          {activeProtocolTab === 'safety' && (
+            <div className="protocol-safety-tab animate-fade-in space-y-4">
+              {/* Overload Warnings (Red Theme Hazard) */}
+              {plan?.overload_warnings && plan.overload_warnings.length > 0 && (
+                <div className="overload-warning-banner glass-card p-5">
+                  <div className="warning-banner-top flex items-center justify-between gap-4 pb-3 mb-4 border-b border-rose-500/30">
+                    <div className="flex items-center gap-3">
+                      <div className="warning-pulse-icon">
+                        <ShieldAlert className="text-rose animate-pulse" size={24} />
+                      </div>
+                      <div>
+                        <h4 className="text-rose font-bold text-base tracking-wide flex items-center gap-2">
+                          <span>🚨 Workload Strain, Hydration & Biometric Alerts</span>
+                          <span className="badge badge-rose text-xs font-mono font-bold">
+                            {plan.overload_warnings.length} {plan.overload_warnings.length === 1 ? 'Alert' : 'Alerts'} Detected
+                          </span>
+                        </h4>
+                        <p className="text-xs text-muted mt-0.5">
+                          Follow immediate fixes to prevent lumbar stress fractures and joint fatigue.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="warning-cards-grid grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {plan.overload_warnings.map((warn, wIdx) => (
+                      <div key={wIdx} className={`warning-item-card ${warn.severity}`}>
+                        <div className="warning-item-header flex items-center justify-between mb-2">
+                          <span className={`severity-tag ${warn.severity} uppercase text-[10px] font-bold px-2 py-0.5 rounded`}>
+                            {warn.severity}
+                          </span>
+                          <span className="text-[11px] text-muted font-mono font-bold">{warn.type}</span>
+                        </div>
+                        <h5 className="warning-item-title mb-1.5">{warn.title}</h5>
+                        <p className="warning-item-reason mb-2">
+                          <strong className="text-primary">Reason:</strong> {warn.reason}
+                        </p>
+                        <div className="warning-risk-box mb-2">
+                          <span className="risk-label">⚠️ Physiological Risk:</span>
+                          <p>{warn.physiological_risk}</p>
+                        </div>
+                        <div className="warning-fix-box">
+                          <span className="fix-label">🛠️ Actionable Correction:</span>
+                          <p>{warn.actionable_fix}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Workload & Strain (ACWR) */}
+              <div className="analytics-card workload-analytics glass-card p-5">
+                <div className="analytics-card-header">
+                  <div className="flex items-center gap-2">
+                    <Activity size={18} className="text-cyan" />
+                    <h4>Current Workload & Strain (ACWR)</h4>
+                  </div>
+                  <span className="zone-pill sweet-spot">ACWR {plan?.workload_summary?.acwr_score ?? 1.15}</span>
+                </div>
+
+                <div className="acwr-meter-container">
+                  <div className="acwr-scale-labels">
+                    <span>&lt;0.8 Underload</span>
+                    <span className="text-emerald font-bold">0.8 – 1.3 Sweet Spot</span>
+                    <span>&gt;1.5 Danger</span>
+                  </div>
+                  <div className="acwr-gauge-bar">
+                    <div className="gauge-zone underload" style={{ width: '25%' }}></div>
+                    <div className="gauge-zone sweet-spot" style={{ width: '45%' }}></div>
+                    <div className="gauge-zone warning" style={{ width: '15%' }}></div>
+                    <div className="gauge-zone danger" style={{ width: '15%' }}></div>
+                    <div 
+                      className="gauge-pointer"
+                      style={{ 
+                        left: `${Math.min(95, Math.max(5, (((plan?.workload_summary?.acwr_score ?? 1.15) - 0.5) / 1.5) * 100))}%` 
+                      }}
+                      title={`Current ACWR: ${plan?.workload_summary?.acwr_score ?? 1.15}`}
+                    ></div>
+                  </div>
+                  <p className="acwr-meter-caption">
+                    Acute:Chronic Ratio is <strong>{plan?.workload_summary?.acwr_score ?? 1.15}</strong>. Safe conditioning for bowling stamina while protecting spinal health.
+                  </p>
+                </div>
+
+                <div className="workload-stat-row">
+                  <div className="workload-metric-box">
+                    <span className="metric-label">Weekly Bowling Strain</span>
+                    <div className="metric-num text-amber">{plan?.workload_summary?.total_weekly_overs ?? 16} Overs</div>
+                    <div className="metric-progress-wrap">
+                      <div 
+                        className="metric-progress-fill amber" 
+                        style={{ width: `${Math.min(100, ((plan?.workload_summary?.total_weekly_overs ?? 16) / (age < 19 ? 18 : 24)) * 100)}%` }}
+                      ></div>
+                    </div>
+                    <span className="metric-sub">Recommended ceiling: {age < 19 ? 18 : 24} overs/wk ({age}y bowler)</span>
+                  </div>
+
+                  <div className="workload-metric-box">
+                    <span className="metric-label">Weekly Schedule Density</span>
+                    <div className="metric-num text-purple">{gymDays + groundDays} Sessions</div>
+                    <div className="session-mini-tags">
+                      <span className="tag-chip ground">{groundDays} Ground ({maxOversDays} Match)</span>
+                      <span className="tag-chip gym">{gymDays === 0 ? 'Calisthenics Only' : `${gymDays} Gym Strength`}</span>
+                    </div>
+                    <span className="metric-sub">{sessionGap.split('•')[0].trim()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fast Bowler Safety & Directives Accordion */}
+              <div className="safety-directives-card glass-card">
+                <button
+                  type="button"
+                  className="safety-toggle-header"
+                  onClick={() => setShowDirectives(!showDirectives)}
+                >
+                  <div className="flex items-center gap-2 text-cyan font-bold text-sm">
+                    <ShieldCheck size={18} />
+                    <span>Fast Bowler Workload Directives & Lumbar Spine Protection Guidelines</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted font-semibold">
+                    <span>{showDirectives ? 'Hide Guidelines' : 'View ECB Guidelines'}</span>
+                    {showDirectives ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </div>
+                </button>
+
+                {showDirectives && (
+                  <div className="safety-expanded-body animate-fade-in">
+                    <p className="text-xs text-muted mb-3 leading-relaxed">
+                      Fast bowlers sustain ground reaction forces of up to <strong>8–9× bodyweight</strong> during front-foot contact. To prevent lumbar stress fractures (pars interarticularis) and patellar tendinopathy:
+                    </p>
+                    <div className="directives-bullets-grid grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="directive-item">
+                        <span className="directive-number">01</span>
+                        <div>
+                          <strong className="text-xs text-primary block">48h Spacing for Max Overs</strong>
+                          <span className="text-xs text-muted">Never bowl max-effort spell sessions on consecutive days to prevent bone edema.</span>
+                        </div>
+                      </div>
+                      <div className="directive-item">
+                        <span className="directive-number">02</span>
+                        <div>
+                          <strong className="text-xs text-primary block">Hydration & Electrolytes</strong>
+                          <span className="text-xs text-muted">Drink 3.5L+ daily to maintain intervertebral disc height and prevent hamstring cramping.</span>
+                        </div>
+                      </div>
+                      <div className="directive-item">
+                        <span className="directive-number">03</span>
+                        <div>
+                          <strong className="text-xs text-primary block">Session Buffering</strong>
+                          <span className="text-xs text-muted">Maintain at least 4–8 hours gap when scheduling ground and strength on the same date.</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           )}
-
-          {/* 5. Collapsible Fast Bowler Safety & Directives Accordion */}
-          <div className="safety-directives-card glass-card mt-4">
-            <button
-              type="button"
-              className="safety-toggle-header"
-              onClick={() => setShowDirectives(!showDirectives)}
-            >
-              <div className="flex items-center gap-2 text-cyan font-bold text-sm">
-                <ShieldCheck size={18} />
-                <span>Fast Bowler Workload Directives & Lumbar Spine Protection Guidelines</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs text-muted font-semibold">
-                <span>{showDirectives ? 'Hide Guidelines' : 'View ECB Guidelines'}</span>
-                {showDirectives ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </div>
-            </button>
-
-            {showDirectives && (
-              <div className="safety-expanded-body animate-fade-in">
-                <p className="text-xs text-muted mb-3 leading-relaxed">
-                  Fast bowlers sustain ground reaction forces of up to <strong>8–9× bodyweight</strong> during front-foot contact. To prevent lumbar stress fractures (pars interarticularis) and patellar tendinopathy:
-                </p>
-                <div className="directives-bullets-grid grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="directive-item">
-                    <span className="directive-number">01</span>
-                    <div>
-                      <strong className="text-xs text-primary block">48h Spacing for Max Overs</strong>
-                      <span className="text-xs text-muted">Never bowl max-effort spell sessions on consecutive days to prevent bone edema.</span>
-                    </div>
-                  </div>
-                  <div className="directive-item">
-                    <span className="directive-number">02</span>
-                    <div>
-                      <strong className="text-xs text-primary block">Hydration & Electrolytes</strong>
-                      <span className="text-xs text-muted">Drink 3.5L+ daily to maintain intervertebral disc height and prevent hamstring cramping.</span>
-                    </div>
-                  </div>
-                  <div className="directive-item">
-                    <span className="directive-number">03</span>
-                    <div>
-                      <strong className="text-xs text-primary block">Session Buffering</strong>
-                      <span className="text-xs text-muted">Maintain at least 4–8 hours gap when scheduling ground and strength on the same date.</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       )}
     </div>
