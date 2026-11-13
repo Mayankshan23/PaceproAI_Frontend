@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, Flame, Sparkles, Zap, HeartPulse } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 import { CombinedPlanner } from '../planner/CombinedPlanner';
 import { DietDashboard } from '../diet/DietDashboard';
 import { StrengthCheck } from './StrengthCheck';
 import './TrainingDashboard.css';
 
 export const TrainingDashboard = ({ defaultTab = 'workload' }) => {
+  const { t } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -48,9 +50,9 @@ export const TrainingDashboard = ({ defaultTab = 'workload' }) => {
         <div className="hub-topbar-inner">
           <div className="hub-brand-info">
             <span className="hub-badge">
-              <Sparkles size={13} className="text-cyan" /> Unified Fast Bowler Hub
+              <Sparkles size={13} className="text-cyan" /> {t('hubBadge', 'Unified Fast Bowler Hub')}
             </span>
-            <h1 className="hub-main-title">Workload & Training Hub</h1>
+            <h1 className="hub-main-title">{t('hubTitle', 'Workload & Training Hub')}</h1>
           </div>
 
           <div className="hub-segmented-tabs w-full overflow-x-auto scrollbar-none flex items-center gap-1.5 p-1 rounded-2xl sm:rounded-full bg-slate-900/60 border border-slate-800">
@@ -60,7 +62,7 @@ export const TrainingDashboard = ({ defaultTab = 'workload' }) => {
               onClick={() => handleTabChange('workload')}
             >
               <Zap size={15} className="text-cyan shrink-0" />
-              <span className="truncate">Workload Planner</span>
+              <span className="truncate">{t('tabHubWorkload', 'Workload Planner')}</span>
             </button>
             <button
               type="button"
@@ -68,7 +70,7 @@ export const TrainingDashboard = ({ defaultTab = 'workload' }) => {
               onClick={() => handleTabChange('strength')}
             >
               <HeartPulse size={15} className="text-amber shrink-0" />
-              <span className="truncate">Test Strength</span>
+              <span className="truncate">{t('tabHubStrength', 'Test Strength')}</span>
             </button>
             <button
               type="button"
@@ -76,7 +78,7 @@ export const TrainingDashboard = ({ defaultTab = 'workload' }) => {
               onClick={() => handleTabChange('diet')}
             >
               <Flame size={15} className="text-emerald shrink-0" />
-              <span className="truncate">Diet Planner</span>
+              <span className="truncate">{t('tabHubDiet', 'Diet Planner')}</span>
             </button>
           </div>
         </div>

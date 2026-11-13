@@ -32,7 +32,8 @@ export const WorkoutDashboard = () => {
     userProfile, 
     updateAthleteProfile,
     activeWorkplan,
-    workoutTask 
+    workoutTask,
+    t
   } = useApp();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showConfig, setShowConfig] = useState(false);

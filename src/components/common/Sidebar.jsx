@@ -16,7 +16,8 @@ import {
   Sun,
   Menu,
   X,
-  Edit3
+  Edit3,
+  Globe
 } from 'lucide-react';
 import { UserButton } from '@clerk/react';
 import { useLocation } from 'react-router-dom';
@@ -34,7 +35,10 @@ export const Sidebar = () => {
     dietTask,
     combinedTask,
     workoutTask,
-    strengthTask
+    strengthTask,
+    language,
+    setLanguage,
+    t
   } = useApp();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -45,11 +49,11 @@ export const Sidebar = () => {
   const isVideoActive = videoAnalysisTask?.isRunning;
 
   const mainNavItems = [
-    { id: 'chat', path: '/', label: 'Home', icon: Home },
+    { id: 'chat', path: '/', label: t('navHome', 'Home'), icon: Home },
     { 
       id: 'analyzer', 
       path: '/analyzer', 
-      label: 'Video Analyzer', 
+      label: t('navAnalyzer', 'Video Analyzer'), 
       icon: Video, 
       badge: isVideoActive ? `${videoAnalysisTask.progress || 20}%` : '3-View',
       isGenerating: isVideoActive
@@ -57,13 +61,13 @@ export const Sidebar = () => {
     { 
       id: 'training', 
       path: '/training', 
-      label: 'Workout & Diet', 
+      label: t('navWorkout', 'Workout & Diet'), 
       icon: Dumbbell,
       matchPaths: ['/training', '/workout', '/diet'],
       badge: isTrainingActive ? 'AI...' : null,
       isGenerating: isTrainingActive
     },
-    { id: 'history', path: '/history', label: 'History', icon: History }
+    { id: 'history', path: '/history', label: t('navHistory', 'History'), icon: History }
   ];
 
   return (
@@ -124,7 +128,7 @@ export const Sidebar = () => {
             title="Start New Chat"
           >
             <Plus size={18} />
-            {!collapsed && <span>New Chat</span>}
+            {!collapsed && <span>{t('newChat', 'New Chat')}</span>}
           </button>
         </div>
 
@@ -159,7 +163,7 @@ export const Sidebar = () => {
           })}
         </nav>
 
-        {/* Bottom Section: Profile & Settings */}
+        {/* Bottom Section: Profile, Language & Settings */}
         <div className="sidebar-footer">
           {/* Settings Button */}
           <button
@@ -168,10 +172,10 @@ export const Sidebar = () => {
               navigateTo('/settings');
               setMobileOpen(false);
             }}
-            title={collapsed ? 'Settings' : ''}
+            title={collapsed ? t('navSettings', 'Settings') : ''}
           >
             <Settings size={20} className="nav-icon" />
-            {!collapsed && <span className="nav-label">Settings</span>}
+            {!collapsed && <span className="nav-label">{t('navSettings', 'Settings')}</span>}
           </button>
 
           {/* Authenticated User Profile Summary & Clerk Controls */}
@@ -212,20 +216,53 @@ export const Sidebar = () => {
                   title="Edit Bowler Attributes"
                 >
                   <Edit3 size={12} />
-                  <span>Edit</span>
+                  <span>{t('edit', 'Edit')}</span>
                 </button>
               )}
             </div>
+          </div>
+
+          {/* Global Language Toggle */}
+          <div className={`sidebar-language-control ${collapsed ? 'collapsed' : ''}`}>
+            {collapsed ? (
+              <button 
+                type="button" 
+                className="theme-toggle-btn lang-toggle-collapsed"
+                onClick={() => setLanguage(language === 'hinglish' ? 'english' : 'hinglish')}
+                title={language === 'hinglish' ? "Switch to English" : "Hinglish me badlein"}
+              >
+                <Globe size={16} />
+              </button>
+            ) : (
+              <div className="sidebar-lang-pill-wrap">
+                <button
+                  type="button"
+                  className={`sidebar-lang-btn ${language === 'hinglish' ? 'active' : ''}`}
+                  onClick={() => setLanguage('hinglish')}
+                  title="Hinglish (Hindi + English)"
+                >
+                  🇮🇳 Hinglish
+                </button>
+                <button
+                  type="button"
+                  className={`sidebar-lang-btn ${language === 'english' ? 'active' : ''}`}
+                  onClick={() => setLanguage('english')}
+                  title="Pure English"
+                >
+                  🇬🇧 English
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Quick Theme Toggle */}
           <button 
             className="theme-toggle-btn"
             onClick={toggleTheme}
-            title={`Switch Theme`}
+            title={theme === 'dark' ? t('lightTheme', 'Light Theme') : t('darkTheme', 'Dark Theme')}
           >
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-            {!collapsed && <span>{theme === 'dark' ? 'Light Theme' : 'Dark Theme'}</span>}
+            {!collapsed && <span>{theme === 'dark' ? t('lightTheme', 'Light Theme') : t('darkTheme', 'Dark Theme')}</span>}
           </button>
         </div>
       </aside>

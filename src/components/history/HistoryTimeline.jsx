@@ -20,9 +20,17 @@ import { useApp } from '../../context/AppContext';
 import './HistoryTimeline.css';
 
 export const HistoryTimeline = () => {
-  const { historyList, navigateTo, removeHistoryItem } = useApp();
+  const { historyList, navigateTo, removeHistoryItem, t } = useApp();
   const [filter, setFilter] = useState('all'); // 'all' | 'bowling' | 'workout' | 'diet' | 'chat'
   const [expandedDietMeals, setExpandedDietMeals] = useState({});
+
+  const TAB_LABELS = {
+    all: t('tabAll', 'All'),
+    bowling: t('tabBowling', 'Bowling'),
+    workout: t('tabWorkout', 'Workout'),
+    diet: t('tabDiet', 'Diet'),
+    chat: t('tabChat', 'Chat')
+  };
 
   const toggleMealsExpand = (e, itemId) => {
     e.stopPropagation();
@@ -54,7 +62,7 @@ export const HistoryTimeline = () => {
 
   const handleDelete = (e, itemId) => {
     e.stopPropagation();
-    if (window.confirm("Remove this generation record from history and database?")) {
+    if (window.confirm(t('deleteRecordConfirm', "Remove this generation record from history and database?"))) {
       removeHistoryItem(itemId);
     }
   };
@@ -76,15 +84,15 @@ export const HistoryTimeline = () => {
         <div>
           <div className="flex items-center gap-3">
             <h2 className="page-title text-2xl font-bold flex items-center gap-2">
-              <History className="text-cyan" size={26} /> Performance History Timeline
+              <History className="text-cyan" size={26} /> {t('historyTitle', 'Performance History Timeline')}
             </h2>
             <span className="auto-prune-pill flex items-center gap-1">
               <Sparkles size={12} className="text-cyan" />
-              Auto-Retains 3 Generations
+              {t('autoRetainBadge', 'Auto-Retains 3 Generations')}
             </span>
           </div>
           <p className="page-subtitle text-muted text-sm mt-1">
-            Persisted in MongoDB Atlas. Automatically stores your newest reports while pruning older generations.
+            {t('historySubtitle', 'Persisted locally & in MongoDB. Automatically stores your newest reports while pruning older generations.')}
           </p>
         </div>
 
@@ -96,7 +104,7 @@ export const HistoryTimeline = () => {
               className={`filter-btn ${filter === tab ? 'active' : ''}`}
               onClick={() => setFilter(tab)}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {TAB_LABELS[tab] || (tab.charAt(0).toUpperCase() + tab.slice(1))}
             </button>
           ))}
         </div>
@@ -149,7 +157,7 @@ export const HistoryTimeline = () => {
                       title={isMealsExpanded ? "Hide meals" : "View generated meals"}
                     >
                       <Utensils size={13} className="text-emerald" />
-                      <span>{isMealsExpanded ? "Hide Meals" : "View Meals"}</span>
+                      <span>{isMealsExpanded ? t('hideMeals', "Hide Meals") : t('viewMeals', "View Meals")}</span>
                       {isMealsExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
                     </button>
                   )}
@@ -161,7 +169,7 @@ export const HistoryTimeline = () => {
                     <Trash2 size={15} />
                   </button>
                   <div className="view-link-badge flex items-center gap-1 text-xs text-cyan font-bold">
-                    <span>Open</span>
+                    <span>{t('open', 'Open')}</span>
                     <ChevronRight size={16} />
                   </div>
                 </div>
@@ -233,7 +241,7 @@ export const HistoryTimeline = () => {
                           className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5"
                           onClick={() => handleItemClick(item)}
                         >
-                          <span>Open in Diet Dashboard</span>
+                          <span>{t('openInDietDashboard', 'Open in Diet Dashboard')}</span>
                           <ArrowRight size={13} />
                         </button>
                       </div>
@@ -248,9 +256,9 @@ export const HistoryTimeline = () => {
         {filteredItems.length === 0 && (
           <div className="empty-history-box glass-card p-10 text-center text-muted">
             <History size={40} className="mx-auto mb-3 opacity-30 text-cyan" />
-            <h4 className="font-bold text-primary text-base mb-1">No Activity Records Found</h4>
+            <h4 className="font-bold text-primary text-base mb-1">{t('noHistoryTitle', 'No Activity Records Found')}</h4>
             <p className="text-xs text-muted max-w-sm mx-auto">
-              Analyze a delivery in Video Analyzer or generate a 7-day Workout & Diet protocol to auto-populate your database history.
+              {t('noHistoryDesc', 'Analyze a delivery in Video Analyzer or generate a 7-day Workout & Diet protocol to auto-populate your database history.')}
             </p>
           </div>
         )}

@@ -48,7 +48,8 @@ export const DietDashboard = () => {
     saveDietPlan, 
     userProfile, 
     updateAthleteProfile,
-    dietTask
+    dietTask,
+    t
   } = useApp();
 
   // Core Backend Supported Inputs (Initialized dynamically from userProfile)
@@ -245,10 +246,10 @@ export const DietDashboard = () => {
       <div className="page-header flex justify-between items-center mb-6">
         <div>
           <h2 className="page-title text-2xl font-bold flex items-center gap-2">
-            <Flame className="text-emerald" size={26} /> Athlete Diet & Performance Nutrition
+            <Flame className="text-emerald" size={26} /> {t('dietTitle', 'Athlete Diet & Performance Nutrition')}
           </h2>
           <p className="page-subtitle text-muted text-sm">
-            Calculate precision macros, meal schedules, and weekly budget for fast bowling workload.
+            {t('dietSubtitle', 'Calculate precision macros, meal schedules, and weekly budget for fast bowling workload.')}
           </p>
         </div>
 
@@ -257,13 +258,13 @@ export const DietDashboard = () => {
             className={`subnav-btn ${activeTabSub === 'setup' ? 'active' : ''}`}
             onClick={() => setActiveTabSub('setup')}
           >
-            <Sliders size={14} /> Nutrition Config
+            <Sliders size={14} /> {t('dietTabSetup', 'Nutrition Config')}
           </button>
           <button 
             className={`subnav-btn ${activeTabSub === 'plan' ? 'active' : ''}`}
             onClick={() => setActiveTabSub('plan')}
           >
-            Generated Meal Plan
+            {t('dietTabPlan', 'Generated Meal Plan')}
           </button>
         </div>
       </div>
@@ -765,11 +766,11 @@ export const DietDashboard = () => {
           >
             {isGenerating ? (
               <>
-                <RefreshCw className="animate-spin" size={20} /> Generating Custom Athlete Meal Plan...
+                <RefreshCw className="animate-spin" size={20} /> {t('generatingDietBtn', 'Generating Custom Athlete Meal Plan...')}
               </>
             ) : (
               <>
-                <Sparkles size={20} /> Generate Diet Plan
+                <Sparkles size={20} /> {t('generateDietBtn', 'Generate Diet Plan')}
               </>
             )}
           </button>
@@ -1020,13 +1021,13 @@ export const DietDashboard = () => {
           {/* Action Bar */}
           <div className="flex justify-end gap-3 mt-6">
             <button className="btn-secondary" onClick={() => setActiveTabSub('setup')}>
-              <Sliders size={16} /> Adjust Config & Inputs
+              <Sliders size={16} /> {t('edit', 'Adjust Config & Inputs')}
             </button>
             <button className="btn-secondary" onClick={handleSavePlan} disabled={isSaved}>
-              <Bookmark size={16} /> {isSaved ? 'Plan Saved' : 'Save Plan'}
+              <Bookmark size={16} /> {isSaved ? t('dietSavedBtn', 'Plan Saved') : t('saveDietBtn', 'Save Plan')}
             </button>
             <button className="btn-primary" onClick={handleSendToChat}>
-              <MessageSquare size={16} /> Send to AI Chat
+              <MessageSquare size={16} /> {t('consultCoachBtn', 'Send to AI Chat')}
             </button>
           </div>
         </div>

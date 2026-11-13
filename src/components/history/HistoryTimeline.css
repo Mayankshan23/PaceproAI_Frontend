@@ -11,7 +11,7 @@
 
 /* ---- Filter Tabs ---- */
 .filter-tabs-pills {
-  background: #ffffff;
+  background: var(--bg-card, #ffffff);
   padding: 4px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
@@ -21,12 +21,12 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .filter-btn {
-  background: transparent; border: none; color: var(--text-muted);
+  background: transparent; border: none; color: var(--text-secondary, #64748b);
   font-size: 0.8rem; font-weight: 700; padding: 7px 16px;
   border-radius: var(--radius-sm); cursor: pointer; transition: all 0.2s ease;
   font-family: var(--font-main); text-transform: capitalize;
 }
-.filter-btn:hover { background: #f0f9ff; color: #0284c7; }
+.filter-btn:hover { background: rgba(2, 132, 199, 0.08); color: var(--accent-primary, #0284c7); }
 .filter-btn.active { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(2,132,199,0.25); }
 
 /* ---- History List ---- */
@@ -253,5 +253,26 @@
 
 [data-theme='dark'] .history-meal-row:hover {
   border-color: rgba(52, 211, 153, 0.3);
+}
+
+[data-theme='dark'] .filter-tabs-pills {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .filter-btn {
+  color: #94a3b8;
+}
+
+[data-theme='dark'] .filter-btn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+[data-theme='dark'] .filter-btn.active {
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  color: #ffffff;
+  box-shadow: 0 2px 12px rgba(14, 165, 233, 0.45);
 }
 

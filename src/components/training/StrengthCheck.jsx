@@ -29,7 +29,9 @@ export const StrengthCheck = () => {
     navigateTo, 
     addChatMessage, 
     strengthTask, 
-    runStrengthAssessment 
+    runStrengthAssessment,
+    addHistoryItem,
+    t
   } = useApp();
 
   // Test setup parameters
@@ -149,18 +151,17 @@ export const StrengthCheck = () => {
       <div className="strength-header glass-card">
         <div className="strength-badge-row">
           <span className="badge badge-cyan flex items-center gap-1.5">
-            <HeartPulse size={13} className="text-cyan animate-pulse" /> Musculoskeletal Diagnostic Engine
+            <HeartPulse size={13} className="text-cyan animate-pulse" /> {t('strengthBadge', 'Musculoskeletal Diagnostic Engine')}
           </span>
           <span className="badge badge-emerald flex items-center gap-1.5">
-            <ShieldCheck size={13} /> 5-Pillar Fast Bowling Kinetic Chain
+            <ShieldCheck size={13} /> {t('strength5PillarBadge', '5-Pillar Fast Bowling Kinetic Chain')}
           </span>
         </div>
         <div className="strength-header-title-row">
           <div>
-            <h2 className="strength-main-title">Fast Bowler Strength & Muscle Weakness Test</h2>
+            <h2 className="strength-main-title">{t('strengthTitle', 'Fast Bowler Strength & Muscle Weakness Test')}</h2>
             <p className="strength-subtitle">
-              Fast bowling puts 8–10x bodyweight braking forces on your front foot and up to 2500°/s rotational shear on your lumbar spine. 
-              Complete this 5-pillar test to diagnose your weakest muscle links and generate a tailored corrective workout routine.
+              {t('strengthSubtitle', 'Fast bowling puts 8–10x bodyweight braking forces on your front foot and up to 2500°/s rotational shear on your lumbar spine. Complete this 5-pillar test to diagnose your weakest muscle links and generate a tailored corrective workout routine.')}
             </p>
           </div>
         </div>
@@ -170,8 +171,8 @@ export const StrengthCheck = () => {
       <div className="strength-track-selector glass-card p-4">
         <div className="flex justify-between items-center flex-wrap gap-3">
           <div>
-            <span className="text-xs font-semibold text-primary block">Select Your Assessment Testing Setup:</span>
-            <span className="text-[11px] text-muted">Test benchmarks calibrate automatically for gym weights or bodyweight ground tests</span>
+            <span className="text-xs font-semibold text-primary block">{t('testingSetupLabel', 'Select Your Assessment Testing Setup:')}</span>
+            <span className="text-[11px] text-muted">{t('testingSetupSub', 'Test benchmarks calibrate automatically for gym weights or bodyweight ground tests')}</span>
           </div>
           <div className="flex gap-2">
             <button 
@@ -179,14 +180,14 @@ export const StrengthCheck = () => {
               className={`chip py-1.5 px-3 text-xs font-semibold flex items-center gap-1.5 ${track === 'gym_lifting' ? 'active' : ''}`}
               onClick={() => { setTrack('gym_lifting'); setDoesDeadlifts(true); }}
             >
-              <Dumbbell size={14} className="text-cyan" /> Gym Weights Mode
+              <Dumbbell size={14} className="text-cyan" /> {t('gymWeightsMode', 'Gym Weights Mode')}
             </button>
             <button 
               type="button" 
               className={`chip py-1.5 px-3 text-xs font-semibold flex items-center gap-1.5 ${track === 'calisthenics_ground' ? 'active' : ''}`}
               onClick={() => { setTrack('calisthenics_ground'); setDoesDeadlifts(false); }}
             >
-              <Activity size={14} className="text-emerald" /> Ground & Bodyweight Mode
+              <Activity size={14} className="text-emerald" /> {t('groundBodyweightMode', 'Ground & Bodyweight Mode')}
             </button>
           </div>
         </div>
@@ -424,9 +425,9 @@ export const StrengthCheck = () => {
               className="btn-primary text-xs py-2 px-4 whitespace-nowrap"
             >
               {isAnalyzing ? (
-                <><RefreshCw size={14} className="animate-spin" /> Analyzing...</>
+                <><RefreshCw size={14} className="animate-spin" /> {t('evaluatingStrengthBtn', 'Evaluating Kinetic Chain...')}</>
               ) : (
-                <><Zap size={14} /> Diagnose Muscle Weakness</>
+                <><Zap size={14} /> {t('runStrengthTestBtn', 'Run Musculoskeletal Assessment')}</>
               )}
             </button>
           </div>
@@ -461,14 +462,14 @@ export const StrengthCheck = () => {
                 disabled={isSaved}
                 className="btn-secondary text-xs"
               >
-                {isSaved ? <><Check size={14} className="text-emerald" /> Saved to History</> : <><Bookmark size={14} /> Save to History</>}
+                {isSaved ? <><Check size={14} className="text-emerald" /> {t('saved', 'Saved to History')}</> : <><Bookmark size={14} /> {t('saveStrengthBtn', 'Save Strength Record')}</>}
               </button>
               <button 
                 type="button" 
                 onClick={handleConsultCoach}
                 className="btn-primary text-xs flex items-center gap-1.5"
               >
-                <MessageSquare size={14} /> Discuss with AI Coach
+                <MessageSquare size={14} /> {t('consultCoachBtn', 'Consult Coach')}
               </button>
             </div>
           </div>

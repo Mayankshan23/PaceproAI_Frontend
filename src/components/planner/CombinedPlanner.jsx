@@ -39,7 +39,8 @@ export const CombinedPlanner = () => {
     navigateTo,
     userProfile,
     updateAthleteProfile,
-    combinedTask
+    combinedTask,
+    t
   } = useApp();
 
   // --- Athlete Status & Workload Parameters ---
@@ -1060,12 +1061,12 @@ export const CombinedPlanner = () => {
               {isGenerating ? (
                 <>
                   <RefreshCw className="animate-spin" size={18} />
-                  <span>Synthesizing Fast Bowler Workload & Strength Protocol...</span>
+                  <span>{t('generatingPlanBtn', 'Synthesizing Fast Bowler Workload & Strength Protocol...')}</span>
                 </>
               ) : (
                 <>
                   <Sparkles size={18} className="text-cyan" />
-                  <span>Analyze Routine & Generate Structured Workplan</span>
+                  <span>{t('generatePlanBtn', 'Generate 7-Day Synchronized Protocol')}</span>
                 </>
               )}
             </button>
@@ -1134,7 +1135,7 @@ export const CombinedPlanner = () => {
                 disabled={isSaved}
               >
                 {isSaved ? <Check size={16} /> : <Bookmark size={16} />}
-                <span>{isSaved ? 'Saved' : 'Save Protocol'}</span>
+                <span>{isSaved ? t('planSavedBtn', 'Saved to Database') : t('savePlanBtn', 'Save 7-Day Protocol')}</span>
               </button>
               <button 
                 type="button" 
@@ -1142,7 +1143,7 @@ export const CombinedPlanner = () => {
                 onClick={handleSendToChat}
               >
                 <MessageSquare size={16} className="text-cyan" />
-                <span>Ask Coach AI</span>
+                <span>{t('consultCoachBtn', 'Consult Coach')}</span>
               </button>
               <button
                 type="button"
@@ -1151,7 +1152,7 @@ export const CombinedPlanner = () => {
                 title="Adjust weight, overs or gym parameters"
               >
                 <Sliders size={16} />
-                <span>{configCollapsed ? 'Edit Parameters' : 'Hide Controls'}</span>
+                <span>{configCollapsed ? t('edit', 'Edit Parameters') : t('cancel', 'Hide Controls')}</span>
               </button>
             </div>
           </div>
@@ -1204,7 +1205,7 @@ export const CombinedPlanner = () => {
               onClick={() => setActiveProtocolTab('schedule')}
             >
               <Calendar size={16} />
-              <span>7-Day Schedule & Routine</span>
+              <span>{t('protocolScheduleTab', '7-Day Schedule & Routine')}</span>
             </button>
             <button 
               type="button"
@@ -1212,7 +1213,7 @@ export const CombinedPlanner = () => {
               onClick={() => setActiveProtocolTab('coaching')}
             >
               <Sparkles size={16} />
-              <span>AI Coaching Diagnostic</span>
+              <span>{t('coachingAssessmentTab', 'AI Coaching Diagnostic')}</span>
             </button>
             <button 
               type="button"
@@ -1220,7 +1221,7 @@ export const CombinedPlanner = () => {
               onClick={() => setActiveProtocolTab('roadmap')}
             >
               <Target size={16} />
-              <span>Targets & Roadmap</span>
+              <span>{t('roadmapTab', 'Targets & Roadmap')}</span>
             </button>
             <button 
               type="button"
@@ -1228,7 +1229,7 @@ export const CombinedPlanner = () => {
               onClick={() => setActiveProtocolTab('safety')}
             >
               <ShieldCheck size={16} />
-              <span>Workload & Safety Audit</span>
+              <span>{t('acwrSafetyTab', 'Workload & Safety Audit')}</span>
               {plan?.overload_warnings?.length > 0 && (
                 <span className="badge badge-rose text-[10px] ml-1">{plan.overload_warnings.length}</span>
               )}

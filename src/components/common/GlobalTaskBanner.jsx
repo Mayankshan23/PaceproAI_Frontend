@@ -5,7 +5,7 @@ import { useApp } from '../../context/AppContext';
 import './GlobalTaskBanner.css';
 
 export const GlobalTaskBanner = () => {
-  const { videoAnalysisTask, dietTask, combinedTask, workoutTask, strengthTask } = useApp();
+  const { videoAnalysisTask, dietTask, combinedTask, workoutTask, strengthTask, t } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,7 +15,7 @@ export const GlobalTaskBanner = () => {
     activeTasks.push({
       id: 'video',
       title: 'Bowling Biomechanics Engine',
-      stage: videoAnalysisTask.stage || 'Calculating 3D joint angles & kinetic chain...',
+      stage: videoAnalysisTask.stage || t('taskAnalyzingVideo', 'Calculating 3D joint angles & kinetic chain...'),
       progress: videoAnalysisTask.progress || 20,
       path: '/analyzer',
       icon: Video,
@@ -27,7 +27,7 @@ export const GlobalTaskBanner = () => {
     activeTasks.push({
       id: 'diet',
       title: 'Nutrition & Macro Synthesis',
-      stage: dietTask.stage || 'Structuring high-protein fast bowling meal schedule...',
+      stage: dietTask.stage || t('taskGeneratingDiet', 'Structuring high-protein fast bowling meal schedule...'),
       path: '/diet',
       icon: Flame,
       color: 'emerald'
@@ -38,7 +38,7 @@ export const GlobalTaskBanner = () => {
     activeTasks.push({
       id: 'combined',
       title: 'Workload & Nutrition Protocol',
-      stage: combinedTask.stage || 'Synthesizing bowling spell limits & recovery protocol...',
+      stage: combinedTask.stage || t('taskGeneratingCombined', 'Synthesizing bowling spell limits & recovery protocol...'),
       path: '/training',
       icon: Dumbbell,
       color: 'sky'
@@ -49,7 +49,7 @@ export const GlobalTaskBanner = () => {
     activeTasks.push({
       id: 'workout',
       title: 'Workout Periodization Plan',
-      stage: workoutTask.stage || 'Designing gym & bowling schedule...',
+      stage: workoutTask.stage || t('taskGeneratingWorkout', 'Designing gym & bowling schedule...'),
       path: '/workout',
       icon: Dumbbell,
       color: 'amber'
@@ -60,7 +60,7 @@ export const GlobalTaskBanner = () => {
     activeTasks.push({
       id: 'strength',
       title: 'Kinetic Strength & Injury Assessment',
-      stage: strengthTask.stage || 'Evaluating lead leg brace & posterior chain capacity...',
+      stage: strengthTask.stage || t('taskAssessingStrength', 'Evaluating lead leg brace & posterior chain capacity...'),
       path: '/training?tab=strength',
       icon: HeartPulse,
       color: 'rose'
@@ -107,7 +107,7 @@ export const GlobalTaskBanner = () => {
                   navigate(task.path);
                 }}
               >
-                <span>View</span>
+                <span>{t('view', 'View')}</span>
                 <ChevronRight size={13} />
               </button>
             )}

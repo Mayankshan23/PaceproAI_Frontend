@@ -28,6 +28,7 @@ export const ChatWindow = () => {
   const { 
     chatMessages, 
     addChatMessage, 
+    addHistoryItem,
     navigateTo, 
     userProfile, 
     latestBowlingAnalysis, 
@@ -35,21 +36,20 @@ export const ChatWindow = () => {
     activeWorkplan,
     activeCombinedPlan,
     pendingChatPrompt,
-    setPendingChatPrompt
+    setPendingChatPrompt,
+    language,
+    setLanguage,
+    t
   } = useApp();
 
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [attachment, setAttachment] = useState(null);
-  const [chatLanguage, setChatLanguage] = useState(() => {
-    return localStorage.getItem('pacepro_chat_language') || 'hinglish';
-  });
-
+  
+  // Use global app language
+  const chatLanguage = language || 'hinglish';
   const handleLanguageChange = (newLang) => {
-    setChatLanguage(newLang);
-    try {
-      localStorage.setItem('pacepro_chat_language', newLang);
-    } catch(e) {}
+    setLanguage(newLang);
   };
 
   const messagesEndRef = useRef(null);
@@ -263,6 +263,22 @@ export const ChatWindow = () => {
         richCard,
         actions
       });
+
+      if (addHistoryItem) {
+        addHistoryItem({
+          id: `chat_${Date.now()}`,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          type: 'chat',
+          title: `AI Coach: "${textToSend.slice(0, 32)}${textToSend.length > 32 ? '...' : ''}"`,
+          subtitle: (response.reply || "Coaching consultation").slice(0, 80) + '...',
+          status: 'Answered',
+          detail: {
+            userQuery: textToSend,
+            coachReply: response.reply,
+            language: chatLanguage
+          }
+        });
+      }
     } catch (err) {
       console.error("Chat API error:", err);
       const athleteFirst = (userProfile?.name || 'Bowler').split(' ')[0];
@@ -319,6 +335,22 @@ export const ChatWindow = () => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         actions: fallbackActions
       });
+
+      if (addHistoryItem) {
+        addHistoryItem({
+          id: `chat_${Date.now()}`,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          type: 'chat',
+          title: `AI Coach: "${textToSend.slice(0, 32)}${textToSend.length > 32 ? '...' : ''}"`,
+          subtitle: fallbackText.slice(0, 80) + '...',
+          status: 'Answered',
+          detail: {
+            userQuery: textToSend,
+            coachReply: fallbackText,
+            language: chatLanguage
+          }
+        });
+      }
     } finally {
       setIsTyping(false);
     }
@@ -614,7 +646,7 @@ export const ChatWindow = () => {
 
           <textarea
             className="gemini-textarea"
-            placeholder="Ask PacePro anything..."
+            placeholder={t('chatInputPlaceholder', 'Ask PacePro anything...')}
             rows={1}
             value={inputText}
             disabled={isTyping}
@@ -640,7 +672,7 @@ export const ChatWindow = () => {
         </div>
 
         <span className="input-disclaimer-text">
-          PacePro AI processes 3D joint kinematics and pose vectors to optimize athletic fast bowling.
+          {t('chatDisclaimer', 'PacePro AI processes 3D joint kinematics and pose vectors to optimize athletic fast bowling.')}
         </span>
       </div>
     </div>

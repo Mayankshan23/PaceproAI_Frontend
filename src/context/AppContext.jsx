@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '@clerk/react';
 import { ProfileSetupModal } from '../components/common/ProfileSetupModal';
+import { getTranslation } from '../utils/translations';
 import { 
   analyzeBowlingPipeline, 
   generateDietPlanApi, 
@@ -82,6 +83,26 @@ export const AppProvider = ({ children }) => {
 
   const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(false);
   const activeUserRef = useRef(null);
+
+  // Global Application Language: 'hinglish' | 'english'
+  const [language, setLanguageState] = useState(() => {
+    try {
+      return localStorage.getItem('pacepro_language') || localStorage.getItem('pacepro_chat_language') || 'hinglish';
+    } catch {
+      return 'hinglish';
+    }
+  });
+
+  const setLanguage = (newLang) => {
+    const validLang = newLang === 'english' ? 'english' : 'hinglish';
+    setLanguageState(validLang);
+    try {
+      localStorage.setItem('pacepro_language', validLang);
+      localStorage.setItem('pacepro_chat_language', validLang);
+    } catch (e) {}
+  };
+
+  const t = (key, fallback = '') => getTranslation(language, key, fallback);
 
   // User Profile
   const [userProfile, setUserProfile] = useState(() => {
@@ -206,8 +227,24 @@ export const AppProvider = ({ children }) => {
       try {
         const remote = await fetchHistoryApi(userId);
         if (isMounted && Array.isArray(remote)) {
-          setHistoryList(remote);
-          try { localStorage.setItem(cacheKey, JSON.stringify(remote)); } catch(e){}
+          if (remote.length > 0) {
+            setHistoryList(remote);
+            try { localStorage.setItem(cacheKey, JSON.stringify(remote)); } catch(e){}
+          } else {
+            // If remote is empty, preserve cached local items and seed backend
+            try {
+              const cached = localStorage.getItem(cacheKey);
+              if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  setHistoryList(parsed);
+                  for (const item of parsed) {
+                    saveHistoryApi({ ...item, user_id: userId, max_retained: 3 }).catch(() => {});
+                  }
+                }
+              }
+            } catch(e){}
+          }
         }
       } catch (err) {
         console.warn("Failed to load history from database:", err);
@@ -347,9 +384,9 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
 
-    // Persist to MongoDB backend (which enforces DB-level auto-deletion of older generations)
+    // Persist to backend (which enforces DB & local-store auto-deletion of older generations)
     const res = await saveHistoryApi(itemWithUser);
-    if (res && res.history && Array.isArray(res.history)) {
+    if (res && res.history && Array.isArray(res.history) && res.history.length > 0) {
       setHistoryList(res.history);
       try { localStorage.setItem(cacheKey, JSON.stringify(res.history)); } catch(e){}
     }
@@ -388,7 +425,8 @@ export const AppProvider = ({ children }) => {
         }, 
         bowlingArm, 
         userId, 
-        userProfile?.name
+        userProfile?.name,
+        language
       );
       setLatestBowlingAnalysis(result);
       
@@ -446,7 +484,7 @@ export const AppProvider = ({ children }) => {
     });
 
     try {
-      const result = await generateDietPlanApi({ ...dietInputs, user_id: userId });
+      const result = await generateDietPlanApi({ ...dietInputs, user_id: userId, language });
       setActiveDietPlan(result);
 
       // Add to MongoDB history with 3-generation auto-retention
@@ -488,7 +526,7 @@ export const AppProvider = ({ children }) => {
     });
 
     try {
-      const result = await generateCombinedPlanApi({ ...combinedInputs, user_id: userId });
+      const result = await generateCombinedPlanApi({ ...combinedInputs, user_id: userId, language });
       setActiveCombinedPlan(result);
       if (result?.workout_plan) {
         setActiveWorkplan(result.workout_plan);
@@ -562,7 +600,7 @@ export const AppProvider = ({ children }) => {
     });
 
     try {
-      const res = await assessStrengthApi(payload);
+      const res = await assessStrengthApi({ ...payload, user_id: userId, language });
       setStrengthTask({
         isRunning: false,
         stage: '',
@@ -620,6 +658,9 @@ export const AppProvider = ({ children }) => {
       value={{
         activeTab,
         navigateTo,
+        language,
+        setLanguage,
+        t,
         userProfile,
         setUserProfile,
         updateAthleteProfile,

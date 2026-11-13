@@ -19,7 +19,16 @@ import { testBackendConnection } from '../../services/api';
 import './SettingsPanel.css';
 
 export const SettingsPanel = () => {
-  const { userProfile, updateAthleteProfile, openProfileSetupModal, apiState, updateApiConfigState } = useApp();
+  const { 
+    userProfile, 
+    updateAthleteProfile, 
+    openProfileSetupModal, 
+    apiState, 
+    updateApiConfigState,
+    language,
+    setLanguage,
+    t
+  } = useApp();
   const { theme, toggleTheme } = useTheme();
 
   const [name, setName] = useState(userProfile.name || '');
@@ -70,10 +79,10 @@ export const SettingsPanel = () => {
       {/* Header */}
       <div className="page-header mb-6">
         <h2 className="page-title text-2xl font-bold flex items-center gap-2">
-          <Settings className="text-cyan" size={26} /> Application Settings & Backend Diagnostics
+          <Settings className="text-cyan" size={26} /> {t('settingsTitle', 'Application Settings & Backend Diagnostics')}
         </h2>
         <p className="page-subtitle text-muted text-sm">
-          Manage athlete identity, Python API server connection URLs, display units, and AI engine parameters.
+          {t('settingsSubtitle', 'Manage athlete identity, Python API server connection URLs, display units, and language preferences.')}
         </p>
       </div>
 
@@ -81,12 +90,12 @@ export const SettingsPanel = () => {
         {/* SECTION 1: ATHLETE PROFILE */}
         <div className="settings-section-card glass-card p-6">
           <h3 className="section-title text-lg font-bold text-primary mb-4 flex items-center gap-2">
-            <User className="text-cyan" size={20} /> Athlete Identity & Profile
+            <User className="text-cyan" size={20} /> {t('athleteProfileSection', 'Athlete Identity & Profile')}
           </h3>
 
           <form onSubmit={handleSaveProfile} className="grid grid-cols-2 gap-4">
             <div>
-              <label className="input-label mb-1">FULL ATHLETE NAME</label>
+              <label className="input-label mb-1">{t('fullNameLabel', 'FULL ATHLETE NAME')}</label>
               <input 
                 type="text" 
                 className="custom-input" 
@@ -96,7 +105,7 @@ export const SettingsPanel = () => {
             </div>
 
             <div>
-              <label className="input-label mb-1">BOWLING ARM SLOT</label>
+              <label className="input-label mb-1">{t('bowlingArmLabel', 'BOWLING ARM SLOT')}</label>
               <select 
                 className="custom-input" 
                 value={arm} 
@@ -110,7 +119,7 @@ export const SettingsPanel = () => {
             </div>
 
             <div>
-              <label className="input-label mb-1">PEAK RECORDED SPEED</label>
+              <label className="input-label mb-1">{t('targetPaceLabel', 'PEAK RECORDED SPEED')}</label>
               <input 
                 type="text" 
                 className="custom-input font-mono" 
@@ -121,14 +130,14 @@ export const SettingsPanel = () => {
 
             <div className="flex items-end gap-2">
               <button type="submit" className="btn-primary flex-1">
-                {savedSuccess ? <><Check size={16} /> Profile Saved</> : 'Save Changes'}
+                {savedSuccess ? <><Check size={16} /> {t('saved', 'Profile Saved')}</> : t('saveChanges', 'Save Changes')}
               </button>
               <button 
                 type="button" 
                 className="btn-secondary whitespace-nowrap text-xs"
                 onClick={openProfileSetupModal}
               >
-                Full Bowler Wizard
+                {t('fullBowlerWizardBtn', 'Full Bowler Wizard')}
               </button>
             </div>
           </form>
@@ -185,34 +194,52 @@ export const SettingsPanel = () => {
           )}
         </div>
 
-        {/* SECTION 3: THEME & DISPLAY PREFERENCES */}
+        {/* SECTION 3: THEME, LANGUAGE & DISPLAY PREFERENCES */}
         <div className="settings-section-card glass-card p-6">
           <h3 className="section-title text-lg font-bold text-primary mb-4 flex items-center gap-2">
-            <Sliders className="text-amber" size={20} /> Interface & Units Preferences
+            <Sliders className="text-amber" size={20} /> {t('interfacePreferencesSection', 'Interface & Language Preferences')}
           </h3>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center justify-between p-3 bg-input rounded-md border border-color">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Language Selector */}
+            <div className="flex items-center justify-between p-3.5 bg-input rounded-md border border-color">
               <div>
-                <span className="font-bold text-sm text-primary block">Color Theme</span>
-                <span className="text-xs text-muted">Toggle interface dark/light palette</span>
+                <span className="font-bold text-sm text-primary block flex items-center gap-1.5">
+                  <Globe size={16} className="text-cyan" /> {t('languageSelectorLabel', 'Application Language')}
+                </span>
+                <span className="text-xs text-muted">
+                  {t('languageSelectorDesc', 'Choose English or Hinglish across all pages, buttons, and AI Coach')}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 p-1 bg-card rounded-lg border border-color shrink-0">
+                <button
+                  type="button"
+                  className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${language === 'hinglish' ? 'bg-sky-500 text-white shadow-sm' : 'text-muted hover:text-primary'}`}
+                  onClick={() => setLanguage('hinglish')}
+                >
+                  🇮🇳 Hinglish
+                </button>
+                <button
+                  type="button"
+                  className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${language === 'english' ? 'bg-sky-500 text-white shadow-sm' : 'text-muted hover:text-primary'}`}
+                  onClick={() => setLanguage('english')}
+                >
+                  🇬🇧 English
+                </button>
+              </div>
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex items-center justify-between p-3.5 bg-input rounded-md border border-color">
+              <div>
+                <span className="font-bold text-sm text-primary block">{t('colorThemeLabel', 'Color Theme')}</span>
+                <span className="text-xs text-muted">{t('colorThemeDesc', 'Toggle interface dark/light palette')}</span>
               </div>
 
               <button className="btn-secondary text-xs" onClick={toggleTheme}>
-                {theme === 'dark' ? <><Sun size={14} /> Light Mode</> : <><Moon size={14} /> Dark Mode</>}
+                {theme === 'dark' ? <><Sun size={14} /> {t('lightTheme', 'Light Mode')}</> : <><Moon size={14} /> {t('darkTheme', 'Dark Mode')}</>}
               </button>
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-input rounded-md border border-color">
-              <div>
-                <span className="font-bold text-sm text-primary block">Measurement System</span>
-                <span className="text-xs text-muted">Metric (km/h, kg) vs Imperial (mph, lbs)</span>
-              </div>
-
-              <select className="custom-input text-xs w-28">
-                <option>Metric</option>
-                <option>Imperial</option>
-              </select>
             </div>
           </div>
         </div>

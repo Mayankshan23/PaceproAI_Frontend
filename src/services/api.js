@@ -23,7 +23,7 @@ export const getApiConfig = () => ({ ...apiConfig });
  * Send Bowling Videos to backend pipeline
  * Backend accepts: { front: File/path, side1: File/path, side2: File/path }
  */
-export const analyzeBowlingPipeline = async (filesDict, onProgressStage, bowlingArm = null, userId = null, athleteName = null) => {
+export const analyzeBowlingPipeline = async (filesDict, onProgressStage, bowlingArm = null, userId = null, athleteName = null, language = 'hinglish') => {
   if (onProgressStage) {
     onProgressStage("Uploading multi-view camera streams to PacePro server...", 20);
   }
@@ -47,6 +47,9 @@ export const analyzeBowlingPipeline = async (filesDict, onProgressStage, bowling
   }
   if (athleteName) {
     formData.append('athlete_name', athleteName);
+  }
+  if (language) {
+    formData.append('language', language);
   }
 
   if (onProgressStage) {

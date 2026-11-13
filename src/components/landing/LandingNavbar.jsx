@@ -9,10 +9,12 @@ import {
 } from 'lucide-react';
 import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/react';
 import { useTheme } from '../../context/ThemeContext';
+import { useApp } from '../../context/AppContext';
 
 export const LandingNavbar = ({ onLaunchDashboard }) => {
   const { isSignedIn } = useUser();
   const { theme, toggleTheme } = useTheme();
+  const { t, language, setLanguage } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -63,33 +65,44 @@ export const LandingNavbar = ({ onLaunchDashboard }) => {
             className="landing-nav-link"
             onClick={(e) => scrollToSection(e, '#features')}
           >
-            Features
+            {t('landingFeatures', 'Features')}
           </a>
           <a 
             href="#biomechanics" 
             className="landing-nav-link"
             onClick={(e) => scrollToSection(e, '#biomechanics')}
           >
-            Biomechanics
+            {t('landingBiomechanics', 'Biomechanics')}
           </a>
           <a 
             href="#training" 
             className="landing-nav-link"
             onClick={(e) => scrollToSection(e, '#training')}
           >
-            Training
+            {t('landingTraining', 'Training')}
           </a>
           <a 
             href="#faq" 
             className="landing-nav-link"
             onClick={(e) => scrollToSection(e, '#faq')}
           >
-            FAQ
+            {t('landingFaq', 'FAQ')}
           </a>
         </nav>
 
-        {/* Right Actions: Context-Aware Get Started / Dashboard + Theme */}
+        {/* Right Actions: Context-Aware Get Started / Dashboard + Theme + Language */}
         <div className="landing-navbar-actions">
+          {/* Language Toggle Pill */}
+          <button
+            type="button"
+            className="landing-theme-toggle"
+            onClick={() => setLanguage(language === 'hinglish' ? 'english' : 'hinglish')}
+            title={`Switch to ${language === 'hinglish' ? 'English' : 'Hinglish'}`}
+            style={{ fontSize: '0.8rem', fontWeight: 600, padding: '0 8px', width: 'auto' }}
+          >
+            {language === 'hinglish' ? '🇮🇳 Hin' : '🇬🇧 Eng'}
+          </button>
+
           {/* Theme Toggle */}
           <button 
             className="landing-theme-toggle" 
@@ -108,7 +121,7 @@ export const LandingNavbar = ({ onLaunchDashboard }) => {
                 onClick={handleCtaClick}
                 title="Go to main home page dashboard"
               >
-                <span>Go to Dashboard</span>
+                <span>{t('landingGoToDashboard', 'Go to Dashboard')}</span>
                 <ArrowRight size={15} />
               </button>
               <div className="landing-user-btn-wrapper">
@@ -119,7 +132,7 @@ export const LandingNavbar = ({ onLaunchDashboard }) => {
             <div className="landing-auth-buttons">
               <SignUpButton mode="modal">
                 <button className="landing-btn-signup">
-                  <span>Get Started</span>
+                  <span>{t('landingGetStarted', 'Get Started')}</span>
                   <ArrowRight size={15} />
                 </button>
               </SignUpButton>
@@ -159,14 +172,14 @@ export const LandingNavbar = ({ onLaunchDashboard }) => {
             className="mobile-nav-link"
             onClick={(e) => scrollToSection(e, '#training')}
           >
-            Training & Workouts
+            {t('landingTraining', 'Training & Workouts')}
           </a>
           <a 
             href="#faq" 
             className="mobile-nav-link"
             onClick={(e) => scrollToSection(e, '#faq')}
           >
-            FAQ
+            {t('landingFaq', 'FAQ')}
           </a>
           <div className="mobile-drawer-footer">
             {isSignedIn ? (
@@ -174,13 +187,13 @@ export const LandingNavbar = ({ onLaunchDashboard }) => {
                 className="landing-btn-signup full-width"
                 onClick={handleCtaClick}
               >
-                <span>Go to Dashboard</span>
+                <span>{t('landingGoToDashboard', 'Go to Dashboard')}</span>
                 <ArrowRight size={16} />
               </button>
             ) : (
               <SignUpButton mode="modal">
                 <button className="landing-btn-signup full-width">
-                  <span>Get Started</span>
+                  <span>{t('landingGetStarted', 'Get Started')}</span>
                   <ArrowRight size={16} />
                 </button>
               </SignUpButton>

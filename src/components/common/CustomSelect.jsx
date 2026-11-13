@@ -1,14 +1,13 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronDown, Check } from 'lucide-react';
+import './CustomSelect.css';
 
 /**
- * CustomSelect - Robust, 100% Accessible Mobile & Desktop Dropdown
+ * CustomSelect - Luxury Theme-Adaptive Custom Dropdown
  * 
- * Features:
- * - Uses semantic native select with luxury custom styling
- * - 100% guaranteed to work on iOS, Android, and Desktop without portal or event listener glitches
- * - Min-height 44px for touch-friendly tap targets
- * - Smooth hover & active focus rings
+ * Avoids browser OS default select styling issues.
+ * Provides custom dark/light glassmorphic menu with check indicators,
+ * smooth animations, and click-outside closure.
  */
 export const CustomSelect = ({
   options = [],
@@ -20,38 +19,91 @@ export const CustomSelect = ({
   id,
   name
 }) => {
-  return (
-    <div className={`custom-select-wrapper relative w-full ${className}`}>
-      <select
-        id={id}
-        name={name}
-        disabled={disabled}
-        value={value || ''}
-        onChange={(e) => onChange && onChange(e.target.value)}
-        className={`w-full min-h-[44px] pl-4 pr-10 py-2.5 rounded-xl border text-sm font-medium transition-all outline-none appearance-none cursor-pointer select-none bg-[var(--bg-input)] text-[var(--text-primary)] border-slate-200 dark:border-white/10 hover:border-sky-400 dark:hover:border-sky-500/50 focus:border-sky-500 focus:ring-2 focus:ring-sky-100 dark:focus:ring-sky-900/40 ${
-          disabled ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
-      >
-        {placeholder && (
-          <option value="" disabled className="text-slate-400 dark:text-zinc-500 bg-white dark:bg-[#141418]">
-            {placeholder}
-          </option>
-        )}
-        {options.map((opt) => (
-          <option
-            key={opt.value}
-            value={opt.value}
-            className="bg-white dark:bg-[#18181e] text-slate-800 dark:text-zinc-100 py-2 text-sm"
-          >
-            {opt.label}
-          </option>
-        ))}
-      </select>
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
 
-      {/* Sleek Chevron Arrow */}
-      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-        <ChevronDown size={17} />
-      </div>
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  const handleSelect = (val) => {
+    if (disabled) return;
+    onChange && onChange(val);
+    setIsOpen(false);
+  };
+
+  return (
+    <div 
+      className={`custom-select-container ${className}`} 
+      ref={containerRef}
+      id={id ? `select-wrapper-${id}` : undefined}
+    >
+      {/* Hidden Native Select for Form Compatibility & Accessibility */}
+      <input type="hidden" name={name} value={value || ''} />
+
+      {/* Trigger Button */}
+      <button
+        type="button"
+        disabled={disabled}
+        className={`custom-select-trigger ${isOpen ? 'is-open' : ''}`}
+        onClick={() => !disabled && setIsOpen((prev) => !prev)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+      >
+        <span className="custom-select-value">
+          {selectedOption ? (
+            selectedOption.label
+          ) : (
+            <span className="custom-select-placeholder">{placeholder}</span>
+          )}
+        </span>
+        <ChevronDown 
+          size={16} 
+          className={`custom-select-chevron ${isOpen ? 'open' : ''}`} 
+        />
+      </button>
+
+      {/* Floating Menu */}
+      {isOpen && (
+        <div className="custom-select-menu" role="listbox">
+          {options.map((opt) => {
+            const isSelected = opt.value === value;
+            return (
+              <div
+                key={opt.value}
+                role="option"
+                aria-selected={isSelected}
+                className={`custom-select-option ${isSelected ? 'is-selected' : ''}`}
+                onClick={() => handleSelect(opt.value)}
+              >
+                <span>{opt.label}</span>
+                {isSelected && <Check size={14} strokeWidth={2.5} className="custom-select-check" />}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

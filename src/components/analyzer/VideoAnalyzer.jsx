@@ -169,15 +169,18 @@ const CORRECTIVE_DRILLS_DATABASE = {
 };
 
 // =========================================================================
-// CLEAR BIOMECHANICAL EXPLANATION GENERATOR PER ANGLE
+// CLEAR BIOMECHANICAL EXPLANATION GENERATOR PER ANGLE (BILINGUAL CONTEXT)
 // =========================================================================
-const getAngleClearExplanation = (key, item) => {
+const getAngleClearExplanation = (key, item, lang = 'english') => {
+  const isHinglish = lang === 'hinglish';
   const val = item?.fused;
   if (val === null || val === undefined) {
     return {
-      statusText: "Not Captured",
+      statusText: isHinglish ? "Angle Not Captured" : "Not Captured",
       badgeClass: "badge-amber",
-      explanation: "Ensure the bowler's full body is framed from approach through release to calculate this angle.",
+      explanation: isHinglish 
+        ? "Bowler ka pura body approach se release tak camera frame me rakhein taaki ye angle accurately calculate ho sake." 
+        : "Ensure the bowler's full body is framed from approach through release to calculate this angle.",
       speedImpact: "—",
       safetyNote: "—"
     };
@@ -190,17 +193,21 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "⚡ Locked & Rigid Fulcrum (Optimal)",
           badgeClass: "badge-emerald",
-          explanation: `Awesome work! Your lead leg maintains a firm ${val}${item.unit} brace at foot plant. This acts as a solid catapult fulcrum, transferring ground energy straight into ball release velocity.`,
-          speedImpact: "+3 to 5 km/h gained via rigid lever transfer.",
-          safetyNote: "Provides a balanced, stable platform that protects your lower back."
+          explanation: isHinglish
+            ? `Zabardast kaam! Delivery stride me front-foot plant pe lead knee ${val}${item.unit} firm brace lock maintain kar rahi hai. Ye rigid lever run-up ki kinetic energy ko seedhe ball release velocity me whip karta hai!`
+            : `Awesome work! Your lead leg maintains a firm ${val}${item.unit} brace at foot plant. This acts as a solid catapult fulcrum, transferring ground energy straight into ball release velocity.`,
+          speedImpact: isHinglish ? "+3 se 5 km/h extra pace rigid lever transfer se." : "+3 to 5 km/h gained via rigid lever transfer.",
+          safetyNote: isHinglish ? "Stable base provide karta hai jisse lower back pe strain nahi padta." : "Provides a balanced, stable platform that protects your lower back."
         };
       } else {
         return {
           statusText: "🚀 Prime Pace Opportunity (+3–5 km/h)",
           badgeClass: "badge-cyan",
-          explanation: `Your front knee flexes to ${val}${item.unit} at foot plant. You have a huge opportunity to add an easy +3 to 5 km/h of ball speed by practicing a firmer lead leg plant, converting all your run-up power directly into release pace!`,
-          speedImpact: "Firming your lead leg at plant can easily unlock extra pace.",
-          safetyNote: "Practicing front-leg stiffness drills builds strong joint stability."
+          explanation: isHinglish
+            ? `Foot plant ke waqt front knee ${val}${item.unit} pe flex ho rahi hai. Lead leg ko firm aur straight plant karke aap aasaani se +3 se 5 km/h ki extra speed unlock kar sakte hain, converting all run-up energy directly into ball pace!`
+            : `Your front knee flexes to ${val}${item.unit} at foot plant. You have a huge opportunity to add an easy +3 to 5 km/h of ball speed by practicing a firmer lead leg plant, converting all your run-up power directly into release pace!`,
+          speedImpact: isHinglish ? "Front leg ko plant pe firm lock karne se extra pace niklegi." : "Firming your lead leg at plant can easily unlock extra pace.",
+          safetyNote: isHinglish ? "Lead-leg stiffness drills joint stability aur knee security build karti hain." : "Practicing front-leg stiffness drills builds strong joint stability."
         };
       }
 
@@ -209,17 +216,21 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "✓ Clean & Legal Bowling Arc",
           badgeClass: "badge-emerald",
-          explanation: `Your bowling arm extends smoothly to ${val}${item.unit} through release. This creates a tall delivery apex for steep downward bounce and full compliance with standard regulations.`,
-          speedImpact: "High release point produces natural bounce and steep carry.",
-          safetyNote: "Fluid arm sweep keeps shoulder and elbow tendons feeling healthy."
+          explanation: isHinglish
+            ? `Bowling arm release ke waqt ${val}${item.unit} smoothly extend ho raha hai. Ye tall release apex steep downward bounce aur ICC legal arm compliance banaye rakhta hai.`
+            : `Your bowling arm extends smoothly to ${val}${item.unit} through release. This creates a tall delivery apex for steep downward bounce and full compliance with standard regulations.`,
+          speedImpact: isHinglish ? "High release point se pitch pe steep bounce aur carry milta hai." : "High release point produces natural bounce and steep carry.",
+          safetyNote: isHinglish ? "Fluid arm sweep shoulder aur elbow tendons ko injury-free rakhta hai." : "Fluid arm sweep keeps shoulder and elbow tendons feeling healthy."
         };
       } else {
         return {
           statusText: "🎯 High-Wheel Arm Sweep Focus",
           badgeClass: "badge-cyan",
-          explanation: `Bowling arm elbow angle was measured at ${val}${item.unit}. Focusing on a tall, relaxed 'high-wheel' arm circle will give you smooth rhythm, consistent seam position, and natural bounce.`,
-          speedImpact: "A relaxed arm swing allows effortless whip through the crease.",
-          safetyNote: "Smooth rotational follow-through protects your arm through long bowling spells."
+          explanation: isHinglish
+            ? `Bowling elbow angle ${val}${item.unit} measure hua hai. Ek lamba aur relaxed 'high-wheel' arm circle banane se smooth delivery rhythm, consistent seam position aur natural bounce milega.`
+            : `Bowling arm elbow angle was measured at ${val}${item.unit}. Focusing on a tall, relaxed 'high-wheel' arm circle will give you smooth rhythm, consistent seam position, and natural bounce.`,
+          speedImpact: isHinglish ? "Relaxed arm swing delivery crease me effortless whip deta hai." : "A relaxed arm swing allows effortless whip through the crease.",
+          safetyNote: isHinglish ? "Smooth rotational follow-through lambi bowling spells me arm protect karta hai." : "Smooth rotational follow-through protects your arm through long bowling spells."
         };
       }
 
@@ -228,17 +239,21 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "🛡️ Upright & Spinal Safe",
           badgeClass: "badge-emerald",
-          explanation: `Great posture! Your torso tilts forward at a controlled ${val}${item.unit}. Your rotational momentum drives straight toward the target with smooth spinal alignment.`,
-          speedImpact: "Linear drive directs ball pace straight at the batter's stumps.",
-          safetyNote: "Balanced posture keeps your back fresh and ready for long spells."
+          explanation: isHinglish
+            ? `Great posture! Delivery stride me torso ${val}${item.unit} forward tilt pe controlled hai. Rotational drive seedhe target ki taraf ja raha hai with safe spinal alignment.`
+            : `Great posture! Your torso tilts forward at a controlled ${val}${item.unit}. Your rotational momentum drives straight toward the target with smooth spinal alignment.`,
+          speedImpact: isHinglish ? "Linear drive ball pace ko seedhe stumps ki taraf direct karta hai." : "Linear drive directs ball pace straight at the batter's stumps.",
+          safetyNote: isHinglish ? "Upright posture kamar ko fresh rakhta hai for long spells." : "Balanced posture keeps your back fresh and ready for long spells."
         };
       } else {
         return {
           statusText: "🎯 Upright Torso Drive Opportunity",
           badgeClass: "badge-cyan",
-          explanation: `Measured trunk tilt is ${val}${item.unit}. By keeping your head and chest a bit taller through delivery, you'll direct all your energy straight down the pitch with pin-point accuracy and an easy follow-through!`,
-          speedImpact: "Direct straight-line momentum improves speed and line consistency.",
-          safetyNote: "Upright thoracic alignment supports healthy spinal comfort all season long."
+          explanation: isHinglish
+            ? `Trunk tilt ${val}${item.unit} measure hua hai. Head aur chest ko release pe thoda aur upright rakhne se run-up momentum seedhe stumps pe hit karega aur accuracy ke sath easy follow-through milega!`
+            : `Measured trunk tilt is ${val}${item.unit}. By keeping your head and chest a bit taller through delivery, you'll direct all your energy straight down the pitch with pin-point accuracy and an easy follow-through!`,
+          speedImpact: isHinglish ? "Straight-line momentum speed aur line consistency dono badhata hai." : "Direct straight-line momentum improves speed and line consistency.",
+          safetyNote: isHinglish ? "Upright thoracic alignment season bhar lower back ko safe rakhta hai." : "Upright thoracic alignment supports healthy spinal comfort all season long."
         };
       }
 
@@ -247,17 +262,21 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "⚡ Explosive Core Recoil (Optimal)",
           badgeClass: "badge-emerald",
-          explanation: `Terrific kinetic timing! Your hips lead your shoulders by ${val}${item.unit}, loading your core like an athletic bowstring for explosive ball release whip.`,
-          speedImpact: "Major driver of high-velocity 135+ km/h fast bowling.",
-          safetyNote: "Distributes workload evenly across your entire core and torso."
+          explanation: isHinglish
+            ? `Terrific kinetic timing! Hips shoulders se ${val}${item.unit} aage hain, jo core ko loaded bowstring ki tarah stretch karke release pe explosive whip unlock karta hai.`
+            : `Terrific kinetic timing! Your hips lead your shoulders by ${val}${item.unit}, loading your core like an athletic bowstring for explosive ball release whip.`,
+          speedImpact: isHinglish ? "135+ km/h high-velocity pace ka sabse bada driver." : "Major driver of high-velocity 135+ km/h fast bowling.",
+          safetyNote: isHinglish ? "Workload pure core aur torso me evenly distribute hota hai." : "Distributes workload evenly across your entire core and torso."
         };
       } else {
         return {
           statusText: "🎯 Core Elastic Stretch Potential",
           badgeClass: "badge-cyan",
-          explanation: `Measured hip-shoulder separation is ${val}${item.unit}. Letting your hips lead slightly ahead of your chest will unlock free rotational whip from your torso, giving you more pace with less arm effort!`,
-          speedImpact: "Great opportunity to let your core power generate extra ball zip.",
-          safetyNote: "Smooth core sequence reduces upper-body fatigue."
+          explanation: isHinglish
+            ? `Measured hip-shoulder separation ${val}${item.unit} hai. Delivery stride me hips ko chest se thoda aage khulne dene se torso se free rotational whip milegi—kam effort me zyada pace!`
+            : `Measured hip-shoulder separation is ${val}${item.unit}. Letting your hips lead slightly ahead of your chest will unlock free rotational whip from your torso, giving you more pace with less arm effort!`,
+          speedImpact: isHinglish ? "Core elastic power se extra ball zip generate karne ka solid chance." : "Great opportunity to let your core power generate extra ball zip.",
+          safetyNote: isHinglish ? "Smooth core sequence upper-body fatigue ko reduce karta hai." : "Smooth core sequence reduces upper-body fatigue."
         };
       }
 
@@ -266,17 +285,21 @@ const getAngleClearExplanation = (key, item) => {
         return {
           statusText: "✓ Tall Springy Gather (Speed Preserved)",
           badgeClass: "badge-emerald",
-          explanation: `Your rear leg lands tall at ${val}${item.unit}, carrying all your horizontal run-up momentum smoothly into the delivery stride without losing height.`,
-          speedImpact: "Preserves approach momentum into delivery stride.",
-          safetyNote: "Springy back leg absorbs landing force effortlessly."
+          explanation: isHinglish
+            ? `Back foot contact pe rear leg ${val}${item.unit} pe tall land karta hai, jo run-up ki horizontal speed ko bina height lose kiye delivery stride me transfer karta hai.`
+            : `Your rear leg lands tall at ${val}${item.unit}, carrying all your horizontal run-up momentum smoothly into the delivery stride without losing height.`,
+          speedImpact: isHinglish ? "Approach speed ko delivery stride me carry karta hai." : "Preserves approach momentum into delivery stride.",
+          safetyNote: isHinglish ? "Springy back leg landing impact ko aasaani se absorb karta hai." : "Springy back leg absorbs landing force effortlessly."
         };
       } else {
         return {
           statusText: "🎯 Tall Gather & Drive Potential",
           badgeClass: "badge-cyan",
-          explanation: `Rear knee angle is ${val}${item.unit} on landing. Focusing on staying tall and springy on your back foot will help carry your full run-up velocity straight into the delivery stride!`,
-          speedImpact: "A taller gather carries maximum run-up momentum into the crease.",
-          safetyNote: "Promotes an easy, fluid stride transition into the front foot."
+          explanation: isHinglish
+            ? `Landing pe rear knee angle ${val}${item.unit} hai. Back foot pe springy aur tall gather maintain karne se aapki run-up velocity seedhe crease me transfer hogi!`
+            : `Rear knee angle is ${val}${item.unit} on landing. Focusing on staying tall and springy on your back foot will help carry your full run-up velocity straight into the delivery stride!`,
+          speedImpact: isHinglish ? "Tall gather maximum run-up momentum ko crease me le jata hai." : "A taller gather carries maximum run-up momentum into the crease.",
+          safetyNote: isHinglish ? "Front foot me fluid stride transition banata hai." : "Promotes an easy, fluid stride transition into the front foot."
         };
       }
 
@@ -284,16 +307,18 @@ const getAngleClearExplanation = (key, item) => {
       return {
         statusText: val >= 70 ? "High-Arm Release Apex" : "Three-Quarter Delivery Arc",
         badgeClass: "badge-cyan",
-        explanation: `Release elevation of ${val}${item.unit}. ${val >= 70 ? 'Generates steep bounce and upright seam presentation.' : 'Produces late swing and natural skid through the air.'}`,
-        speedImpact: "Optimized for natural release geometry.",
-        safetyNote: "Matches natural shoulder trajectory without rotator impingement."
+        explanation: isHinglish
+          ? `Release elevation ${val}${item.unit} hai. ${val >= 70 ? 'Ye steep bounce aur upright seam presentation generate karta hai.' : 'Ye natural skid aur late swing through the air produce karta hai.'}`
+          : `Release elevation of ${val}${item.unit}. ${val >= 70 ? 'Generates steep bounce and upright seam presentation.' : 'Produces late swing and natural skid through the air.'}`,
+        speedImpact: isHinglish ? "Natural release geometry ke hisaab se optimized." : "Optimized for natural release geometry.",
+        safetyNote: isHinglish ? "Rotator cuff impingement ke bina natural shoulder arc match karta hai." : "Matches natural shoulder trajectory without rotator impingement."
       };
 
     default:
       return {
         statusText: "Biomechanical Metric",
         badgeClass: "badge-cyan",
-        explanation: `${item.name}: Fused value of ${val}${item.unit} (Optimal: ${item.optimal_range}).`,
+        explanation: `${item.name}: ${val}${item.unit} (Optimal: ${item.optimal_range}).`,
         speedImpact: "Core contributor to delivery kinematics.",
         safetyNote: "Monitored for athletic longevity."
       };
@@ -309,7 +334,9 @@ export const VideoAnalyzer = () => {
     navigateTo,
     videoFiles,
     setVideoFiles,
-    videoAnalysisTask
+    videoAnalysisTask,
+    language,
+    t
   } = useApp();
 
   const isAnalyzing = videoAnalysisTask.isRunning;
@@ -443,17 +470,17 @@ export const VideoAnalyzer = () => {
       <div className="page-header flex justify-between items-center mb-6 flex-wrap gap-4">
         <div>
           <h2 className="page-title text-2xl font-bold flex items-center gap-2">
-            <Video className="text-cyan" size={26} /> Delivery Video & Biomechanics Analyzer
+            <Video className="text-cyan" size={26} /> {t('analyzerTitle', 'Multi-View Bowling Biomechanics Analyzer')}
           </h2>
           <p className="page-subtitle text-muted text-sm">
-            High-precision joint angle calculations, plain-English mechanical explanations, and direct corrective drill protocols.
+            {t('analyzerSubtitle', 'Synchronize 3 camera angles (Front, Side Release, Side Crease) to compute 3D joint kinematics, front-knee brace lock, and velocity levers.')}
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 w-full sm:w-auto">
           {/* Bowling Arm Action selector */}
           <div className="bowling-arm-selector">
-            <span className="arm-selector-label">Action:</span>
+            <span className="arm-selector-label">{t('bowlingArmLabel', 'Action')}:</span>
             <div className="arm-toggle-pill">
               <button
                 type="button"
@@ -461,7 +488,7 @@ export const VideoAnalyzer = () => {
                 onClick={() => !isAnalyzing && setBowlingArmChoice('right')}
                 disabled={isAnalyzing}
               >
-                Right-Arm
+                {t('rightArmFast', 'Right-Arm')}
               </button>
               <button
                 type="button"
@@ -469,7 +496,7 @@ export const VideoAnalyzer = () => {
                 onClick={() => !isAnalyzing && setBowlingArmChoice('left')}
                 disabled={isAnalyzing}
               >
-                Left-Arm
+                {t('leftArmFast', 'Left-Arm')}
               </button>
             </div>
           </div>
@@ -481,10 +508,10 @@ export const VideoAnalyzer = () => {
                 type="button"
                 className="btn-secondary px-3.5 py-2 text-xs flex items-center gap-1.5 rounded-xl border border-white/10 hover:border-cyan-500/40 transition-all font-medium"
                 onClick={() => setShowUploadSection(prev => !prev)}
-                title={showUploadSection ? "Hide Upload Cards" : "Show Upload Cards"}
+                title={showUploadSection ? t('hideClips', 'Hide Upload Cards') : t('viewClips', 'Show Upload Cards')}
               >
                 {showUploadSection ? <EyeOff size={15} /> : <Eye size={15} />}
-                <span>{showUploadSection ? 'Hide Clips' : 'View Clips'}</span>
+                <span>{showUploadSection ? t('hideClips', 'Hide Clips') : t('viewClips', 'View Clips')}</span>
               </button>
 
               <button 
@@ -493,7 +520,7 @@ export const VideoAnalyzer = () => {
                 onClick={handleResetAnalysis}
               >
                 <RotateCcw size={15} />
-                <span>New Analysis</span>
+                <span>{t('newAnalysis', 'New Analysis')}</span>
               </button>
             </div>
           ) : (
@@ -504,11 +531,11 @@ export const VideoAnalyzer = () => {
             >
               {isAnalyzing ? (
                 <>
-                  <RefreshCw className="animate-spin" size={18} /> Calculating Angles...
+                  <RefreshCw className="animate-spin" size={18} /> {t('analyzingVideoBtn', 'Calculating Angles...')}
                 </>
               ) : (
                 <>
-                  <Sparkles size={18} /> Run Delivery Analysis
+                  <Sparkles size={18} /> {t('analyzeDeliveryBtn', 'Run Delivery Analysis')}
                 </>
               )}
             </button>
@@ -543,7 +570,7 @@ export const VideoAnalyzer = () => {
                 onClick={() => setShowUploadSection(false)}
               >
                 <EyeOff size={14} className="shrink-0" />
-                <span>Collapse Clips</span>
+                <span>{t('collapseClips', 'Collapse Clips')}</span>
               </button>
             </div>
           )}
@@ -552,8 +579,8 @@ export const VideoAnalyzer = () => {
           <div className="views-upload-grid">
             {/* FRONT VIEW CARD */}
             <UploadViewCard 
-              viewTitle="FRONT VIEW"
-              viewSubtitle="Chest alignment & arm release slot"
+              viewTitle={t('frontViewTitle', 'FRONT VIEW')}
+              viewSubtitle={t('frontViewSub', 'Chest alignment & arm release slot')}
               fileData={videoFiles.front}
               inputRef={frontInputRef}
               onUpload={(f) => handleFileUpload('front', f)}
@@ -563,8 +590,8 @@ export const VideoAnalyzer = () => {
 
             {/* SIDE VIEW 1 CARD */}
             <UploadViewCard 
-              viewTitle="SIDE VIEW 1"
-              viewSubtitle="Front knee brace & BFC/FFC timing"
+              viewTitle={t('side1ViewTitle', 'SIDE VIEW 1')}
+              viewSubtitle={t('side1ViewSub', 'Front knee brace & BFC/FFC timing')}
               fileData={videoFiles.side1}
               inputRef={side1InputRef}
               onUpload={(f) => handleFileUpload('side1', f)}
@@ -574,8 +601,8 @@ export const VideoAnalyzer = () => {
 
             {/* SIDE VIEW 2 CARD */}
             <UploadViewCard 
-              viewTitle="SIDE VIEW 2"
-              viewSubtitle="Opposite angle & trunk flexion"
+              viewTitle={t('side2ViewTitle', 'SIDE VIEW 2')}
+              viewSubtitle={t('side2ViewSub', 'Opposite angle & trunk flexion')}
               fileData={videoFiles.side2}
               inputRef={side2InputRef}
               onUpload={(f) => handleFileUpload('side2', f)}
@@ -836,7 +863,7 @@ export const VideoAnalyzer = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.entries(metricsMap).map(([key, item]) => {
-                const diag = getAngleClearExplanation(key, item);
+                const diag = getAngleClearExplanation(key, item, language);
                 return (
                   <div key={key} className="angle-card glass-card p-4 rounded-xl flex flex-col justify-between border border-white/10 hover:border-cyan-500/40 transition-all">
                     <div>
@@ -899,7 +926,7 @@ export const VideoAnalyzer = () => {
             <div className="drills-header flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <div>
                 <h4 className="text-lg font-bold text-primary flex items-center gap-2">
-                  <Flame className="text-amber" size={22} /> Targeted Corrective Drills & Video Tutorials
+                  <Flame className="text-amber" size={22} /> {t('correctiveDrillsTitle', 'Targeted Corrective Drills & Video Tutorials')}
                 </h4>
                 <p className="text-xs text-muted">
                   Direct actionable ground & gym drill protocols with curated YouTube coaching tutorials from top fast-bowling specialists.
@@ -1060,7 +1087,7 @@ export const VideoAnalyzer = () => {
               <input
                 type="text"
                 className="coach-input-field flex-1 py-2.5 px-4 rounded-xl bg-black/40 border border-white/15 text-sm text-primary placeholder:text-muted focus:border-cyan-500 outline-none"
-                placeholder="Type any question for Coach (e.g., 'Lead leg collapse kaise rokein?', 'Bumrah jaisa snap kaise banayein?')..."
+                placeholder={t('askCoachPlaceholder', "Type any question for Coach (e.g., 'Lead leg collapse kaise rokein?', 'Bumrah jaisa snap kaise banayein?')...")}
                 value={customCoachQuestion}
                 onChange={(e) => setCustomCoachQuestion(e.target.value)}
                 onKeyDown={(e) => {
@@ -1075,7 +1102,7 @@ export const VideoAnalyzer = () => {
                 onClick={() => handleAskCoach()}
                 disabled={!customCoachQuestion.trim()}
               >
-                <span>Ask Coach</span>
+                <span>{t('askCoachBtn', 'Ask Coach')}</span>
                 <Send size={15} />
               </button>
             </div>
