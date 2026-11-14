@@ -403,7 +403,7 @@ export const AppProvider = ({ children }) => {
   };
 
   // Run bowling analysis (Global Task Runner)
-  const runAnalysis = async (filesDict, onProgress = null, armOverride = null) => {
+  const runAnalysis = async (filesDict, onProgress = null, armOverride = null, slowMotion = 'auto') => {
     setVideoAnalysisTask({
       isRunning: true,
       stage: 'Uploading multi-view camera streams...',
@@ -426,7 +426,8 @@ export const AppProvider = ({ children }) => {
         bowlingArm, 
         userId, 
         userProfile?.name,
-        language
+        language,
+        slowMotion
       );
       setLatestBowlingAnalysis(result);
       

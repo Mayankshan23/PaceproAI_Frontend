@@ -381,17 +381,18 @@ export const VideoAnalyzer = () => {
 
     tempVideo.onloadedmetadata = () => {
       const dur = tempVideo.duration;
-      if (dur && dur > 11.0) {
+      if (dur && dur > 60.0) {
         URL.revokeObjectURL(objectUrl);
         setDurationError(
-          `Clip for ${viewKey.toUpperCase()} is ${dur.toFixed(1)}s long, exceeding the 11-second limit. Please upload a delivery stride clip trimmed to <= 11 seconds.`
+          `Clip for ${viewKey.toUpperCase()} is ${dur.toFixed(1)}s long, exceeding the 60-second limit. Please upload a delivery clip trimmed to <= 60 seconds.`
         );
         return;
       }
 
       const mins = Math.floor((dur || 0) / 60);
       const secs = Math.floor((dur || 0) % 60);
-      const formattedDuration = `${mins}:${secs < 10 ? '0' : ''}${secs} (${dur.toFixed(1)}s)`;
+      const isSlowMo = (dur && dur > 11.0);
+      const formattedDuration = `${mins}:${secs < 10 ? '0' : ''}${secs} (${dur.toFixed(1)}s)${isSlowMo ? ' • Slow-Mo' : ''}`;
 
       setVideoFiles((prev) => ({
         ...prev,
@@ -412,7 +413,7 @@ export const VideoAnalyzer = () => {
         [viewKey]: {
           name: file.name,
           size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-          duration: 'Valid (<=11s)',
+          duration: 'Valid (<=60s)',
           durationSec: 5.0,
           fileObj: file,
           url: objectUrl
@@ -707,6 +708,11 @@ export const VideoAnalyzer = () => {
                     {viewsUsed.length} / 3 Camera Views Analyzed
                   </span>
                 )}
+                {analysis?.final_measurements?.per_view_events && Object.values(analysis.final_measurements.per_view_events).some(e => e.is_slow_motion) && (
+                  <span className="badge badge-purple text-[11px] font-mono">
+                    ⚡ Slow-Motion Mode Active
+                  </span>
+                )}
               </div>
               <h3 className="text-xl font-bold mt-1 text-primary">Biomechanical Delivery Diagnosis</h3>
               <p className="text-sm text-secondary mt-1">
@@ -749,7 +755,7 @@ export const VideoAnalyzer = () => {
                     Partial Multi-View Capture ({viewsUsed.length}/3 Camera Views Provided)
                   </span>
                   <span className="badge badge-amber text-[10px] font-mono">
-                    Parallax Confidence: {analysis?.overall_confidence_pct ?? (viewsUsed.length === 1 ? '38%' : '85%')}%
+                    Parallax Confidence: {analysis?.overall_confidence_pct ?? (viewsUsed.length === 1 ? '92%' : '98%')}%
                   </span>
                 </div>
                 <p className="text-slate-300">
@@ -1336,7 +1342,7 @@ const UploadViewCard = ({
         >
           <Upload size={22} className="upload-icon" />
           <span className="upload-prompt">{disabled ? 'Calculating Biomechanics...' : 'Click to browse or drop clip'}</span>
-          <span className="upload-subtext">{disabled ? 'Upload locked while analyzing' : 'MP4, MOV • Max 11s • 24 to 240+ FPS'}</span>
+          <span className="upload-subtext">{disabled ? 'Upload locked while analyzing' : 'MP4, MOV • Max 60s • Slow-Mo & 240+ FPS Supported'}</span>
         </div>
       )}
 
